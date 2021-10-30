@@ -22,37 +22,49 @@ import javax.swing.JTabbedPane;
  */
 public class chatRoomView extends JPanel{
 	public chatRoomView() {
+		textField.setToolTipText("The string message to be sent");
 		textField.setColumns(30);
 		initGUI();
 	}
 	private void initGUI() {
 		setLayout(new BorderLayout(0, 0));
+		Msg.setToolTipText("The Panel for sending all messages");
 		
 		add(Msg, BorderLayout.SOUTH);
 		Msg.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		Msg.add(textField);
+		sendMsg.setToolTipText("Button to send string message");
 		
 		Msg.add(sendMsg);
+		sendBallWorld.setToolTipText("button to send ball world message");
 		
 		Msg.add(sendBallWorld);
+		control.setToolTipText("Controlling the chat app");
 		control.setResizeWeight(0.05);
 		
 		add(control, BorderLayout.CENTER);
+		splitPane.setToolTipText("Messages and their status");
 		splitPane.setResizeWeight(0.8);
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		
 		control.setRightComponent(splitPane);
+		status.setToolTipText("The status of the app");
 		
 		splitPane.setRightComponent(status);
 		
 		splitPane.setLeftComponent(tabbedPane);
 		
+		tabbedPane.addTab("Messages", null, Messages, null);
+		users.setToolTipText("List of users");
+		
 		control.setLeftComponent(users);
 		users.setLayout(new BorderLayout(0, 0));
+		btnNewButton.setToolTipText("Leave this room");
 		btnNewButton.setFont(new Font("SimSun", Font.PLAIN, 8));
 		
 		users.add(btnNewButton, BorderLayout.SOUTH);
+		scrollPane.setToolTipText("The users");
 		
 		users.add(scrollPane, BorderLayout.CENTER);
 	}
@@ -72,5 +84,6 @@ public class chatRoomView extends JPanel{
 	private final JButton btnNewButton = new JButton("Exit Room");
 	private final JScrollPane scrollPane = new JScrollPane();
 	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+	private final JPanel Messages = new JPanel();
 
 }
