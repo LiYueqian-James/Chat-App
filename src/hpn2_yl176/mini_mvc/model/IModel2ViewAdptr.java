@@ -8,5 +8,10 @@ package hpn2_yl176.mini_mvc.model;
  *
  */
 public interface IModel2ViewAdptr {
+	
+	public void displayMsg(String msg);
+	
+	public void displayStatus(String status);
+	
 
 }

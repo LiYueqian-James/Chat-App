@@ -13,4 +13,9 @@ public interface IMini2MainAdptr {
 	 * Remove "this" chat room. This will be resolved using closure.
 	 */
 	public void removeRoom();
+	
+	/**
+	 * @return the user name of the current chat app instance.
+	 */
+	public String getUserName();
 }
