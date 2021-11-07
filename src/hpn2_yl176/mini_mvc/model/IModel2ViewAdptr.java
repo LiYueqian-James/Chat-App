@@ -16,7 +16,7 @@ public interface IModel2ViewAdptr {
 	
 	
 	/**
-	 * @param status the status messsage to be displayed
+	 * @param status the status message to be displayed
 	 */
 	public void displayStatus(String status);
 	
