@@ -45,5 +45,5 @@
 	fetchRecurseSubmodules = true
 [submodule "src/common"]
 	path = src/common
-	url = https://github.com/Rice-COMP-310/comp310-f21-chatapp-design-comp310-f21-chatapp-design-d.git
+	url = https://github.com/Rice-COMP-310/comp310-f21-chatapp-design-comp310-f21-chatapp-design-j.git
 	fetchRecurseSubmodules = true
