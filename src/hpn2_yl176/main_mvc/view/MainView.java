@@ -67,6 +67,11 @@ public class MainView<TDropListItem> extends JFrame {
 	 * Holds the send message options
 	 */
 	private final JPanel usernamePanel = new JPanel();
+	
+	/**
+	 * Holds the send message options
+	 */
+	private final JPanel boundNamePanel = new JPanel();
 
 	/**
 	 * Holds the send message options
@@ -82,6 +87,11 @@ public class MainView<TDropListItem> extends JFrame {
 	 * Receives input message to be sent to the server
 	 */
 	private final JTextField usernameInput = new JTextField();
+	
+	/**
+	 * Receives input message to be sent to the server
+	 */
+	private final JTextField boundNameInput = new JTextField();
 	
 	/**
 	 * Receives server name
@@ -175,6 +185,7 @@ public class MainView<TDropListItem> extends JFrame {
 		setTitle("Client GUI");
 		makeChatRoomInput.setColumns(10);
 		usernameInput.setColumns(10);
+		boundNameInput.setColumns(10);
 		servernameInput.setColumns(10);
 		connectByIPInput.setColumns(10);
 
@@ -205,12 +216,18 @@ public class MainView<TDropListItem> extends JFrame {
 		usernamePanel.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"Username", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		boundNamePanel.setBorder(new TitledBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Bound name", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+
 		servernamePanel.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"Server name", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		
 		appStartupPanel.add(usernamePanel);
-
 		usernamePanel.add(usernameInput);
+		boundNamePanel.add(boundNameInput);
+		appStartupPanel.add(boundNamePanel);
 		
 		servernamePanel.add(servernameInput);
 		
@@ -236,7 +253,7 @@ public class MainView<TDropListItem> extends JFrame {
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"Connected Hosts", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		addBtn.setToolTipText("Click to add new task name to task menus");
-
+		
 		menuPanel.add(appStartupPanel);
 
 		/**
@@ -265,7 +282,7 @@ public class MainView<TDropListItem> extends JFrame {
 		contentPane.add(chatroomTabPane, BorderLayout.CENTER);
 		chatroomTabPane.setToolTipText("A chatroom's tab");
 		
-		chatroomTabPane.addTab("Chatroom 1", null, panel, null);
+		chatroomTabPane.addTab("Info", null, panel, null);
 		
 		chatroomTabPane.addTab("New tab", null, panel_1, null);
 	}

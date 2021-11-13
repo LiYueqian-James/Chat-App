@@ -6,7 +6,13 @@ package hpn2_yl176.main_mvc.model;
 import java.rmi.registry.Registry;
 import java.rmi.server.RemoteStub;
 import java.util.HashMap;
+import java.util.HashSet;
 
+import common.connector.IConnector;
+import common.receiver.IReceiver;
+import hpn2_yl176.MiniFactory;
+import hpn2_yl176.mini_mvc.IMini2MainAdptr;
+import hpn2_yl176.mini_mvc.controller.MiniController;
 import provided.logger.ILogEntry;
 import provided.logger.ILogEntryFormatter;
 import provided.logger.ILogEntryProcessor;
@@ -14,6 +20,8 @@ import provided.logger.ILogger;
 import provided.logger.ILoggerControl;
 import provided.logger.LogLevel;
 import provided.logger.demo.model.IModel2ViewAdapter;
+import provided.pubsubsync.IPubSubSyncChannelUpdate;
+import provided.pubsubsync.IPubSubSyncManager;
 import provided.rmiUtils.IRMIUtils;
 import provided.rmiUtils.RMIUtils;
 
@@ -31,6 +39,8 @@ public class MainModel {
 	private ILogger sysLogger;
 	
 	public IMainModel2ViewAdpt model2ViewAdpt;
+	
+	public IPubSubSyncManager manager; 
 	
 	/**
 	 * A logger that logs to the view and the system logger
@@ -55,7 +65,7 @@ public class MainModel {
 		viewLogger.append(sysLogger);
 	}
 	
-	public void makeController() {
+	public MiniController makeController() {
 		return MiniFactory.Singleton.make();
 	}
 	
@@ -64,16 +74,16 @@ public class MainModel {
 		System.exit(exitCode);
 	}
 	
-	public String connectTo(String remoteRegistryIPAddr) {
+	public String connectTo(String remoteRegistryIPAddr, String boundName) {
 		//sysLogger.log(LogLevel.INFO, "HERE: " + remoteRegistryIPAddr);
 		try {
 			sysLogger.log(LogLevel.INFO, "Locating registry at " + remoteRegistryIPAddr + "...");
 			Registry registry = rmiUtils.getRemoteRegistry(remoteRegistryIPAddr);
 			sysLogger.log(LogLevel.INFO, "Found registry: " + registry);
-//			ICompute remoteStub = (ICompute) registry.lookup(ICompute.BOUND_NAME);
-			for (connection: remoteStub.getContacts()) {
-				this.addContact(String);
-			}
+			IConnector remoteStub = (IConnector) registry.lookup(boundName);
+//			for (connection: remoteStub.getContacts()) {
+//				this.addContact(String);
+//			}
 			
 			sysLogger.log(LogLevel.INFO, "Found remote stub: ");
 //			this.processStub(remoteStub);
@@ -89,6 +99,15 @@ public class MainModel {
 	
 	public void addContact(String name) {
 		
+	}
+	
+	public void makeRoom(String roomName, IMini2MainAdptr mini2MainAdptr) {
+		HashSet<IReceiver> roster = new HashSet<>();
+		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = manager.createChannel(roomName, roster, null, 
+				(statusMessage) -> {
+					sendStatusMsg(other)
+				});
+	
 	}
 	
 	public void leaveRoom(String roomname) {
