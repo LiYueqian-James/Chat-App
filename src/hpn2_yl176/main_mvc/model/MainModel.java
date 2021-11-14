@@ -41,7 +41,7 @@ public class MainModel {
 	 * The IRMIUtils in use
 	 */
 	
-	pu
+
 	private IRMIUtils rmiUtils;
 	
 	private ILogger sysLogger;
@@ -63,7 +63,6 @@ public class MainModel {
 		this.sysLogger = logger;
 		this.model2ViewAdpt = model2ViewAdpt;
 		rmiUtils = new RMIUtils(logger);
-
 		viewLogger = ILoggerControl.makeLogger(new ILogEntryProcessor() {
 			ILogEntryFormatter formatter = ILogEntryFormatter.MakeFormatter("[%1s] %2s");
 

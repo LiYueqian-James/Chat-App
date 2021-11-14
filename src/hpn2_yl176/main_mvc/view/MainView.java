@@ -7,8 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -19,17 +17,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import hpn2_yl176.main_mvc.IMain2MiniAdptr;
-
 import javax.swing.JTabbedPane;
 
 /**
- * @author hungnguyen
+ * @author hungnguyen, James Li
+ * @param <TDropListItem> Stubs of the chat app instances that this chat app instance can connect to
  *
  */
 public class MainView<TDropListItem> extends JFrame {
@@ -308,12 +304,15 @@ public class MainView<TDropListItem> extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * James: I don't think we need the name from the mini mvc.
+	 * When we make a chat room, the view provides the chat room name
+	 * When we join a chat room, the main model receive an invitation 
+	 * From there we can retrieve the name/stub of the chatroom
 	 */
-	private void installTab(IMain2MiniAdptr main2MiniAdapter) {
-		this.chatroomTabPane.addTab(main2MiniAdapter.getName(), null, main2MiniAdapter.getView(), null);
-		
-	}
+//	private void installTab(IMain2MiniAdptr main2MiniAdapter) {
+//		this.chatroomTabPane.addTab(main2MiniAdapter.getName(), null, main2MiniAdapter.getView(), null);
+//		
+//	}
 
 	/**
 	 * starts the client GUI
