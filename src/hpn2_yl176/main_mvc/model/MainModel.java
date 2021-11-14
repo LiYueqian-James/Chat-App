@@ -5,14 +5,21 @@ package hpn2_yl176.main_mvc.model;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.List;
 
 import common.connector.ConnectorDataPacket;
+import common.connector.ConnectorDataPacketAlgo;
 import common.connector.IConnector;
 import common.connector.INamedConnector;
+import common.connector.messages.IConnectorMsg;
+import common.connector.messages.IInviteMsg;
+import common.connector.messages.ISyncPeersMsg;
+import common.receiver.INamedReceiver;
 import common.receiver.IReceiver;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
+import provided.datapacket.IDataPacketID;
 import provided.logger.ILogEntry;
 import provided.logger.ILogEntryFormatter;
 import provided.logger.ILogEntryProcessor;
@@ -54,8 +61,6 @@ public class MainModel {
 	 */
 	private IPubSubSyncManager pubSubManager; 
 	
-	public IConnector otherStub;
-	
 	/**
 	 * A logger that logs to the view and the system logger
 	 */
@@ -67,17 +72,81 @@ public class MainModel {
 	private IConnector connector;
 	
 	/**
-	 * A dyad containing infos about the current chat app instance.
+	 * The stub of the current chat app instance.
 	 */
-	private INamedConnector namedChatApp;
+	private IConnector connectorStub;
 	
 	/**
 	 * A list of chat app instance stubs/
 	 */
 	private List<INamedConnector> contacts;
 	
+	 /**
+	  * The user name of the chat app instance.
+	  */
+	private String userName;
 	
+	/**
+	 * The local Registry
+	 */
+	private Registry registry;
 	
+	/**
+	 * The configuration of the chat app instance. 
+	 */
+	private ChatAppConfig chatAppConfig;
+	
+	private ConnectorDataPacketAlgo receiverVisitor;
+	
+	public void joinRoom(UUID id, String roomname) {
+		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.subscribeToUpdateChannel(id, null, null);
+//		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
+	}
+	
+	public String connectToStub(INamedConnector connectedStub) {
+		connectedStub.sendMessage(new ConnectorDataPacket<ISyncPeersMsg>(new SyncPeersMsg(this.contacts)), namedRemoteStub);
+	}
+	
+	private void setVisitor() {
+		receiverVisitor = new ConnectorDataPacketAlgo(new AConnectorDataPacketAlgoCmd<IConnectorMsg>() {
+		});
+		
+		
+		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IInviteMsg.class), new AConnectorDataPacketAlgoCmd<IInviteMsg>() {
+
+			@Override
+			public Void apply(IDataPacketID index, ConnectorDataPacket<IInviteMsg> host, Void... params) {
+				// TODO Auto-generated method stub
+				MainModel.this.joinRoom(host.getData().getUUID(), host.getData().getFriendlyName());
+			}
+		});
+		
+		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ISyncPeersMsg.class), new AConnectorDataPacketAlgoCmd<ISyncPeersMsg>() {
+
+			@Override
+			public Void apply(IDataPacketID index, ConnectorDataPacket<ISyncPeersMsg> host, Void... params) {
+				// TODO Auto-generated method stub
+				for (INamedConnector newPeer: host.getData().getNewPeers()) {
+					sendMessage(newPeer, new ConnectorDataPacket<IAddPeersMsg>(new AddPeersMsg
+				}
+				
+				for (INamedConnector myConnectedStub: MainModel.this.contacts) {
+					sendMessage(myConnectedStub, new ConnectorDataPacket<IAddPeersMsg>(null, myConnectedStub))
+				}
+			}
+
+			@Override
+			public Void apply(IDataPacketID index, ConnectorDataPacket<ISyncPeersMsg> host, Void... params) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		});
+		
+		receiverVisitor.setCmd(null, null);
+		
+		receiverVisitor.setCmd(null, null);
+	};
 	
 	/**
 	 * Constructor for the model.
@@ -103,27 +172,7 @@ public class MainModel {
 		// Chain the system logger to the end of the view logger so that 
 		// anything logged to the view also goes to the system log 
 		// (default = to console).
-		viewLogger.append(sysLogger);
-		
-		// make the connector and named connector
-		this.connector = new IConnector() {
-
-			@Override
-			public void sendMessage(ConnectorDataPacket<?> packet) throws RemoteException {
-				// The message received here should be in the connector/messages package
-				// We need a visitor to deal with these different types of message
-				// Regular visitor pattern should be enough since the set of message types is fixed
-				
-			}
-
-			@Override
-			public INamedConnector makeNamedConnector() throws RemoteException {
-				// TODO Auto-generated method stub
-				return null;
-			}};
-		
-		// 
-		
+		viewLogger.append(sysLogger);		
 	}
 	
 	/**
@@ -140,7 +189,18 @@ public class MainModel {
 		System.exit(exitCode);
 		
 	}
+
+	public String connectToStub(INamedConnector connectedStub) {
+		connectedStub.sendMessage(new ConnectorDataPacket<ISyncPeersMsg>(new SyncPeersMsg(this.contacts)), namedRemoteStub);
+	}
+
 	
+	/**
+	 * Connect to another Chat app instance.
+	 * @param remoteRegistryIPAddr the ip address to connect to.
+	 * @param boundName the bound name of the chat app instance.
+	 * @return a status message of the connection
+	 */
 	public String connectTo(String remoteRegistryIPAddr, String boundName) {
 		//sysLogger.log(LogLevel.INFO, "HERE: " + remoteRegistryIPAddr);
 		try {
@@ -148,12 +208,7 @@ public class MainModel {
 			Registry registry = rmiUtils.getRemoteRegistry(remoteRegistryIPAddr);
 			sysLogger.log(LogLevel.INFO, "Found registry: " + registry);
 			IConnector remoteStub = (IConnector) registry.lookup(boundName);
-//			for (connection: remoteStub.getContacts()) {
-//				this.addContact(String);
-//			}
-			
 			sysLogger.log(LogLevel.INFO, "Found remote stub: ");
-//			this.processStub(remoteStub);
 
 		} catch (Exception e) {
 			sysLogger.log(LogLevel.ERROR, "Exception connecting to " + remoteRegistryIPAddr + ": " + e);
@@ -165,8 +220,8 @@ public class MainModel {
 	}
 	
 	/**
-	 * Add the 
-	 * @param contact
+	 * Add the connected stub to the list of contacts
+	 * @param contact the stub of a chat app instance.
 	 */
 	public void addContact(INamedConnector contact) {
 		this.contacts.add(contact);
@@ -177,22 +232,17 @@ public class MainModel {
 	 * @param roomName the name of the room.
 	 */
 	public void makeRoom(String roomName) {
-		HashSet<IReceiver> roster = new HashSet<>();
-		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.createChannel(roomName, roster, null, 
+		HashSet<INamedReceiver> roster = new HashSet<>();
+		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubManager.createChannel(roomName, roster, null, 
 				(statusMessage) -> {
 					sysLogger.log(LogLevel.DEBUG, "room " + roomName +" has been made sucessfully.");
 				});
-		IMain2MiniAdptr miniController = this.makeMiniController();
-		
+		IMain2MiniAdptr miniController = this.model2ViewAdpt.make();
 		// add the current stub of the room to the data channel
-		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(miniController.getNamedReceiver().getStub()));
+		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(miniController.getNamedReceiver()));
 		this.model2ViewAdpt.addComponent(miniController.getRoomPanel());
 	}
 	
-	public void leaveRoom(String roomname) {
-		viewLogger.log(LogLevel.INFO, "Left room " + roomname);
-		//TODO: remove the panel from the view
-	}
 	
 	// I think this one is more like a cmd to process the invite message
 //	public void joinRoom(UUID id, String roomname, IMini2MainAdptr mini2MainAdptr) {
@@ -214,15 +264,73 @@ public class MainModel {
 			e.printStackTrace();
 		}
 		
+		// get the username from the view
+		this.userName = this.model2ViewAdpt.getUserName();
+		
+		// make the Connector and the namedConnector
+		this.connector = new IConnector() {
+
+			@Override
+			public void sendMessage(ConnectorDataPacket<?> packet) throws RemoteException {
+				// The message received here should be in the connector/messages package
+				// We need a visitor to deal with these different types of message
+				// Regular visitor pattern should be enough since the set of message types is fixed
+				
+			}
+
+			@Override
+			public INamedConnector makeNamedConnector() throws RemoteException {
+				return new INamedConnector() {
+
+					/**
+					 * The serial version UID
+					 */
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public String getName() {
+						return userName;
+					}
+
+					@Override
+					public IConnector getStub() {
+						return connector;
+					}
+					
+				};
+			}};
+		
+		// Bind the connector to the discovery server
+		try {
+			registry = rmiUtils.getLocalRegistry();
+			viewLogger.log(LogLevel.INFO, "Local Registry = " + registry);
+		} catch (Exception e) {
+			viewLogger.log(LogLevel.ERROR, "Exception while intializing RMI: " + e);
+			e.printStackTrace();
+			quit(-1); // exit the program.
+		}
+
+		try {
+
+			// Create a UnicastRemoteObject stub from the RMI Server implementation to be sent to the clients.
+			this.connectorStub = (IConnector) UnicastRemoteObject.exportObject(this.connector,
+					chatAppConfig.getPort());
+			
+			
+			// Bind the remote object's stub in the registry at the specified
+			// port use rebind instead of bind so the program can be run
+			// multiple times with the same registry
+
+			registry.rebind(this.userName, this.connectorStub);
+			viewLogger.log(LogLevel.INFO, "Chat app sucessfully binded to the discovery server!");
+
+		} catch (Exception e) {
+			viewLogger.log(LogLevel.ERROR, "Server exception: " + e.toString());
+			e.printStackTrace();
+			quit(-1); // exit the program.
+		}
+		
 	}
-	
-//	public void 
-	// I moved this part to the controller based on hw7
-//	public void connectToDiscoveryServer(String category, Consumer<Iterable<IEndPointData>> endPointsUpdateFn) {
-////		try {
-////			discover
-////		}
-//	}
 	
 	
 }

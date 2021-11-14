@@ -2,7 +2,14 @@
  * 
  */
 package hpn2_yl176.mini_mvc.model;
+import java.util.HashSet;
+
+import common.receiver.INamedReceiver;
 import controller.BallWorldController;
+import hpn2_yl176.main_mvc.IMain2MiniAdptr;
+import provided.logger.LogLevel;
+import provided.pubsubsync.IPubSubSyncChannelUpdate;
+import provided.pubsubsync.IPubSubSyncUpdater;
 /**
  * @author James Li
  *
@@ -19,9 +26,10 @@ public class MiniModel {
 	}
 	
 	/**
-	 * start the model.
+	 * start the chat room - create a pubsubsync manager
 	 */
 	public void start() {
+		
 	}
 	
 	/**

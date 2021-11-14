@@ -100,11 +100,11 @@ public class MainController {
 			 * Terminate the program
 			 */
 			public void quit() {
-				
+				mainModel.quit();
 			};
 			
 			public void invite(INamedConnector namedConnector) {
-				
+				mainModel.invite(namedConnector);
 			}
 			
 			public void makeRoom(String roomName) {
