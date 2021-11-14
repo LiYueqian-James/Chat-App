@@ -27,4 +27,10 @@ public interface IMainModel2ViewAdpt {
 	 * @return an IMain2MiniAdptr to interact with it
 	 */
 	public IMain2MiniAdptr make();
+	
+	/**
+	 * Get the user name of the chat app instance from the view.
+	 * @return the chat app user name.
+	 */
+	public String getUserName();
 }
