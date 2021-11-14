@@ -5,6 +5,7 @@ package hpn2_yl176.main_mvc.controller;
 
 import java.util.function.Consumer;
 
+import javax.swing.JPanel;
 import javax.swing.text.View;
 
 import common.connector.IConnector;
@@ -14,13 +15,20 @@ import hpn2_yl176.main_mvc.model.MainModel;
 import hpn2_yl176.main_mvc.view.IMainViewToModelAdapter;
 import hpn2_yl176.main_mvc.view.MainView;
 import hpn2_yl176.mini_mvc.controller.MiniController;
+import jdk.internal.org.jline.reader.impl.history.DefaultHistory;
 import provided.discovery.IEndPointData;
-import provided.discovery.impl.model.DiscoveryModelWatchOnly;
+import provided.discovery.impl.model.DiscoveryModel;
 import provided.discovery.impl.view.DiscoveryPanel;
 import provided.discovery.impl.view.IDiscoveryPanelAdapter;
+import provided.discovery.impl.model.IDiscoveryModelToViewAdapter;
+import provided.logger.ILogger;
+import provided.logger.ILoggerControl;
 import provided.logger.impl.Logger;
-import provided.remoteCompute.compute.ICompute;
 
+/**
+ * @author James Li
+ *
+ */
 /**
  * @author hungnguyen
  *
@@ -33,14 +41,23 @@ public class MainController {
 	private DiscoveryPanel<IEndPointData> discPnl;
 
 	/**
-	 * A self-contained model to handle the discovery server.   MUST be started AFTER the main model as it needs the IRMIUtils from the main model! 
+	 * A self-contained model to handle the discovery server.   
+	 * MUST be started AFTER the main model as it needs the IRMIUtils from the main model! 
 	 */
-	private DiscoveryModelWatchOnly discModel;
+	private DiscoveryModel<IConnector> discModel;
 	
 	private MainView mainView;
 	
 	private MainModel mainModel;
 	
+	/**
+	 * The system logger to use. Change and/or customize this logger as desired.
+	 */
+	private ILogger sysLogger = ILoggerControl.getSharedLogger();
+	
+	/**
+	 * Instantiate the view, model, discovery server, and the mini mvc.
+	 */
 	public MainController() {
 		
 		discPnl = new DiscoveryPanel<IEndPointData>(new IDiscoveryPanelAdapter<IEndPointData>() {
@@ -57,21 +74,18 @@ public class MainController {
 			}
 
 		}, false, true);
+		
+		discModel = new DiscoveryModel<IConnector>(this.sysLogger, new IDiscoveryModelToViewAdapter<IConnector>() {
 
-		mainModel = new MainModel(new Logger(), new IMainModel2ViewAdpt() {
-			
 			@Override
-			public void makeMiniController() {
-				// TODO Auto-generated method stub
-				
+			public void addStub(IConnector stub) {
+				INamedConnector namedConnector = stub.makeNamedConnector();
+				mainModel.addContact(namedConnector);
 			}
 			
-			@Override
-			public void displayMsg(String msg) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+		}
+		);
+
 		
 		mainView = new MainView<INamedConnector>(new IMainViewToModelAdapter<INamedConnector>() {
 			/**
@@ -94,8 +108,14 @@ public class MainController {
 			}
 			
 			public void makeRoom(String roomName) {
-				MiniController miniController = new MiniController();
-				model.makeRoom();
+				mainModel.makeRoom(roomName);
+				
+			}
+
+			@Override
+			public String connectTo(String remoteIP) {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		});
 	}
