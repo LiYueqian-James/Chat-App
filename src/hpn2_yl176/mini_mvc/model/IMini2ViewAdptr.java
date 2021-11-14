@@ -7,7 +7,7 @@ package hpn2_yl176.mini_mvc.model;
  * @author James Li
  *
  */
-public interface IModel2ViewAdptr {
+public interface IMini2ViewAdptr {
 	
 	/**
 	 * @param msg the message to be displayed

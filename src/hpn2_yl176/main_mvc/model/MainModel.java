@@ -8,6 +8,7 @@ import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import common.connector.ConnectorDataPacket;
@@ -93,7 +94,7 @@ public class MainModel {
 	 * @param model2ViewAdpt interaction with the view.
 	 * @param adptr interacting with the mini mvc.
 	 */
-	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt, IMain2MiniAdptr adptr) {
+	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt) {
 		this.sysLogger = logger;
 		this.model2ViewAdpt = model2ViewAdpt;
 		rmiUtils = new RMIUtils(logger);
@@ -144,7 +145,9 @@ public class MainModel {
 	
 	public void quit(int exitCode) {
 		rmiUtils.stopRMI();
+		//TODO: send a IQuitMessage to the chat rooms
 		System.exit(exitCode);
+		
 	}
 	
 	public String connectTo(String remoteRegistryIPAddr, String boundName) {
@@ -188,18 +191,19 @@ public class MainModel {
 		
 		// add the current stub of the room to the data channel
 		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(miniController.getNamedReceiver().getStub()));
-		
+		this.model2ViewAdpt.addComponent(miniController.getRoomPanel());
 	}
 	
 	public void leaveRoom(String roomname) {
 		viewLogger.log(LogLevel.INFO, "Left room " + roomname);
-		
+		//TODO: remove the panel from the view
 	}
 	
-	public void joinRoom(UUID id, String roomname, IMini2MainAdptr mini2MainAdptr) {
-		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.subscribeToUpdateChannel(id, null, null);
-		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
-	}
+	// I think this one is more like a cmd to process the invite message
+//	public void joinRoom(UUID id, String roomname, IMini2MainAdptr mini2MainAdptr) {
+//		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.subscribeToUpdateChannel(id, null, null);
+//		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
+//	}
 	
 	/**
 	 * Start the RMI and create a pubsubManager.
