@@ -22,6 +22,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 import javax.swing.JTabbedPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * @author hungnguyen, James Li
@@ -63,11 +65,6 @@ public class MainView<TDropListItem> extends JFrame {
 	 * Holds the send message options
 	 */
 	private final JPanel usernamePanel = new JPanel();
-	
-	/**
-	 * Holds the send message options
-	 */
-	private final JPanel boundNamePanel = new JPanel();
 
 	/**
 	 * Holds the send message options
@@ -83,11 +80,6 @@ public class MainView<TDropListItem> extends JFrame {
 	 * Receives input message to be sent to the server
 	 */
 	private final JTextField usernameInput = new JTextField();
-	
-	/**
-	 * Receives input message to be sent to the server
-	 */
-	private final JTextField boundNameInput = new JTextField();
 	
 	/**
 	 * Receives server name
@@ -140,11 +132,6 @@ public class MainView<TDropListItem> extends JFrame {
 	private final JPanel connectByIPPanel = new JPanel();
 	
 	/**
-	 * Holds remote server connection utilities
-	 */
-	private final JTextField connectByIPInput = new JTextField();
-	
-	/**
 	 * connects client to the server
 	 */
 	private final JButton connectBtn = new JButton("Connect");
@@ -163,6 +150,10 @@ public class MainView<TDropListItem> extends JFrame {
 	private final JTabbedPane chatroomTabPane = new JTabbedPane(JTabbedPane.TOP);
 	private final JPanel panel = new JPanel();
 	private final JPanel panel_1 = new JPanel();
+	private final JPanel boundNamePanel = new JPanel();
+	private final JTextField textField = new JTextField();
+	private final JPanel panel_2 = new JPanel();
+	private final JTextField hostIP = new JTextField();
 	
 	/**
 	 * Constructs the view
@@ -181,9 +172,7 @@ public class MainView<TDropListItem> extends JFrame {
 		setTitle("Client GUI");
 		makeChatRoomInput.setColumns(10);
 		usernameInput.setColumns(10);
-		boundNameInput.setColumns(10);
 		servernameInput.setColumns(10);
-		connectByIPInput.setColumns(10);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1063, 453);
@@ -212,9 +201,6 @@ public class MainView<TDropListItem> extends JFrame {
 		usernamePanel.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"Username", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		boundNamePanel.setBorder(new TitledBorder(
-				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-				"Bound name", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 
 		servernamePanel.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
@@ -222,8 +208,6 @@ public class MainView<TDropListItem> extends JFrame {
 		
 		appStartupPanel.add(usernamePanel);
 		usernamePanel.add(usernameInput);
-		boundNamePanel.add(boundNameInput);
-		appStartupPanel.add(boundNamePanel);
 		
 		servernamePanel.add(servernameInput);
 		
@@ -239,6 +223,10 @@ public class MainView<TDropListItem> extends JFrame {
 		makeChatroomPnl.setBorder(
 				new TitledBorder(null, "Make Chat Room", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		makeChatroomPnl.add(makeChatRoomInput);
+		makeChatroomBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		makeChatroomPnl.add(makeChatroomBtn);
 		
 		remoteHostPanel.setLayout(new GridLayout(0, 1, 0, 0));
@@ -264,14 +252,22 @@ public class MainView<TDropListItem> extends JFrame {
 		makeChatroomPnl.setToolTipText("Makes a chatroom");
 		
 		menuPanel.add(makeChatroomPnl);
-		
-		/**
-		 * Makes the Connect panel
-		 */
-		connectByIPPanel.add(connectByIPInput);
 		connectByIPPanel.add(connectBtn);
-		connectByIPPanel.add(connectByIPInput);
 		remoteHostPanel.add(connectByIPPanel);
+		panel_2.setBorder(new TitledBorder(null, "Host", TitledBorder.LEFT, TitledBorder.TOP, null, null));
+		
+		connectByIPPanel.add(panel_2);
+		hostIP.setColumns(10);
+		
+		panel_2.add(hostIP);
+		boundNamePanel.setBorder(new TitledBorder(
+						new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+						"Bound name", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		
+		connectByIPPanel.add(boundNamePanel);
+		textField.setColumns(10);
+		
+		boundNamePanel.add(textField);
 		remoteHostPanel.add(connectedHostsPanel);
 		menuPanel.add(remoteHostPanel);
 		

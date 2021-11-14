@@ -5,29 +5,20 @@ package hpn2_yl176.main_mvc.model;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.function.Consumer;
 
 import common.connector.ConnectorDataPacket;
 import common.connector.IConnector;
 import common.connector.INamedConnector;
 import common.receiver.IReceiver;
-import common.receiver.ReceiverDataPacket;
-import hpn2_yl176.MiniFactory;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
-import hpn2_yl176.mini_mvc.IMini2MainAdptr;
-import hpn2_yl176.mini_mvc.controller.MiniController;
-import hpn2_yl176.mini_mvc.view.ChatRoomView;
-import provided.discovery.IEndPointData;
 import provided.logger.ILogEntry;
 import provided.logger.ILogEntryFormatter;
 import provided.logger.ILogEntryProcessor;
 import provided.logger.ILogger;
 import provided.logger.ILoggerControl;
 import provided.logger.LogLevel;
-import provided.logger.demo.model.IModel2ViewAdapter;
 import provided.pubsubsync.IPubSubSyncChannelUpdate;
 import provided.pubsubsync.IPubSubSyncConnection;
 import provided.pubsubsync.IPubSubSyncManager;
@@ -59,12 +50,6 @@ public class MainModel {
 	private IMainModel2ViewAdpt model2ViewAdpt;
 	
 	/**
-	 * Interaction with multiple mini mvc - the chat room.
-	 */
-	private IMain2MiniAdptr main2Miniadptr;
-	
-	
-	/**
 	 * Manage the data channels.
 	 */
 	private IPubSubSyncManager pubSubManager; 
@@ -84,7 +69,14 @@ public class MainModel {
 	/**
 	 * A dyad containing infos about the current chat app instance.
 	 */
-	private INamedConnector namedConnector;
+	private INamedConnector namedChatApp;
+	
+	/**
+	 * A list of chat app instance stubs/
+	 */
+	private List<INamedConnector> contacts;
+	
+	
 	
 	
 	/**
@@ -93,7 +85,7 @@ public class MainModel {
 	 * @param model2ViewAdpt interaction with the view.
 	 * @param adptr interacting with the mini mvc.
 	 */
-	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt, IMain2MiniAdptr adptr) {
+	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt) {
 		this.sysLogger = logger;
 		this.model2ViewAdpt = model2ViewAdpt;
 		rmiUtils = new RMIUtils(logger);
@@ -139,12 +131,14 @@ public class MainModel {
 	 * @return An adapter to that instance of the controller.
 	 */
 	public IMain2MiniAdptr makeMiniController() {
-		return this.main2Miniadptr.make();
+		return this.model2ViewAdpt.make();
 	}
 	
 	public void quit(int exitCode) {
 		rmiUtils.stopRMI();
+		//TODO: send a IQuitMessage to the chat rooms
 		System.exit(exitCode);
+		
 	}
 	
 	public String connectTo(String remoteRegistryIPAddr, String boundName) {
@@ -170,8 +164,12 @@ public class MainModel {
 		return "Connection to " + remoteRegistryIPAddr + " established!";
 	}
 	
-	public void addContact(String name) {
-		
+	/**
+	 * Add the 
+	 * @param contact
+	 */
+	public void addContact(INamedConnector contact) {
+		this.contacts.add(contact);
 	}
 	
 	/**
@@ -188,18 +186,19 @@ public class MainModel {
 		
 		// add the current stub of the room to the data channel
 		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(miniController.getNamedReceiver().getStub()));
-		
+		this.model2ViewAdpt.addComponent(miniController.getRoomPanel());
 	}
 	
 	public void leaveRoom(String roomname) {
 		viewLogger.log(LogLevel.INFO, "Left room " + roomname);
-		
+		//TODO: remove the panel from the view
 	}
 	
-	public void joinRoom(UUID id, String roomname, IMini2MainAdptr mini2MainAdptr) {
-		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.subscribeToUpdateChannel(id, null, null);
-		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
-	}
+	// I think this one is more like a cmd to process the invite message
+//	public void joinRoom(UUID id, String roomname, IMini2MainAdptr mini2MainAdptr) {
+//		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.subscribeToUpdateChannel(id, null, null);
+//		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
+//	}
 	
 	/**
 	 * Start the RMI and create a pubsubManager.
@@ -218,10 +217,12 @@ public class MainModel {
 	}
 	
 //	public void 
+	// I moved this part to the controller based on hw7
+//	public void connectToDiscoveryServer(String category, Consumer<Iterable<IEndPointData>> endPointsUpdateFn) {
+////		try {
+////			discover
+////		}
+//	}
 	
-	public void connectToDiscoveryServer(String category, Consumer<Iterable<IEndPointData>> endPointsUpdateFn) {
-//		try {
-//			discover
-//		}
-	}
+	
 }

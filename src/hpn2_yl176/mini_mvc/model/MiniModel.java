@@ -9,12 +9,12 @@ import controller.BallWorldController;
  */
 public class MiniModel {
 	
-	private IModel2ViewAdptr adptr;
+	private IMini2ViewAdptr adptr;
 	
 	/**
 	 * @param adptr the adapter
 	 */
-	public MiniModel(IModel2ViewAdptr adptr) {
+	public MiniModel(IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
 	}
 	
