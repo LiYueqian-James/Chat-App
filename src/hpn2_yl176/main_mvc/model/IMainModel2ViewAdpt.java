@@ -8,7 +8,7 @@ package hpn2_yl176.main_mvc.model;
  *
  */
 public interface IMainModel2ViewAdpt {
-	void makeMiniController();
+//	void makeMiniController();
 	
 	void displayMsg(String msg);
 }

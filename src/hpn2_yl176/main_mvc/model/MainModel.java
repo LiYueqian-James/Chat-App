@@ -3,15 +3,20 @@
  */
 package hpn2_yl176.main_mvc.model;
 
+import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.rmi.server.RemoteStub;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.function.Consumer;
 
+import common.connector.ConnectorDataPacket;
 import common.connector.IConnector;
+import common.connector.INamedConnector;
 import common.receiver.IReceiver;
+import common.receiver.ReceiverDataPacket;
 import hpn2_yl176.MiniFactory;
+import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.mini_mvc.IMini2MainAdptr;
 import hpn2_yl176.mini_mvc.controller.MiniController;
 import hpn2_yl176.mini_mvc.view.ChatRoomView;
@@ -41,14 +46,28 @@ public class MainModel {
 	 * The IRMIUtils in use
 	 */
 	
-	pu
 	private IRMIUtils rmiUtils;
 	
-	private ILogger sysLogger;
+	/**
+	 * The system logger to use.
+	 */
+	private ILogger sysLogger = ILoggerControl.makeLogger(LogLevel.DEBUG);
 	
-	public IMainModel2ViewAdpt model2ViewAdpt;
+	/**
+	 * Interaction with the main view
+	 */
+	private IMainModel2ViewAdpt model2ViewAdpt;
 	
-	public IPubSubSyncManager pubSubManager; 
+	/**
+	 * Interaction with multiple mini mvc - the chat room.
+	 */
+	private IMain2MiniAdptr main2Miniadptr;
+	
+	
+	/**
+	 * Manage the data channels.
+	 */
+	private IPubSubSyncManager pubSubManager; 
 	
 	public IConnector otherStub;
 	
@@ -57,13 +76,28 @@ public class MainModel {
 	 */
 	private ILogger viewLogger;
 	
+	/**
+	 * The connector representing the current chat app instance.
+	 */
+	private IConnector connector;
 	
-	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt) {
-		pubSubManager = IPubSubSyncConnection.getPubSubSyncManager(logger, rmiUtils, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+	/**
+	 * A dyad containing infos about the current chat app instance.
+	 */
+	private INamedConnector namedConnector;
+	
+	
+	/**
+	 * Constructor for the model.
+	 * @param logger the logger being used by the pubsubSync manager.
+	 * @param model2ViewAdpt interaction with the view.
+	 * @param adptr interacting with the mini mvc.
+	 */
+	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt, IMain2MiniAdptr adptr) {
 		this.sysLogger = logger;
 		this.model2ViewAdpt = model2ViewAdpt;
 		rmiUtils = new RMIUtils(logger);
-
+		
 		viewLogger = ILoggerControl.makeLogger(new ILogEntryProcessor() {
 			ILogEntryFormatter formatter = ILogEntryFormatter.MakeFormatter("[%1s] %2s");
 
@@ -73,11 +107,39 @@ public class MainModel {
 			}
 
 		}, LogLevel.INFO);
+		
+		// Chain the system logger to the end of the view logger so that 
+		// anything logged to the view also goes to the system log 
+		// (default = to console).
 		viewLogger.append(sysLogger);
+		
+		// make the connector and named connector
+		this.connector = new IConnector() {
+
+			@Override
+			public void sendMessage(ConnectorDataPacket<?> packet) throws RemoteException {
+				// The message received here should be in the connector/messages package
+				// We need a visitor to deal with these different types of message
+				// Regular visitor pattern should be enough since the set of message types is fixed
+				
+			}
+
+			@Override
+			public INamedConnector makeNamedConnector() throws RemoteException {
+				// TODO Auto-generated method stub
+				return null;
+			}};
+		
+		// 
+		
 	}
 	
-	public MiniController makeController() {
-		return MiniFactory.Singleton.make();
+	/**
+	 * Make a mini-contoller
+	 * @return An adapter to that instance of the controller.
+	 */
+	public IMain2MiniAdptr makeMiniController() {
+		return this.main2Miniadptr.make();
 	}
 	
 	public void quit(int exitCode) {
@@ -112,12 +174,20 @@ public class MainModel {
 		
 	}
 	
-	public void makeRoom(String roomName, IMini2MainAdptr mini2MainAdptr) {
+	/**
+	 * Make a chat room!
+	 * @param roomName the name of the room.
+	 */
+	public void makeRoom(String roomName) {
 		HashSet<IReceiver> roster = new HashSet<>();
 		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.createChannel(roomName, roster, null, 
 				(statusMessage) -> {
-					sendStatusMsg()
+					sysLogger.log(LogLevel.DEBUG, "room " + roomName +" has been made sucessfully.");
 				});
+		IMain2MiniAdptr miniController = this.makeMiniController();
+		
+		// add the current stub of the room to the data channel
+		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(miniController.getNamedReceiver().getStub()));
 		
 	}
 	
@@ -131,15 +201,27 @@ public class MainModel {
 		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
 	}
 	
+	/**
+	 * Start the RMI and create a pubsubManager.
+	 */
 	public void start() {
-		rmiUtils.startRMI(IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+		// must start the rmi-utils first
+		this.rmiUtils.startRMI(IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+		// must be here rather than the constructor to ensure the RMI has already started
+		try {
+			pubSubManager = IPubSubSyncConnection.getPubSubSyncManager(this.sysLogger, this.rmiUtils, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+		} catch (RemoteException e) {
+			this.sysLogger.log(LogLevel.DEBUG, "Failed to create a pubsubSync Manager.");
+			e.printStackTrace();
+		}
+		
 	}
 	
-	public void 
+//	public void 
 	
 	public void connectToDiscoveryServer(String category, Consumer<Iterable<IEndPointData>> endPointsUpdateFn) {
-		try {
-			discover
-		}
+//		try {
+//			discover
+//		}
 	}
 }
