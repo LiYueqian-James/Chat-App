@@ -7,12 +7,15 @@ import java.rmi.registry.Registry;
 import java.rmi.server.RemoteStub;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.Consumer;
 
 import common.connector.IConnector;
 import common.receiver.IReceiver;
 import hpn2_yl176.MiniFactory;
 import hpn2_yl176.mini_mvc.IMini2MainAdptr;
 import hpn2_yl176.mini_mvc.controller.MiniController;
+import hpn2_yl176.mini_mvc.view.ChatRoomView;
+import provided.discovery.IEndPointData;
 import provided.logger.ILogEntry;
 import provided.logger.ILogEntryFormatter;
 import provided.logger.ILogEntryProcessor;
@@ -21,8 +24,11 @@ import provided.logger.ILoggerControl;
 import provided.logger.LogLevel;
 import provided.logger.demo.model.IModel2ViewAdapter;
 import provided.pubsubsync.IPubSubSyncChannelUpdate;
+import provided.pubsubsync.IPubSubSyncConnection;
 import provided.pubsubsync.IPubSubSyncManager;
+import provided.pubsubsync.IPubSubSyncUpdater;
 import provided.rmiUtils.IRMIUtils;
+import provided.rmiUtils.IRMI_Defs;
 import provided.rmiUtils.RMIUtils;
 
 /**
@@ -34,13 +40,17 @@ public class MainModel {
 	/**
 	 * The IRMIUtils in use
 	 */
+	
+	pu
 	private IRMIUtils rmiUtils;
 	
 	private ILogger sysLogger;
 	
 	public IMainModel2ViewAdpt model2ViewAdpt;
 	
-	public IPubSubSyncManager manager; 
+	public IPubSubSyncManager pubSubManager; 
+	
+	public IConnector otherStub;
 	
 	/**
 	 * A logger that logs to the view and the system logger
@@ -49,6 +59,7 @@ public class MainModel {
 	
 	
 	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt) {
+		pubSubManager = IPubSubSyncConnection.getPubSubSyncManager(logger, rmiUtils, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
 		this.sysLogger = logger;
 		this.model2ViewAdpt = model2ViewAdpt;
 		rmiUtils = new RMIUtils(logger);
@@ -103,11 +114,11 @@ public class MainModel {
 	
 	public void makeRoom(String roomName, IMini2MainAdptr mini2MainAdptr) {
 		HashSet<IReceiver> roster = new HashSet<>();
-		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = manager.createChannel(roomName, roster, null, 
+		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.createChannel(roomName, roster, null, 
 				(statusMessage) -> {
-					sendStatusMsg(other)
+					sendStatusMsg()
 				});
-	
+		
 	}
 	
 	public void leaveRoom(String roomname) {
@@ -115,7 +126,20 @@ public class MainModel {
 		
 	}
 	
-	public void joinRoom(String roomname) {
-		
+	public void joinRoom(UUID id, String roomname, IMini2MainAdptr mini2MainAdptr) {
+		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.subscribeToUpdateChannel(id, null, null);
+		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
+	}
+	
+	public void start() {
+		rmiUtils.startRMI(IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+	}
+	
+	public void 
+	
+	public void connectToDiscoveryServer(String category, Consumer<Iterable<IEndPointData>> endPointsUpdateFn) {
+		try {
+			discover
+		}
 	}
 }
