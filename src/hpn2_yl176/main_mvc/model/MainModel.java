@@ -185,12 +185,11 @@ public class MainModel {
 	 * Set the visitor to process connection level messages.
 	 */
 	private void setConnectorMsgVisitor() {
-		receiverVisitor = new ConnectorDataPacketAlgo(new DefaultConnectMsgCmd());
+		receiverVisitor = new ConnectorDataPacketAlgo(new DefaultConnectorMsgCmd());
 		
 		receiverVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this.pubSubManager, this.main2miniAdptr.getNamedReceiver()));
 		
-		receiverVisitor.setCmd(ISyncPeersMsg.GetID(), new AConnectorDataPacketAlgoCmd<ISyncPeersMsg>() 
-		});
+		receiverVisitor.setCmd(ISyncPeersMsg.GetID(), new );
 		
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IQuitMsg.class), new AConnectorDataPacketAlgoCmd<IQuitMsg>() {
 
@@ -202,6 +201,8 @@ public class MainModel {
 			@Override
 			public Void apply(IDataPacketID index, ConnectorDataPacket<IQuitMsg> host, Void... params) {
 				// TODO Auto-generated method stub
+				contacts.remove(host.getSender());
+				model2ViewAdpt.removeStub(host.getSender());
 				return null;
 			}
 			
