@@ -17,7 +17,7 @@ import provided.pubsubsync.IPubSubSyncManager;
 public interface IMainModel2ViewAdpt {
 //	void makeMiniController();
 	
-	public void displayMsg(String msg);
+	public void displayStatusMsg(String msg);
 	
 	/**
 	 * Add a tab to the main view

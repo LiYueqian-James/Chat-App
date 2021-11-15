@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Component;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -35,6 +36,8 @@ public class MainView<TDropListItem> extends JFrame {
 	 * Holds the main content of the application
 	 */
 	private JPanel contentPane;
+	
+//	private 
 
 	/**
 	 * Displays client response to server connections
@@ -164,7 +167,14 @@ public class MainView<TDropListItem> extends JFrame {
 		setPreferredSize(new Dimension(1000, 700));
 		initGUI();
 	}
-
+	
+	/**
+	 * @return the current component representing the chat room.
+	 */
+	public Component getCurrentChatRoom() {
+		return chatroomTabPane.getSelectedComponent();
+		
+	}
 	/**
 	 * Initializes the GUI
 	 */

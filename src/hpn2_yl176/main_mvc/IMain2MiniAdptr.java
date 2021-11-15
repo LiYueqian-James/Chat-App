@@ -3,9 +3,12 @@
  */
 package hpn2_yl176.main_mvc;
 
+import java.util.UUID;
+
 import javax.swing.JPanel;
 
 import common.receiver.INamedReceiver;
+import common.receiver.ReceiverDataPacketAlgo;
 
 /**
  * @author James Li
@@ -40,5 +43,22 @@ public interface IMain2MiniAdptr {
 	 * Quit the chat room.
 	 */
 	public void quit();
+	
+	/**
+	 * @return the visitor to execute a receiver message.
+	 */
+	public ReceiverDataPacketAlgo getReceiverMsgAlgo();
+	
+	/**
+	 * @return the chatRoomID.
+	 */
+	public UUID getChatRoomID();
+	
+	
+	public String getRoomName();
+
+//	public IMain2MiniAdptr makeNewRoom();
+//	
+//	public IMain2MiniAdptr joinRoom();
 	
 }
