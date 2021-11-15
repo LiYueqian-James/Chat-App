@@ -24,9 +24,10 @@ public interface IMainModel2ViewAdpt {
 	
 	/**
 	 * Make a mini controller
+	 * @param roomName the name of the chatRoom.
 	 * @return an IMain2MiniAdptr to interact with it
 	 */
-	public IMain2MiniAdptr make();
+	public IMain2MiniAdptr make(String roomName);
 	
 	/**
 	 * Get the user name of the chat app instance from the view.

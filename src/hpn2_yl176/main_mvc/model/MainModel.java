@@ -8,6 +8,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import common.connector.ConnectorDataPacket;
 import common.connector.ConnectorDataPacketAlgo;
@@ -19,6 +20,9 @@ import common.connector.messages.ISyncPeersMsg;
 import common.receiver.INamedReceiver;
 import common.receiver.IReceiver;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
+import hpn2_yl176.msg.connectorMsgCmd.DefaultConnectMsgCmd;
+import hpn2_yl176.msg.connectorMsgCmd.InviteMsgCmd;
+import provided.datapacket.DataPacketIDFactory;
 import provided.datapacket.IDataPacketID;
 import provided.logger.ILogEntry;
 import provided.logger.ILogEntryFormatter;
@@ -55,6 +59,11 @@ public class MainModel {
 	 * Interaction with the main view
 	 */
 	private IMainModel2ViewAdpt model2ViewAdpt;
+	
+	/**
+	 * Interaction with the mini controller
+	 */
+	private IMain2MiniAdptr main2miniAdptr;
 	
 	/**
 	 * Manage the data channels.
@@ -98,55 +107,6 @@ public class MainModel {
 	
 	private ConnectorDataPacketAlgo receiverVisitor;
 	
-	public void joinRoom(UUID id, String roomname) {
-		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.subscribeToUpdateChannel(id, null, null);
-//		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
-	}
-	
-	public String connectToStub(INamedConnector connectedStub) {
-		connectedStub.sendMessage(new ConnectorDataPacket<ISyncPeersMsg>(new SyncPeersMsg(this.contacts)), namedRemoteStub);
-	}
-	
-	private void setVisitor() {
-		receiverVisitor = new ConnectorDataPacketAlgo(new AConnectorDataPacketAlgoCmd<IConnectorMsg>() {
-		});
-		
-		
-		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IInviteMsg.class), new AConnectorDataPacketAlgoCmd<IInviteMsg>() {
-
-			@Override
-			public Void apply(IDataPacketID index, ConnectorDataPacket<IInviteMsg> host, Void... params) {
-				// TODO Auto-generated method stub
-				MainModel.this.joinRoom(host.getData().getUUID(), host.getData().getFriendlyName());
-			}
-		});
-		
-		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ISyncPeersMsg.class), new AConnectorDataPacketAlgoCmd<ISyncPeersMsg>() {
-
-			@Override
-			public Void apply(IDataPacketID index, ConnectorDataPacket<ISyncPeersMsg> host, Void... params) {
-				// TODO Auto-generated method stub
-				for (INamedConnector newPeer: host.getData().getNewPeers()) {
-					sendMessage(newPeer, new ConnectorDataPacket<IAddPeersMsg>(new AddPeersMsg
-				}
-				
-				for (INamedConnector myConnectedStub: MainModel.this.contacts) {
-					sendMessage(myConnectedStub, new ConnectorDataPacket<IAddPeersMsg>(null, myConnectedStub))
-				}
-			}
-
-			@Override
-			public Void apply(IDataPacketID index, ConnectorDataPacket<ISyncPeersMsg> host, Void... params) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-		});
-		
-		receiverVisitor.setCmd(null, null);
-		
-		receiverVisitor.setCmd(null, null);
-	};
 	
 	/**
 	 * Constructor for the model.
@@ -154,7 +114,7 @@ public class MainModel {
 	 * @param model2ViewAdpt interaction with the view.
 	 * @param adptr interacting with the mini mvc.
 	 */
-	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt) {
+	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt, IMain2MiniAdptr main2miniadptr) {
 		this.sysLogger = logger;
 		this.model2ViewAdpt = model2ViewAdpt;
 		rmiUtils = new RMIUtils(logger);
@@ -175,23 +135,93 @@ public class MainModel {
 		viewLogger.append(sysLogger);		
 	}
 	
+	
 	/**
-	 * Make a mini-contoller
-	 * @return An adapter to that instance of the controller.
+	 * Join a chat room, used by the visitor.
+	 * @param id the id of the chatRoom.
+	 * @param roomname the name of the chat room.
 	 */
-	public IMain2MiniAdptr makeMiniController() {
-		return this.model2ViewAdpt.make();
+	private void joinRoom(UUID id, String roomname) {
+		IPubSubSyncChannelUpdate<HashSet<IReceiver>> chatRoom = pubSubManager.subscribeToUpdateChannel(id, null, null);
+		chatRoom.update(IPubSubSyncUpdater.makeRemoteSetAddFn(localStub));
 	}
+	
+	public String connectToStub(INamedConnector connectedStub) {
+		connectedStub.sendMessage(new ConnectorDataPacket<ISyncPeersMsg>(new ISyncPeersMsg() {
+			
+			@Override
+			public Set<INamedConnector> getNewPeers() {
+				// TODO Auto-generated method stub
+				return contacts;
+		}}, namedConnector));
+	}
+	
+	/**
+	 * Set the visitor to process connection level messages.
+	 */
+	private void setConnectorMsgVisitor() {
+		receiverVisitor = new ConnectorDataPacketAlgo(new DefaultConnectMsgCmd());
+		
+		receiverVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this.pubSubManager, this.main2miniAdptr.makeNamedReceiver()));
+		
+		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ISyncPeersMsg.class), new AConnectorDataPacketAlgoCmd<ISyncPeersMsg>() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Void apply(IDataPacketID index, ConnectorDataPacket<ISyncPeersMsg> host, Void... params) {
+				// TODO Auto-generated method stub
+				for (INamedConnector newPeer: host.getData().getNewPeers()) {
+					newPeer.sendMessage(new ConnectorDataPacket<IAddPeersMsg>(new IAddPeersMsg() {
+
+						/**
+						 * 
+						 */
+						private static final long serialVersionUID = 1L;
+
+						@Override
+						public Set<INamedConnector> getNewPeers() {
+							// TODO Auto-generated method stub
+							return contacts;
+						}
+					}, namedConnector));
+				}
+				
+				for (INamedConnector myConnectedStub: MainModel.this.contacts) {
+					myConnectedStub.sendMessage(new ConnectorDataPacket<IAddPeersMsg>(null, myConnectedStub));
+				}
+			}
+		});
+		
+		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IQuitMsg.class), new AConnectorDataPacketAlgoCmd<IQuitMsg>() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Void apply(IDataPacketID index, ConnectorDataPacket<IQuitMsg> host, Void... params) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		});
+		
+		receiverVisitor.setCmd(null, null);
+	};
+	
+
+
 	
 	public void quit(int exitCode) {
 		rmiUtils.stopRMI();
 		//TODO: send a IQuitMessage to the chat rooms
 		System.exit(exitCode);
 		
-	}
-
-	public String connectToStub(INamedConnector connectedStub) {
-		connectedStub.sendMessage(new ConnectorDataPacket<ISyncPeersMsg>(new SyncPeersMsg(this.contacts)), namedRemoteStub);
 	}
 
 	
@@ -232,14 +262,8 @@ public class MainModel {
 	 * @param roomName the name of the room.
 	 */
 	public void makeRoom(String roomName) {
-		HashSet<INamedReceiver> roster = new HashSet<>();
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubManager.createChannel(roomName, roster, null, 
-				(statusMessage) -> {
-					sysLogger.log(LogLevel.DEBUG, "room " + roomName +" has been made sucessfully.");
-				});
-		IMain2MiniAdptr miniController = this.model2ViewAdpt.make();
-		// add the current stub of the room to the data channel
-		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(miniController.getNamedReceiver()));
+		IMain2MiniAdptr miniController = this.model2ViewAdpt.make(roomName);
+		miniController.start();
 		this.model2ViewAdpt.addComponent(miniController.getRoomPanel());
 	}
 	
@@ -275,7 +299,7 @@ public class MainModel {
 				// The message received here should be in the connector/messages package
 				// We need a visitor to deal with these different types of message
 				// Regular visitor pattern should be enough since the set of message types is fixed
-				
+				packet.execute(receiverVisitor, null)
 			}
 
 			@Override

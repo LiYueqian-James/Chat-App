@@ -28,13 +28,13 @@ public class ChatRoomView extends JPanel{
 	/**
 	 * The adapter for the model.
 	 */
-	private IView2ModelAdptr adptr;
+	private IView2MiniAdptr adptr;
 	
 	/**
 	 * Constructor for the view
 	 * @param adptr the adapter.
 	 */
-	public ChatRoomView(IView2ModelAdptr adptr) {
+	public ChatRoomView(IView2MiniAdptr adptr) {
 		textField.setToolTipText("The string message to be sent");
 		textField.setColumns(30);
 		initGUI();
