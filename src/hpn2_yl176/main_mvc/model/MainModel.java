@@ -129,7 +129,7 @@ public class MainModel {
 
 			@Override
 			public void accept(ILogEntry logEntry) {
-				MainModel.this.model2ViewAdpt.displayMsg(formatter.apply(logEntry));
+				MainModel.this.model2ViewAdpt.displayStatusMsg(formatter.apply(logEntry));
 			}
 
 		}, LogLevel.INFO);
@@ -187,7 +187,7 @@ public class MainModel {
 	private void setConnectorMsgVisitor() {
 		receiverVisitor = new ConnectorDataPacketAlgo(new DefaultConnectMsgCmd());
 		
-		receiverVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this.pubSubManager, this.main2miniAdptr.makeNamedReceiver()));
+		receiverVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this.pubSubManager, this.main2miniAdptr.getNamedReceiver()));
 		
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ISyncPeersMsg.class), new AConnectorDataPacketAlgoCmd<ISyncPeersMsg>() {
 

@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JTabbedPane;
 import java.awt.event.ActionListener;
+import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 
@@ -29,6 +30,61 @@ public class ChatRoomView extends JPanel{
 	 * The adapter for the model.
 	 */
 	private IView2MiniAdptr adptr;
+
+	/**
+	 * Serialized version UID.
+	 */
+	private static final long serialVersionUID = 1707042914688785298L;
+	/**
+	 * The message panel.
+	 */
+	private final JPanel Msg = new JPanel();
+	/**
+	 * The control panel.
+	 */
+	private final JSplitPane control = new JSplitPane();
+	/**
+	 * Panel that split users from msg and status.
+	 */
+	private final JSplitPane splitPane = new JSplitPane();
+	/**
+	 * Text field to put message to be sent.
+	 */
+	private final JTextField textField = new JTextField();
+	/**
+	 * Send message button.
+	 */
+	private final JButton sendMsg = new JButton("Send Msg");
+	/**
+	 * Send BallWolrd button.
+	 */
+	private final JButton sendBallWorld = new JButton("send Ball World");
+	/**
+	 * List of users panel.
+	 */
+	private final JPanel users = new JPanel();
+	/**
+	 * Button to exit the room.
+	 */
+	private final JButton exit = new JButton("Exit Room");
+	/**
+	 * List of users
+	 */
+	private final JScrollPane usersPanel = new JScrollPane();
+	/**
+	 * A tab for each task
+	 */
+	private final JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
+	/**
+	 * textArea for status.
+	 */
+	private final JTextArea statusArea = new JTextArea();
+	/**
+	 * textArea for msg.
+	 */
+	private final JTextArea msgArea = new JTextArea();
+
+	private Set<String> roomRoster;
 	
 	/**
 	 * Constructor for the view
@@ -37,6 +93,7 @@ public class ChatRoomView extends JPanel{
 	public ChatRoomView(IView2MiniAdptr adptr) {
 		textField.setToolTipText("The string message to be sent");
 		textField.setColumns(30);
+		roomRoster = adptr.getRoomRoster();
 		initGUI();
 	}
 	
@@ -103,60 +160,7 @@ public class ChatRoomView extends JPanel{
 		
 		users.add(usersPanel, BorderLayout.CENTER);
 	}
-
-	/**
-	 * Serialized version UID.
-	 */
-	private static final long serialVersionUID = 1707042914688785298L;
-	/**
-	 * The message panel.
-	 */
-	private final JPanel Msg = new JPanel();
-	/**
-	 * The control panel.
-	 */
-	private final JSplitPane control = new JSplitPane();
-	/**
-	 * Panel that split users from msg and status.
-	 */
-	private final JSplitPane splitPane = new JSplitPane();
-	/**
-	 * Text field to put message to be sent.
-	 */
-	private final JTextField textField = new JTextField();
-	/**
-	 * Send message button.
-	 */
-	private final JButton sendMsg = new JButton("Send Msg");
-	/**
-	 * Send BallWolrd button.
-	 */
-	private final JButton sendBallWorld = new JButton("send Ball World");
-	/**
-	 * List of users panel.
-	 */
-	private final JPanel users = new JPanel();
-	/**
-	 * Button to exit the room.
-	 */
-	private final JButton exit = new JButton("Exit Room");
-	/**
-	 * List of users
-	 */
-	private final JScrollPane usersPanel = new JScrollPane();
-	/**
-	 * A tab for each task
-	 */
-	private final JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
-	/**
-	 * textArea for status.
-	 */
-	private final JTextArea statusArea = new JTextArea();
-	/**
-	 * textArea for msg.
-	 */
-	private final JTextArea msgArea = new JTextArea();
-
+	
 	/**
 	 * Start the view.
 	 */
@@ -180,4 +184,8 @@ public class ChatRoomView extends JPanel{
 	public void appendStatus(String status) {
 		statusArea.append(status);
 	}
+	
+	public void setRoomRoster(Set<String> roomRoster) {
+		this.roomRoster = roomRoster;
+	} 
 }

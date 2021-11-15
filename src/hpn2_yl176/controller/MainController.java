@@ -5,6 +5,7 @@ package hpn2_yl176.controller;
 
 import java.rmi.RemoteException;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -172,8 +173,14 @@ public class MainController {
 
 			@Override
 			public IMain2MiniAdptr makeNewRoom(String roomName, IPubSubSyncManager pubSubSyncManager) {
+				
 				// empty room roster - nobody is in the room yet
 				HashSet<INamedReceiver> roster = new HashSet<>();
+				
+				/*
+				 * The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
+				 * the data channel changes.
+				 */
 				IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(roomName, roster, 
 						(pubSubSyncData) -> {
 							roster.addAll(pubSubSyncData.getData());
@@ -205,9 +212,18 @@ public class MainController {
 						// TODO Auto-generated method stub
 						return null;
 					}
+
+					@Override
+					public Set<INamedReceiver> getRoomRoster() {
+						return roster;
+					}
 					
 				}, chatRoomID);
 				
+				
+				/*
+				 * Instantiate the adapter, get information needed from the mini-controller above!
+				 */
 				IMain2MiniAdptr chatRoomAdptr = new IMain2MiniAdptr() {
 
 					@Override

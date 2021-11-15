@@ -95,8 +95,7 @@ public class MiniController {
 
 			@Override
 			public Set<INamedReceiver> getRoomRoster() {
-				// TODO Auto-generated method stub
-				return null;
+				return mini2MainAdptr.getRoomRoster();
 			}
 			
 		});
@@ -118,6 +117,16 @@ public class MiniController {
 			public void sendBallWorld() {
 				// TODO Auto-generated method stub
 				
+			}
+
+			@Override
+			public Set<String> getRoomRoster() {
+				Set<INamedReceiver> roster = model.getRoomRoster();
+				Set<String> stringRoster = new HashSet<>();
+				for (INamedReceiver person: roster) {
+					stringRoster.add(person.toString());
+					}
+			return stringRoster;	
 			}
 			
 		});
