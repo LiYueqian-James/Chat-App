@@ -5,6 +5,7 @@ package hpn2_yl176.mini_mvc.model;
 import java.util.HashSet;
 
 import common.receiver.INamedReceiver;
+import common.receiver.ReceiverDataPacketAlgo;
 import controller.BallWorldController;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import provided.logger.LogLevel;
@@ -18,11 +19,20 @@ public class MiniModel {
 	
 	private IMini2ViewAdptr adptr;
 	
+	private ReceiverDataPacketAlgo receiverVisitor;
+	
 	/**
 	 * @param adptr the adapter
 	 */
 	public MiniModel(IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
+	}
+	
+	/**
+	 * @return
+	 */
+	public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
+		return this.receiverVisitor;
 	}
 	
 	/**

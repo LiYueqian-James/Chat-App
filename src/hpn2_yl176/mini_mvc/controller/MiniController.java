@@ -1,10 +1,12 @@
-package hpn2_yl176.controller;
+package hpn2_yl176.mini_mvc.controller;
 import hpn2_yl176.mini_mvc.view.ChatRoomView;
 import hpn2_yl176.mini_mvc.model.IMini2ViewAdptr;
 import hpn2_yl176.mini_mvc.view.IView2MiniAdptr;
 import hpn2_yl176.mini_mvc.model.MiniModel;
 
 import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import common.receiver.INamedReceiver;
 import common.receiver.ReceiverDataPacketAlgo;
@@ -25,11 +27,15 @@ public class MiniController {
 	 */
 	private ChatRoomView view;
 	
-	
 	/**
 	 * The model behind a chat room.
 	 */
 	private MiniModel model;
+	
+	/**
+	 * Mini-controller 2 Main model adapter.
+	 */
+	private IMini2MainAdptr mini2MainAdptr;
 	
 	/**
 	 * The manager to create data channels, i.e. chat rooms.
@@ -54,19 +60,24 @@ public class MiniController {
 	private ReceiverDataPacketAlgo visitor;
 	
 	/**
-	 * Construct a miniController.
-	 * @param pubSubSyncManager the pubsubsync manager.
-	 * @param roomName the name of the chat room.
-	 * @param sysLogger the logger to display status.
+	 * The chat room ID.
 	 */
-	public MiniController(IPubSubSyncManager pubSubSyncManager, String roomName, ILogger sysLogger) {
+	private UUID chatRoomID;
+	
+	/**
+	 * Construct a miniController, representing a instance of the chat room!
+	 * @param mini2MainAdptr the adapter towards the main model
+	 * @param chatRoomID the chatRoomID.
+	 */
+	public MiniController(IMini2MainAdptr mini2MainAdptr, UUID chatRoomID) {
 		
-		//TODO: maybe this should be done via some adapter.
-		this.pubSubSyncManager = pubSubSyncManager;
+		this.mini2MainAdptr = mini2MainAdptr;
 		
-		this.roomName = roomName;
+		this.pubSubSyncManager = this.mini2MainAdptr.getPubSubSyncManager();
 		
-		this.sysLogger = sysLogger;
+		this.sysLogger = this.mini2MainAdptr.getLogger();
+		
+		this.chatRoomID = chatRoomID;
 		
 		model = new MiniModel(new IMini2ViewAdptr() {
 
@@ -83,8 +94,9 @@ public class MiniController {
 			}
 
 			@Override
-			public IPubSubSyncManager getPubSubSyncManager() {
-				return pubSubSyncManager;
+			public Set<INamedReceiver> getRoomRoster() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 			
 		});
@@ -118,17 +130,13 @@ public class MiniController {
 	public void start() {
 		view.start();
 		model.start();
-		
-		// empty room roster - nobody is in the room yet
-		HashSet<INamedReceiver> roster = new HashSet<>();
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(roomName, roster, 
-				null,
-				(statusMessage) -> {
-					sysLogger.log(LogLevel.DEBUG, "room " + roomName +" has been made sucessfully.");
-				});
-		
-//		 add the host of the room to the data channel.
-		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(host));
+	}
+	
+	/**
+	 * @return the chat room id.
+	 */
+	public UUID getRoomID() {
+		return this.getRoomID();
 	}
 	
 	

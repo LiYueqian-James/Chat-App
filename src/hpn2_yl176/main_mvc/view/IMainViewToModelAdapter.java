@@ -24,6 +24,4 @@ public interface IMainViewToModelAdapter<ConnectedHostname> {
 	void quit();
 	
 	void invite(INamedConnector namedConnector);
-	
-	void makeRoom(String roomName);
 }

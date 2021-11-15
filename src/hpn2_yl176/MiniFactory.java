@@ -2,8 +2,8 @@
  * 
  */
 package hpn2_yl176;
-import hpn2_yl176.controller.MiniController;
-import hpn2_yl176.mini_mvc.IMini2MainAdptr;
+import hpn2_yl176.mini_mvc.controller.IMini2MainAdptr;
+import hpn2_yl176.mini_mvc.controller.MiniController;
 /**
  * @author James Li
  *

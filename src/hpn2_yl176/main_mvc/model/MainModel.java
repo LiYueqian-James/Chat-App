@@ -3,11 +3,14 @@
  */
 package hpn2_yl176.main_mvc.model;
 
+import java.awt.Component;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import common.connector.ConnectorDataPacket;
@@ -107,6 +110,8 @@ public class MainModel {
 	
 	private ConnectorDataPacketAlgo receiverVisitor;
 	
+	private Map<Component, IMain2MiniAdptr> panel2chatRoom;
+	
 	
 	/**
 	 * Constructor for the model.
@@ -114,7 +119,7 @@ public class MainModel {
 	 * @param model2ViewAdpt interaction with the view.
 	 * @param adptr interacting with the mini mvc.
 	 */
-	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt, IMain2MiniAdptr main2miniadptr) {
+	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt) {
 		this.sysLogger = logger;
 		this.model2ViewAdpt = model2ViewAdpt;
 		rmiUtils = new RMIUtils(logger);
@@ -135,7 +140,27 @@ public class MainModel {
 		viewLogger.append(sysLogger);		
 	}
 	
+	/**
+	 * @return the user name.
+	 */
+	public String getUserName() {
+		return this.userName;
+	}
 	
+	public INamedConnector getNamedConnector() {
+		try {
+			return this.connector.makeNamedConnector();
+		} catch (RemoteException e) {
+			sysLogger.log(LogLevel.DEBUG, "Unable to make named connector!");
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
+	public Map<Component, IMain2MiniAdptr> getPanel2RoomMap(){
+		return this.panel2chatRoom;
+	}
 	/**
 	 * Join a chat room, used by the visitor.
 	 * @param id the id of the chatRoom.
@@ -214,8 +239,6 @@ public class MainModel {
 		receiverVisitor.setCmd(null, null);
 	};
 	
-
-
 	
 	public void quit(int exitCode) {
 		rmiUtils.stopRMI();
@@ -238,6 +261,7 @@ public class MainModel {
 			Registry registry = rmiUtils.getRemoteRegistry(remoteRegistryIPAddr);
 			sysLogger.log(LogLevel.INFO, "Found registry: " + registry);
 			IConnector remoteStub = (IConnector) registry.lookup(boundName);
+			//TODO: wrap around the stub in an INamedConnector and add to the list of contacts.
 			sysLogger.log(LogLevel.INFO, "Found remote stub: ");
 
 		} catch (Exception e) {
@@ -257,15 +281,15 @@ public class MainModel {
 		this.contacts.add(contact);
 	}
 	
-	/**
-	 * Make a chat room!
-	 * @param roomName the name of the room.
-	 */
-	public void makeRoom(String roomName) {
-		IMain2MiniAdptr miniController = this.model2ViewAdpt.make(roomName);
-		miniController.start();
-		this.model2ViewAdpt.addComponent(miniController.getRoomPanel());
-	}
+//	/**
+//	 * Make a chat room!
+//	 * @param roomName the name of the room.
+//	 */
+//	public void makeRoom(String roomName) {
+//		IMain2MiniAdptr miniController = this.model2ViewAdpt.make(roomName);
+//		miniController.start();
+//		this.model2ViewAdpt.addComponent(miniController.getRoomPanel());
+//	}
 	
 	
 	// I think this one is more like a cmd to process the invite message
@@ -299,7 +323,7 @@ public class MainModel {
 				// The message received here should be in the connector/messages package
 				// We need a visitor to deal with these different types of message
 				// Regular visitor pattern should be enough since the set of message types is fixed
-				packet.execute(receiverVisitor, null)
+				packet.execute(receiverVisitor, null);
 			}
 
 			@Override
@@ -318,7 +342,22 @@ public class MainModel {
 
 					@Override
 					public IConnector getStub() {
-						return connector;
+						return connectorStub;
+					}
+					
+					public int hashcode() {
+						return this.getStub().hashCode();
+					}
+					
+					public boolean equals(Object obj) {
+						if (obj instanceof INamedConnector) {
+							return this.getStub().equals(obj);
+						}
+						return false;
+					}
+					
+					public String toString() {
+						return this.getName();
 					}
 					
 				};
