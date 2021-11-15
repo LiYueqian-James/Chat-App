@@ -3,6 +3,8 @@
  */
 package hpn2_yl176.mini_mvc.view;
 
+import java.util.Set;
+
 /**
  * @author James Li
  *
@@ -24,5 +26,10 @@ public interface IView2MiniAdptr {
 	 * 
 	 */
 	public void sendBallWorld();
+	
+	/**
+	 * @return
+	 */
+	public Set<String> getRoomRoster();
 	
 }

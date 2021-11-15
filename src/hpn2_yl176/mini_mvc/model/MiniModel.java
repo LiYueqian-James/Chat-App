@@ -3,6 +3,7 @@
  */
 package hpn2_yl176.mini_mvc.model;
 import java.util.HashSet;
+import java.util.Set;
 
 import common.receiver.INamedReceiver;
 import common.receiver.ReceiverDataPacketAlgo;
@@ -21,11 +22,19 @@ public class MiniModel {
 	
 	private ReceiverDataPacketAlgo receiverVisitor;
 	
+	private Set<INamedReceiver> roomRoster;
+	
 	/**
 	 * @param adptr the adapter
 	 */
 	public MiniModel(IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
+		this.roomRoster = adptr.getRoomRoster();
+	}
+	
+	public Set<INamedReceiver> getRoomRoster(){
+		return this.roomRoster;
+		
 	}
 	
 	/**
