@@ -1,7 +1,7 @@
 /**
  * 
  */
-package hpn2_yl176.main_mvc.controller;
+package hpn2_yl176.controller;
 
 import java.util.function.Consumer;
 
@@ -14,8 +14,6 @@ import hpn2_yl176.main_mvc.model.IMainModel2ViewAdpt;
 import hpn2_yl176.main_mvc.model.MainModel;
 import hpn2_yl176.main_mvc.view.IMainViewToModelAdapter;
 import hpn2_yl176.main_mvc.view.MainView;
-import hpn2_yl176.mini_mvc.controller.MiniController;
-import jdk.internal.org.jline.reader.impl.history.DefaultHistory;
 import provided.discovery.IEndPointData;
 import provided.discovery.impl.model.DiscoveryModel;
 import provided.discovery.impl.view.DiscoveryPanel;
@@ -46,8 +44,15 @@ public class MainController {
 	 */
 	private DiscoveryModel<IConnector> discModel;
 	
-	private MainView mainView;
+	/**
+	 * The view of the chat app instance.
+	 */
+	private MainView<INamedConnector> mainView;
 	
+	
+	/**
+	 * The model of the chat app instance.
+	 */
 	private MainModel mainModel;
 	
 	/**

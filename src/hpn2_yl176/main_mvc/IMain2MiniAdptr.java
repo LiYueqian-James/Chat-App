@@ -15,10 +15,18 @@ public interface IMain2MiniAdptr {
 	/**
 	 * @return the named receiver representing the stub of the chat room(the mini mvc)
 	 */
-	public INamedReceiver getNamedReceiver();
+	public INamedReceiver makeNamedReceiver();
 	
 	/**
 	 * @return the panel containing the view of a chat room.
 	 */
 	public JPanel getRoomPanel();
+	
+	/**
+	 * Start the mini controller - start the chat room!
+	 */
+	public void start();
+	
+	
+//	public void makeChatRoom();
 }

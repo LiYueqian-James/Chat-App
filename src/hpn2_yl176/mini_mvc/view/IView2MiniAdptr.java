@@ -7,7 +7,7 @@ package hpn2_yl176.mini_mvc.view;
  * @author James Li
  *
  */
-public interface IView2ModelAdptr {
+public interface IView2MiniAdptr {
 	
 	/**
 	 * Send a string message to the chat room.

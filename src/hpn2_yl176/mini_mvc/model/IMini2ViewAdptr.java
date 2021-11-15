@@ -3,6 +3,8 @@
  */
 package hpn2_yl176.mini_mvc.model;
 
+import provided.pubsubsync.IPubSubSyncManager;
+
 /**
  * @author James Li
  *
@@ -19,6 +21,12 @@ public interface IMini2ViewAdptr {
 	 * @param status the status message to be displayed
 	 */
 	public void displayStatus(String status);
+	
+	/**
+	 * Get the pubsubsync manager to create data channels
+	 * @return
+	 */
+	public IPubSubSyncManager getPubSubSyncManager();
 	
 
 }
