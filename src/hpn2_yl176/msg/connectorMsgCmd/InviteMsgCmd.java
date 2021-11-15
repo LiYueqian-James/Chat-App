@@ -5,6 +5,7 @@ package hpn2_yl176.msg.connectorMsgCmd;
 
 import java.rmi.RemoteException;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import common.connector.AConnectorDataPacketAlgoCmd;
@@ -48,8 +49,13 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 	
 	@Override
 	public Void apply(IDataPacketID index, ConnectorDataPacket<IInviteMsg> host, Void... params) {
+		//TODO: instantiate the mini controller!
+		Set<INamedReceiver> initialRoster = new HashSet<>();
 		UUID id = host.getData().getUUID();
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = this.pubSubSyncManager.subscribeToUpdateChannel(id, null, null);
+		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = this.pubSubSyncManager.subscribeToUpdateChannel(id, 
+				(data)->{
+					initialRoster.addAll(data.getData());
+				}, null);
 		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(this.receiver));
 		return null;
 	}

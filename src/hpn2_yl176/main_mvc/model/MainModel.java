@@ -189,36 +189,7 @@ public class MainModel {
 		
 		receiverVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this.pubSubManager, this.main2miniAdptr.getNamedReceiver()));
 		
-		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ISyncPeersMsg.class), new AConnectorDataPacketAlgoCmd<ISyncPeersMsg>() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Void apply(IDataPacketID index, ConnectorDataPacket<ISyncPeersMsg> host, Void... params) {
-				// TODO Auto-generated method stub
-				for (INamedConnector newPeer: host.getData().getNewPeers()) {
-					newPeer.sendMessage(new ConnectorDataPacket<IAddPeersMsg>(new IAddPeersMsg() {
-
-						/**
-						 * 
-						 */
-						private static final long serialVersionUID = 1L;
-
-						@Override
-						public Set<INamedConnector> getNewPeers() {
-							// TODO Auto-generated method stub
-							return contacts;
-						}
-					}, namedConnector));
-				}
-				
-				for (INamedConnector myConnectedStub: MainModel.this.contacts) {
-					myConnectedStub.sendMessage(new ConnectorDataPacket<IAddPeersMsg>(null, myConnectedStub));
-				}
-			}
+		receiverVisitor.setCmd(ISyncPeersMsg.GetID(), new AConnectorDataPacketAlgoCmd<ISyncPeersMsg>() 
 		});
 		
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IQuitMsg.class), new AConnectorDataPacketAlgoCmd<IQuitMsg>() {
@@ -392,6 +363,7 @@ public class MainModel {
 			e.printStackTrace();
 			quit(-1); // exit the program.
 		}
+		this.addContact(getNamedConnector());
 		
 	}
 	
