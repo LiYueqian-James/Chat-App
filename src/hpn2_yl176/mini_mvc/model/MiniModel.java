@@ -17,6 +17,10 @@ import provided.pubsubsync.IPubSubSyncUpdater;
  *
  */
 public class MiniModel {
+
+	private IReceiver receiver;
+
+	private ReceiverDataPacketAlgo receiverVisitor;
 	
 	private IMini2ViewAdptr adptr;
 	
@@ -29,6 +33,65 @@ public class MiniModel {
 	 */
 	public MiniModel(IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
+		this.roomRoster = adptr.getRoomRoster();
+	}
+
+	private void initVisitor() {
+		receiverVistor = new ReceiverDataPacketAlgo(new AReceiverDataPacketAlgoCmd<IReceiverMsg>() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -7464317584958038535L;
+
+			@Override
+			public Void apply(IDataPacketID index, ReceiverDataPacket<IReceiverMsg> host, Void... params) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		receiverVistor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new AReceiverDataPacketAlgoCmd<IStringMsg>() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6286359836516888655L;
+
+			@Override
+			public Void apply(IDataPacketID id, ReceiverDataPacket<IStringMsg> host, Void... params) {
+				// TODO Auto-generated method stub
+				adptr.displayMsg(host.getSender().getName() + ": " + host.getData().toString());
+				return null;
+			}
+
+			@Override
+			public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
+				// TODO Auto-generated method stub
+				
+			}
+		} );
+		
+		receiverVistor.setCmd(DataPacketIDFactory.Singleton.makeID(ICommandMsg.class), new AReceiverDataPacketAlgoCmd<ICommandMsg>() {
+
+			@Override
+			public Void apply(IDataPacketID index, ReceiverDataPacket<ICommandMsg> host, Void... params) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		this.roomRoster = adptr.getRoomRoster();
 	}
 	
@@ -48,7 +111,12 @@ public class MiniModel {
 	 * start the chat room - create a pubsubsync manager
 	 */
 	public void start() {
-		
+		try {
+			IReceiver receiver = (IReceiver) UnicastRemoteObject.exportObject(receiver, config.getPort());
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 	/**
