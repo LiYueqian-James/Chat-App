@@ -3,6 +3,8 @@
  */
 package hpn2_yl176.controller;
 
+import java.util.HashSet;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
@@ -10,6 +12,8 @@ import javax.swing.text.View;
 
 import common.connector.IConnector;
 import common.connector.INamedConnector;
+import common.receiver.INamedReceiver;
+import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.main_mvc.model.IMainModel2ViewAdpt;
 import hpn2_yl176.main_mvc.model.MainModel;
 import hpn2_yl176.main_mvc.view.IMainViewToModelAdapter;
@@ -21,7 +25,11 @@ import provided.discovery.impl.view.IDiscoveryPanelAdapter;
 import provided.discovery.impl.model.IDiscoveryModelToViewAdapter;
 import provided.logger.ILogger;
 import provided.logger.ILoggerControl;
+import provided.logger.LogLevel;
 import provided.logger.impl.Logger;
+import provided.pubsubsync.IPubSubSyncChannelUpdate;
+import provided.pubsubsync.IPubSubSyncManager;
+import provided.pubsubsync.IPubSubSyncUpdater;
 
 /**
  * @author James Li
@@ -123,6 +131,46 @@ public class MainController {
 				return null;
 			}
 		});
+		
+		mainModel = new MainModel(sysLogger, new IMainModel2ViewAdpt() {
+
+			@Override
+			public void displayMsg(String msg) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void addComponent(JPanel Panel) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public IMain2MiniAdptr makeNewRoom(String roomName, IPubSubSyncManager pubSubSyncManager) {
+				// empty room roster - nobody is in the room yet
+				HashSet<INamedReceiver> roster = new HashSet<>();
+				IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(roomName, roster, 
+						null,
+						(statusMessage) -> {
+							sysLogger.log(LogLevel.DEBUG, "room " + roomName +" has been made sucessfully.");
+						});
+				
+//				 add the host of the room to the data channel.
+				chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(host));
+			}
+
+			@Override
+			public IMain2MiniAdptr join(UUID roomID, IPubSubSyncManager pubSubManager) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getUserName() {
+				// TODO Auto-generated method stub
+				return null;
+			}})
 	}
 	
 }

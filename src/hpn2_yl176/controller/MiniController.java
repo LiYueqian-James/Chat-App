@@ -118,17 +118,6 @@ public class MiniController {
 	public void start() {
 		view.start();
 		model.start();
-		
-		// empty room roster - nobody is in the room yet
-		HashSet<INamedReceiver> roster = new HashSet<>();
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(roomName, roster, 
-				null,
-				(statusMessage) -> {
-					sysLogger.log(LogLevel.DEBUG, "room " + roomName +" has been made sucessfully.");
-				});
-		
-//		 add the host of the room to the data channel.
-		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(host));
 	}
 	
 	

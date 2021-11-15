@@ -114,7 +114,7 @@ public class MainModel {
 	 * @param model2ViewAdpt interaction with the view.
 	 * @param adptr interacting with the mini mvc.
 	 */
-	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt, IMain2MiniAdptr main2miniadptr) {
+	public MainModel(ILogger logger, IMainModel2ViewAdpt model2ViewAdpt) {
 		this.sysLogger = logger;
 		this.model2ViewAdpt = model2ViewAdpt;
 		rmiUtils = new RMIUtils(logger);

@@ -3,9 +3,12 @@
  */
 package hpn2_yl176.main_mvc.model;
 
+import java.util.UUID;
+
 import javax.swing.JPanel;
 
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
+import provided.pubsubsync.IPubSubSyncManager;
 
 /**
  * @author hungnguyen
@@ -25,15 +28,18 @@ public interface IMainModel2ViewAdpt {
 	/**
 	 * Make a new chat room.
 	 * @param roomName the name of the chatRoom.
+	 * @param pubSubManager the manager.
 	 * @return an IMain2MiniAdptr to interact with it
 	 */
-	public IMain2MiniAdptr make(String roomName);
+	public IMain2MiniAdptr makeNewRoom(String roomName, IPubSubSyncManager pubSubManager);
 	
 	/**
 	 * Join a chat room.
+	 * @param roomID the room ID.
+	 * @param pubSubManager the manager.
 	 * @return the adapter so that the main can add the IRecevier to the room roster.
 	 */
-	public IMain2MiniAdptr join();
+	public IMain2MiniAdptr join(UUID roomID, IPubSubSyncManager pubSubManager);
 	
 	
 	

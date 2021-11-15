@@ -11,6 +11,8 @@ import common.receiver.INamedReceiver;
  * @author James Li
  * The mini model doesn't know if the room is created by the current chat app instance
  * or if it is created via invitation.
+ * 
+ * Each adapter represents a chat room instance.
  */
 public interface IMain2MiniAdptr {	
 	/**
@@ -28,6 +30,15 @@ public interface IMain2MiniAdptr {
 	 */
 	public void start();
 	
+	/**
+	 * Remove the person that has quit from the room.
+	 * @param person the person who has quit.
+	 */
+	public void removeParticipant(INamedReceiver person);
 	
-//	public void makeChatRoom();
+	/**
+	 * Quit the chat room.
+	 */
+	public void quit();
+	
 }
