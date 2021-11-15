@@ -50,13 +50,16 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 	@Override
 	public Void apply(IDataPacketID index, ConnectorDataPacket<IInviteMsg> host, Void... params) {
 		//TODO: instantiate the mini controller!
-		Set<INamedReceiver> initialRoster = new HashSet<>();
-		UUID id = host.getData().getUUID();
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = this.pubSubSyncManager.subscribeToUpdateChannel(id, 
-				(data)->{
-					initialRoster.addAll(data.getData());
-				}, null);
-		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(this.receiver));
+		Thread t = new Thread(() -> {
+			Set<INamedReceiver> initialRoster = new HashSet<>();
+			UUID id = host.getData().getUUID();
+			IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = this.pubSubSyncManager.subscribeToUpdateChannel(id, 
+					(data)->{
+						initialRoster.addAll(data.getData());
+					}, null);
+			chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(this.receiver));
+		});
+		t.start();
 		return null;
 	}
 

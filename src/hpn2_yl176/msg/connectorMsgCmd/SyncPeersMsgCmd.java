@@ -55,27 +55,28 @@ public class SyncPeersMsgCmd extends AConnectorDataPacketAlgoCmd<ISyncPeersMsg>{
 	
 	@Override
 	public Void apply(IDataPacketID index, ConnectorDataPacket<ISyncPeersMsg> host, Void... params) {
-		// for each contact of the sender
-		// tell them to add my contacts
-		for (INamedConnector newPeer: host.getData().getNewPeers()) {
-			try {
-				newPeer.sendMessage(new ConnectorDataPacket<IAddPeersMsg>(new AddPeersMsg(this.contacts), this.sender));
-			} catch (RemoteException e) {
-				sysLogger.log(LogLevel.DEBUG, "Failed to send AddPeersMsg");
-				e.printStackTrace();
+		Thread t = new Thread(() -> {
+			for (INamedConnector newPeer: host.getData().getNewPeers()) {
+				try {
+					newPeer.sendMessage(new ConnectorDataPacket<IAddPeersMsg>(new AddPeersMsg(this.contacts), this.sender));
+				} catch (RemoteException e) {
+					sysLogger.log(LogLevel.DEBUG, "Failed to send AddPeersMsg");
+					e.printStackTrace();
+				}
 			}
-		}
-		
-		// for each contact I previously have (Including myself)
-		// tell them to add the new contacts from the sender
-		for (INamedConnector myConnectedStub: this.contacts) {
-			try {
-				myConnectedStub.sendMessage(new ConnectorDataPacket<IAddPeersMsg>(new AddPeersMsg(host.getData().getNewPeers()), myConnectedStub));
-			} catch (RemoteException e) {
-				sysLogger.log(LogLevel.DEBUG, "Failed to send AddPeersMsg");
-				e.printStackTrace();
+			
+			// for each contact I previously have (Including myself)
+			// tell them to add the new contacts from the sender
+			for (INamedConnector myConnectedStub: this.contacts) {
+				try {
+					myConnectedStub.sendMessage(new ConnectorDataPacket<IAddPeersMsg>(new AddPeersMsg(host.getData().getNewPeers()), myConnectedStub));
+				} catch (RemoteException e) {
+					sysLogger.log(LogLevel.DEBUG, "Failed to send AddPeersMsg");
+					e.printStackTrace();
+				}
 			}
-		}
+		});
+		t.start();
 		return null;
 	}
 

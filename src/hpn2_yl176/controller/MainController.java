@@ -136,6 +136,11 @@ public class MainController {
 			public void invite(INamedConnector namedConnector) {
 				ConnectorDataPacket<IInviteMsg> msg = new ConnectorDataPacket<>(new IInviteMsg() {
 
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = -2070991057271714627L;
+
 					@Override
 					public UUID getUUID() {
 						IMain2MiniAdptr main2mini = mainModel.getPanel2RoomMap().get(mainView.getCurrentChatRoom());
@@ -183,6 +188,7 @@ public class MainController {
 				 */
 				IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(roomName, roster, 
 						(pubSubSyncData) -> {
+							// roster.clear();
 							roster.addAll(pubSubSyncData.getData());
 						},
 						(statusMessage) -> {
