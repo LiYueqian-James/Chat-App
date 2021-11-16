@@ -11,11 +11,14 @@ import java.util.UUID;
 
 import javax.swing.text.StyledEditorKit.ForegroundAction;
 
+import common.connector.AConnectorDataPacketAlgoCmd;
 import common.connector.INamedConnector;
+import common.receiver.AReceiverDataPacketAlgoCmd;
 import common.receiver.INamedReceiver;
 import common.receiver.IReceiver;
 import common.receiver.ReceiverDataPacket;
 import common.receiver.ReceiverDataPacketAlgo;
+import common.receiver.messages.ICommandMsg;
 import common.receiver.messages.ICommandRequestMsg;
 import common.receiver.messages.IReceiverMsg;
 import common.receiver.messages.IStringMsg;
@@ -197,5 +200,14 @@ public class MiniModel {
 		}
 	}
 	
+	public void sendCmdMsg(AReceiverDataPacketAlgoCmd<?> cmd, IDataPacketID cmdId) {
+		try {
+			receiver.sendMessage(new ReceiverDataPacket<ICommandMsg>(new CommandMsg(cmd,cmdId), namedReceiver));
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
 
 }

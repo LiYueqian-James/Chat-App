@@ -32,19 +32,6 @@ public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<ICommandReq
 	 */
 	private static final long serialVersionUID = -452405725602635887L;
 
-//	@Override
-//	public Void apply(IDataPacketID index, ReceiverDataPacket<ICommandRequestMsg> host, Void... params) {
-//		// TODO Auto-generated method stub
-//		IDataPacketID cmdId = host.getData().getID();
-//		Thread thread = new Thread(() -> {
-//			host.getSender().sendMessage(host)
-//		});
-//		host.getSender().sendMessage(host);
-//		thread.start();
-//		return null;
-//	}
-		
-
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
