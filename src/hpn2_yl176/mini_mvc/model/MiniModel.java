@@ -148,7 +148,7 @@ public class MiniModel {
 	 */
 	public void sendMsg(String msg) {
 		try {
-			adptr.displayStatus("Message " + msg + "successfully sent!");
+			adptr.displayStatus("Message \"" + msg + "\" successfully sent!");
 		}
 		catch (Exception e){
 			adptr.displayStatus("Exception occured: "+e.toString());

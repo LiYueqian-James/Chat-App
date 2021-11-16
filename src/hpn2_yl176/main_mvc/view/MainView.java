@@ -136,7 +136,6 @@ public class MainView<Stub> extends JFrame {
 	private final JButton startButton = new JButton("Start");
 	private final JTabbedPane chatroomTabPane = new JTabbedPane(JTabbedPane.TOP);
 	private final JPanel statusPanel = new JPanel();
-	private final JPanel panel_1 = new JPanel();
 	private final JPanel boundNamePanel = new JPanel();
 	private final JTextField boundName = new JTextField();
 	private final JPanel panel_2 = new JPanel();
@@ -187,7 +186,7 @@ public class MainView<Stub> extends JFrame {
 	 * Initializes the GUI
 	 */
 	private void initGUI() {
-		setBounds(20, 25, 1000, 400);
+		setBounds(20, 25, 1000, 800);
 		setTitle("ChatApp");
 		usernameInput.setColumns(10);
 		servernameInput.setColumns(10);
@@ -311,8 +310,6 @@ public class MainView<Stub> extends JFrame {
 		statusPanel.add(statusPane, BorderLayout.CENTER);
 		
 		statusPane.setViewportView(statusText);
-		
-		chatroomTabPane.addTab("New tab", null, panel_1, null);
 	}
 
 	/**

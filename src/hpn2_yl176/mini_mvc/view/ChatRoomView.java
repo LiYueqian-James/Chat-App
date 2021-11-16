@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
+import javax.swing.border.TitledBorder;
 
 /**
  * @author James Li
@@ -79,16 +80,15 @@ public class ChatRoomView extends JPanel{
 	 */
 	private final JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
 	/**
-	 * textArea for status.
-	 */
-	private final JTextArea statusArea = new JTextArea();
-	/**
 	 * textArea for msg.
 	 */
 	private final JTextArea msgArea = new JTextArea();
 
 	private Set<String> roomRoster;
 	private final JTextArea memberList = new JTextArea();
+	private final JPanel panel = new JPanel();
+	private final JPanel statusPanel = new JPanel();
+	private final JTextArea statusArea = new JTextArea();
 	
 	/**
 	 * Constructor for the view
@@ -98,6 +98,7 @@ public class ChatRoomView extends JPanel{
 		textField.setToolTipText("The string message to be sent");
 		textField.setColumns(30);
 		roomRoster = adptr.getRoomRoster();
+		this.adptr = adptr;
 		initGUI();
 	}
 	
@@ -144,9 +145,15 @@ public class ChatRoomView extends JPanel{
 		msgArea.setToolTipText("Display messages");
 		
 		tabs.addTab("Messages", null, msgArea, null);
+		
+		tabs.addTab("New tab", null, panel, null);
+		statusPanel.setBorder(new TitledBorder(null, "Status", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		splitPane.setRightComponent(statusPanel);
+		statusPanel.setLayout(new BorderLayout(0, 0));
 		statusArea.setToolTipText("place to display status msg");
 		
-		splitPane.setRightComponent(statusArea);
+		statusPanel.add(statusArea, BorderLayout.CENTER);
 		users.setToolTipText("List of users");
 		
 		control.setLeftComponent(users);
@@ -192,7 +199,7 @@ public class ChatRoomView extends JPanel{
 	 * @param status the status msg
 	 */
 	public void appendStatus(String status) {
-		statusArea.append(status);
+		statusArea.append(status+"\n");
 	}
 	
 	public void setRoomRoster(Set<String> roomRoster) {
