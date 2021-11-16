@@ -138,7 +138,7 @@ public class MainView<Stub> extends JFrame {
 	private final JPanel statusPanel = new JPanel();
 	private final JPanel panel_1 = new JPanel();
 	private final JPanel boundNamePanel = new JPanel();
-	private final JTextField textField = new JTextField();
+	private final JTextField boundName = new JTextField();
 	private final JPanel panel_2 = new JPanel();
 	private final JTextField hostIP = new JTextField();
 	private final JScrollPane statusPane = new JScrollPane();
@@ -283,9 +283,14 @@ public class MainView<Stub> extends JFrame {
 						"Bound name", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		connectByIPPanel.add(boundNamePanel);
-		textField.setColumns(10);
+		boundName.setColumns(10);
 		
-		boundNamePanel.add(textField);
+		boundNamePanel.add(boundName);
+		connectBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewToModelAdapter.connectTo(hostIP.getText(), boundName.getText());
+			}
+		});
 		connectByIPPanel.add(connectBtn);
 		
 		contentPane.add(chatroomTabPane, BorderLayout.CENTER);
@@ -313,9 +318,11 @@ public class MainView<Stub> extends JFrame {
 	
 	/**
 	 * Updates connected host lists.
+	 * @param newHosts the set of new hosts.
 	 */
 	public void updateConnectedHosts(Set<Stub> newHosts) {
-		this.connectedHosts.addAll(newHosts);
+		this.connectedHosts = new HashSet<Stub>(newHosts);
+		connectedHostsMenu.removeAllItems();
 		for (Stub connectedHost: connectedHosts) {
 			connectedHostsMenu.addItem(connectedHost);
 		}

@@ -17,6 +17,7 @@ import common.connector.ConnectorDataPacket;
 import common.connector.IConnector;
 import common.connector.INamedConnector;
 import common.connector.messages.IInviteMsg;
+import common.connector.messages.ISyncPeersMsg;
 import common.receiver.INamedReceiver;
 import common.receiver.IReceiver;
 import common.receiver.ReceiverDataPacket;
@@ -30,6 +31,7 @@ import hpn2_yl176.main_mvc.view.MainView;
 import hpn2_yl176.mini_mvc.controller.IMini2MainAdptr;
 import hpn2_yl176.mini_mvc.controller.MiniController;
 import hpn2_yl176.msg.connectorMsgImpl.InviteMsg;
+import hpn2_yl176.msg.connectorMsgImpl.SyncPeersMsg;
 import provided.discovery.IEndPointData;
 import provided.discovery.impl.model.DiscoveryModel;
 import provided.discovery.impl.view.DiscoveryPanel;
@@ -87,10 +89,8 @@ public class MainController {
 	/**
 	 * Instantiate the view, model, discovery server, and the mini mvc.
 	 */
-	public MainController() {
-		this.appConfig0 = new ChatAppConfig("App1", IRMI_Defs.STUB_PORT_CLIENT, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
-//		ChatAppConfig appConfig1 = new ChatAppConfig("App2", IRMI_Defs.STUB_PORT_SERVER);
-//		ChatAppConfig appConfig2 = new ChatAppConfig("App3", IRMI_Defs.STUB_PORT_EXTRA);
+	public MainController(ChatAppConfig appConfig) {
+		this.appConfig0 = appConfig;
 		discPnl = new DiscoveryPanel<IEndPointData>(new IDiscoveryPanelAdapter<IEndPointData>() {
 
 			@Override
@@ -113,7 +113,7 @@ public class MainController {
 				INamedConnector namedConnector;
 				try {
 					namedConnector = stub.makeNamedConnector();
-					mainModel.addContact(namedConnector);
+					namedConnector.sendMessage(new ConnectorDataPacket<ISyncPeersMsg>(new SyncPeersMsg(mainModel.getContacts()), namedConnector));
 				} catch (RemoteException e) {
 					sysLogger.log(LogLevel.DEBUG, "Failed to make Named connector");
 					e.printStackTrace();
@@ -344,7 +344,6 @@ public class MainController {
 			@Override
 			public void updateContacts(Set<INamedConnector> stubs) {
 				mainView.updateConnectedHosts(stubs);
-				
 			}}, appConfig0);
 	}
 	
@@ -371,9 +370,16 @@ public class MainController {
 	 */
 	public static void main(String[] args) {
 //		System.out.println("bruh!");
+		
+		ChatAppConfig appConfig0 = new ChatAppConfig("App1", IRMI_Defs.STUB_PORT_CLIENT, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+		ChatAppConfig appConfig1 = new ChatAppConfig("App2", IRMI_Defs.STUB_PORT_SERVER, IRMI_Defs.CLASS_SERVER_PORT_SERVER);
+		ChatAppConfig appConfig2 = new ChatAppConfig("App3", IRMI_Defs.STUB_PORT_EXTRA, IRMI_Defs.CLASS_SERVER_PORT_EXTRA);
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				(new MainController()).start();
+				(new MainController(appConfig0)).start();
+				(new MainController(appConfig1)).start();
+				(new MainController(appConfig2)).start();
 			}
 		});
 	}

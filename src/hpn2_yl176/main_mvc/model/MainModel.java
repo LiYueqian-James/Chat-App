@@ -166,9 +166,9 @@ public class MainModel {
 		
 //		connectoMsgVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this.pubSubManager, this.main2miniAdptr.getNamedReceiver()));
 		
-		connectoMsgVisitor.setCmd(ISyncPeersMsg.GetID(), new SyncPeersMsgCmd(this.myContacts, this.getNamedConnector(), this.sysLogger));
+		connectoMsgVisitor.setCmd(ISyncPeersMsg.GetID(), new SyncPeersMsgCmd(this.myContacts, this.getNamedConnector(), this.sysLogger, this.model2ViewAdpt));
 		
-		connectoMsgVisitor.setCmd(IAddPeersMsg.GetID(), new AddPeersMsgCmd(this.myContacts));
+		connectoMsgVisitor.setCmd(IAddPeersMsg.GetID(), new AddPeersMsgCmd(this.myContacts, this.model2ViewAdpt));
 		
 		connectoMsgVisitor.setCmd(IQuitMsg.GetID(), new QuitMsgCmd(this.model2ViewAdpt, this.myContacts));
 	};
@@ -193,6 +193,13 @@ public class MainModel {
 	 */
 	public Map<Component, IMain2MiniAdptr> getPanel2RoomMap(){
 		return this.panel2chatRoom;
+	}
+	
+	/**
+	 * @return my contacts.
+	 */
+	public Set<INamedConnector> getContacts(){
+		return this.myContacts;
 	}
 		
 	/**
@@ -222,17 +229,19 @@ public class MainModel {
 		 */
 		QuitMsg quitMsg = new QuitMsg();
 		ConnectorDataPacket<IQuitMsg> quitData = new ConnectorDataPacket<>(quitMsg, this.myNamedConnector);
+		Set<INamedConnector> prevContact = new HashSet<>(this.myContacts);
 		
 		// Tell everyone I know(including myself) that I have quit!
-		for (INamedConnector app: this.myContacts) {
+		// A copy is necessary to avoid concurrent modification.
+		for (INamedConnector app: prevContact) {
 			try {
 				app.sendMessage(quitData);
 			} catch (RemoteException e) {
-				sysLogger.log(LogLevel.DEBUG, "Failed to send quit msg.");
+				sysLogger.log(LogLevel.ERROR, "Failed to send quit msg.");
 				e.printStackTrace();
 			}
 		}
-		System.exit(exitCode);
+//		System.exit(exitCode);
 		
 	}
 
@@ -268,6 +277,7 @@ public class MainModel {
 	 */
 	public void addContact(INamedConnector contact) {
 		this.myContacts.add(contact);
+		this.model2ViewAdpt.updateContacts(myContacts);
 	}
 	
 	

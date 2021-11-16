@@ -13,6 +13,7 @@ import common.connector.INamedConnector;
 import common.connector.messages.IInviteMsg;
 import common.connector.messages.ISyncPeersMsg;
 import common.connector.messages.IAddPeersMsg;
+import hpn2_yl176.main_mvc.model.IMainModel2ViewAdpt;
 import hpn2_yl176.main_mvc.model.MainModel;
 import hpn2_yl176.msg.connectorMsgImpl.AddPeersMsg;
 import provided.datapacket.IDataPacketID;
@@ -41,16 +42,23 @@ public class SyncPeersMsgCmd extends AConnectorDataPacketAlgoCmd<ISyncPeersMsg>{
 	 */
 	private INamedConnector sender;
 	
+	/**
+	 * System logger.
+	 */
 	private ILogger sysLogger;
+	
+	private IMainModel2ViewAdpt adptr;
 	/**
 	 * @param contacts my contacts.
 	 * @param sender the sender of the msg.
 	 * @param sysLogger the logger to display status msg.
 	 */
-	public SyncPeersMsgCmd(Set<INamedConnector> contacts, INamedConnector sender, ILogger sysLogger) {
+	public SyncPeersMsgCmd(Set<INamedConnector> contacts, INamedConnector sender, ILogger sysLogger,
+			IMainModel2ViewAdpt adptr) {
 		this.contacts = contacts;
 		this.sender = sender;
 		this.sysLogger = sysLogger;
+		this.adptr = adptr;
 	}
 	
 	@Override

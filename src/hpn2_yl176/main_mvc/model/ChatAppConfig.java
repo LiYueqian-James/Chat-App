@@ -6,7 +6,7 @@ package hpn2_yl176.main_mvc.model;
 import provided.config.AppConfig;
 
 /**
- * A configura
+ * A configuration.
  * @author James Li
  *
  */

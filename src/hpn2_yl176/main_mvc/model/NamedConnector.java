@@ -54,5 +54,17 @@ public class NamedConnector implements INamedConnector{
 	public String toString() {
 		return this.name;
 	}
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof INamedConnector) {
+			return ((INamedConnector) obj).getStub().equals(this.stub);
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.stub.hashCode();
+	}
 }
