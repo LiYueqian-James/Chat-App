@@ -222,17 +222,19 @@ public class MainModel {
 		 */
 		QuitMsg quitMsg = new QuitMsg();
 		ConnectorDataPacket<IQuitMsg> quitData = new ConnectorDataPacket<>(quitMsg, this.myNamedConnector);
+		Set<INamedConnector> prevContact = new HashSet<>(this.myContacts);
 		
 		// Tell everyone I know(including myself) that I have quit!
-		for (INamedConnector app: this.myContacts) {
+		// A copy is necessary to avoid concurrent modification.
+		for (INamedConnector app: prevContact) {
 			try {
 				app.sendMessage(quitData);
 			} catch (RemoteException e) {
-				sysLogger.log(LogLevel.DEBUG, "Failed to send quit msg.");
+				sysLogger.log(LogLevel.ERROR, "Failed to send quit msg.");
 				e.printStackTrace();
 			}
 		}
-		System.exit(exitCode);
+//		System.exit(exitCode);
 		
 	}
 
@@ -268,6 +270,7 @@ public class MainModel {
 	 */
 	public void addContact(INamedConnector contact) {
 		this.myContacts.add(contact);
+		this.model2ViewAdpt.updateContacts(myContacts);
 	}
 	
 	

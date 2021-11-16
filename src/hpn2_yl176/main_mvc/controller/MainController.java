@@ -87,10 +87,8 @@ public class MainController {
 	/**
 	 * Instantiate the view, model, discovery server, and the mini mvc.
 	 */
-	public MainController() {
-		this.appConfig0 = new ChatAppConfig("App1", IRMI_Defs.STUB_PORT_CLIENT, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
-//		ChatAppConfig appConfig1 = new ChatAppConfig("App2", IRMI_Defs.STUB_PORT_SERVER);
-//		ChatAppConfig appConfig2 = new ChatAppConfig("App3", IRMI_Defs.STUB_PORT_EXTRA);
+	public MainController(ChatAppConfig appConfig) {
+		this.appConfig0 = appConfig;
 		discPnl = new DiscoveryPanel<IEndPointData>(new IDiscoveryPanelAdapter<IEndPointData>() {
 
 			@Override
@@ -344,7 +342,6 @@ public class MainController {
 			@Override
 			public void updateContacts(Set<INamedConnector> stubs) {
 				mainView.updateConnectedHosts(stubs);
-				
 			}}, appConfig0);
 	}
 	
@@ -371,9 +368,16 @@ public class MainController {
 	 */
 	public static void main(String[] args) {
 //		System.out.println("bruh!");
+		
+		ChatAppConfig appConfig0 = new ChatAppConfig("App1", IRMI_Defs.STUB_PORT_CLIENT, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+		ChatAppConfig appConfig1 = new ChatAppConfig("App2", IRMI_Defs.STUB_PORT_SERVER, IRMI_Defs.CLASS_SERVER_PORT_SERVER);
+		ChatAppConfig appConfig2 = new ChatAppConfig("App3", IRMI_Defs.STUB_PORT_EXTRA, IRMI_Defs.CLASS_SERVER_PORT_EXTRA);
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				(new MainController()).start();
+				(new MainController(appConfig0)).start();
+				(new MainController(appConfig1)).start();
+				(new MainController(appConfig2)).start();
 			}
 		});
 	}

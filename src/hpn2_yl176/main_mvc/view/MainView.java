@@ -313,9 +313,11 @@ public class MainView<Stub> extends JFrame {
 	
 	/**
 	 * Updates connected host lists.
+	 * @param newHosts the set of new hosts.
 	 */
 	public void updateConnectedHosts(Set<Stub> newHosts) {
-		this.connectedHosts.addAll(newHosts);
+		this.connectedHosts = new HashSet<Stub>(newHosts);
+		connectedHostsMenu.removeAllItems();
 		for (Stub connectedHost: connectedHosts) {
 			connectedHostsMenu.addItem(connectedHost);
 		}

@@ -46,9 +46,11 @@ public class QuitMsgCmd extends AConnectorDataPacketAlgoCmd<IQuitMsg>{
 	@Override
 	public Void apply(IDataPacketID index, ConnectorDataPacket<IQuitMsg> host, Void... params) {
 		Thread t = new Thread(()->{
+			System.out.println(contacts.size());
 			contacts.remove(host.getSender());
+			System.out.println(contacts.size());
 			// tell the rest of the world (all the chat rooms) that this stub is dead.
-			adpt.removeStub(host.getSender());
+			adpt.updateContacts(contacts);
 		});
 		t.start();
 		return null;
