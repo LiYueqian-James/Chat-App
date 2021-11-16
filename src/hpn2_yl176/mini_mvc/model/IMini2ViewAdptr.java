@@ -5,6 +5,7 @@ package hpn2_yl176.mini_mvc.model;
 
 import java.util.Set;
 
+import common.connector.INamedConnector;
 import common.receiver.INamedReceiver;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import provided.logger.ILogger;
@@ -32,10 +33,15 @@ public interface IMini2ViewAdptr {
 	 */
 	public Set<INamedReceiver> getRoomRoster();
 	
-	
 	public ILogger getSysLogger();
 
 	public RMIUtils getRmiUtils();
 	
+	public void updateMemberList(Set<INamedReceiver> namedReceivers);
+	
+	public String getUserName();
+	
 	public ChatAppConfig getConfig();
+	
+	public INamedConnector getNamedConnector();
 }

@@ -71,7 +71,7 @@ public class MiniModel {
 	
 	private INamedReceiver namedReceiver;
 	
-	private ChatRoom chatRoom;
+//	private ChatRoom chatRoom;
 	private ChatAppConfig config;
 	/**
 	 * @param adptr the adapter
@@ -90,12 +90,13 @@ public class MiniModel {
 		viewLogger.append(sysLogger);
 		rmiUtils = adptr.getRmiUtils();
 		config = adptr.getConfig();
+		addUser(namedReceiver);
 		try {
 			pubSubManager = IPubSubSyncConnection.getPubSubSyncManager(sysLogger, rmiUtils, config.getPort());
-			chatRoom = new ChatRoom(id, friendlyName, adptr);
 		}
 		catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 		this.roomRoster = adptr.getRoomRoster();
 	}
@@ -111,7 +112,6 @@ public class MiniModel {
 	
 	public Set<INamedReceiver> getRoomRoster(){
 		return this.roomRoster;
-		
 	}
 	
 	/**
@@ -127,25 +127,30 @@ public class MiniModel {
 	public void start() {
 		this.initVisitor();
 		try {
-			IReceiver receiver = (IReceiver) UnicastRemoteObject.exportObject(receiver, config.getPort());
+			IReceiver receiver = (IReceiver) UnicastRemoteObject.exportObject(this.receiver, config.getPort());
 			this.namedReceiver = new INamedReceiver() {
 				
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = -472661494405857810L;
+
 				@Override
 				public IReceiver getStub() {
 					// TODO Auto-generated method stub
-					return null;
+					return receiver;
 				}
 				
 				@Override
 				public String getName() {
 					// TODO Auto-generated method stub
-					return null;
+					return adptr.getUserName();
 				}
 				
 				@Override
 				public INamedConnector getConnector() {
 					// TODO Auto-generated method stub
-					return null;
+					return adptr.getNamedConnector();
 				}
 			};
 		}
@@ -195,7 +200,19 @@ public class MiniModel {
 		}
 	}
 	
-	public void leaveRoom()
+	public void leaveRoom() {
+		
+	}
+	
+	public void removeUser(INamedReceiver namedReceiver) {
+		this.roomRoster.remove(namedReceiver);
+		adptr.updateMemberList(roomRoster);
+	}
+	
+	public void addUser(INamedReceiver namedUser) {
+		this.roomRoster.add(namedUser);
+		adptr.updateMemberList(this.roomRoster);
+	}
 	
 	public void sendTextMsg(String text) {
 		try {

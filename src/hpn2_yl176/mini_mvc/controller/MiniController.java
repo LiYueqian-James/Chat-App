@@ -1,5 +1,6 @@
 package hpn2_yl176.mini_mvc.controller;
 import hpn2_yl176.mini_mvc.view.ChatRoomView;
+import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.mini_mvc.model.IMini2ViewAdptr;
 import hpn2_yl176.mini_mvc.view.IView2MiniAdptr;
 import hpn2_yl176.mini_mvc.model.MiniModel;
@@ -8,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import common.connector.INamedConnector;
 import common.receiver.INamedReceiver;
 import common.receiver.ReceiverDataPacketAlgo;
 import provided.logger.ILogger;
@@ -15,6 +17,7 @@ import provided.logger.LogLevel;
 import provided.pubsubsync.IPubSubSyncChannelUpdate;
 import provided.pubsubsync.IPubSubSyncManager;
 import provided.pubsubsync.IPubSubSyncUpdater;
+import provided.rmiUtils.RMIUtils;
 
 
 /**
@@ -69,7 +72,7 @@ public class MiniController {
 	 * @param mini2MainAdptr the adapter towards the main model
 	 * @param chatRoomID the chatRoomID.
 	 */
-	public MiniController(IMini2MainAdptr mini2MainAdptr, UUID chatRoomID) {
+	public MiniController(UUID chatRoomID, String friendlyName, IMini2MainAdptr mini2MainAdptr) {
 		
 		this.mini2MainAdptr = mini2MainAdptr;
 		
@@ -79,23 +82,63 @@ public class MiniController {
 		
 		this.chatRoomID = chatRoomID;
 		
-		model = new MiniModel(new IMini2ViewAdptr() {
+		model = new MiniModel(chatRoomID, friendlyName, new IMini2ViewAdptr() {
 
 			@Override
 			public void displayMsg(String msg) {
 				// TODO Auto-generated method stub
-				
+				view.appendMessage(friendlyName, msg);
 			}
 
 			@Override
 			public void displayStatus(String status) {
 				// TODO Auto-generated method stub
-				
+				view.appendStatus(status);
 			}
 
 			@Override
 			public Set<INamedReceiver> getRoomRoster() {
 				return mini2MainAdptr.getRoomRoster();
+			}
+
+			@Override
+			public ILogger getSysLogger() {
+				// TODO Auto-generated method stub
+				return mini2MainAdptr.getLogger();
+			}
+
+			@Override
+			public RMIUtils getRmiUtils() {
+				// TODO Auto-generated method stub
+				return mini2MainAdptr.getRmiUtils();
+			}
+
+			@Override
+			public String getUserName() {
+				// TODO Auto-generated method stub
+				return mini2MainAdptr.getUserName();
+			}
+
+			@Override
+			public ChatAppConfig getConfig() {
+				// TODO Auto-generated method stub
+				return mini2MainAdptr.getConfig();
+			}
+
+			@Override
+			public INamedConnector getNamedConnector() {
+				// TODO Auto-generated method stub
+				return mini2MainAdptr.getNamedConnector();
+			}
+
+			@Override
+			public void updateMemberList(Set<INamedReceiver> namedReceivers) {
+				// TODO Auto-generated method stub
+				Set<String> memberList = new HashSet<>();
+				for (INamedReceiver namedReceiver: namedReceivers) {
+					memberList.add(namedReceiver.getName());
+				}
+				view.setRoomRoster(memberList);
 			}
 			
 		});
@@ -110,7 +153,7 @@ public class MiniController {
 
 			@Override
 			public void leave() {
-				
+				model.leaveRoom();
 			}
 
 			@Override

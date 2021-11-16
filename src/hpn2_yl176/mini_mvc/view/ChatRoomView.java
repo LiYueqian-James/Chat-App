@@ -13,6 +13,9 @@ import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 import javax.swing.SwingConstants;
+
+import common.receiver.INamedReceiver;
+
 import java.awt.Font;
 import javax.swing.JTabbedPane;
 import java.awt.event.ActionListener;
@@ -85,6 +88,7 @@ public class ChatRoomView extends JPanel{
 	private final JTextArea msgArea = new JTextArea();
 
 	private Set<String> roomRoster;
+	private final JTextArea memberList = new JTextArea();
 	
 	/**
 	 * Constructor for the view
@@ -159,6 +163,12 @@ public class ChatRoomView extends JPanel{
 		usersPanel.setToolTipText("The users");
 		
 		users.add(usersPanel, BorderLayout.CENTER);
+		
+		usersPanel.setViewportView(memberList);
+		for (String member: roomRoster) {
+			memberList.append(member + '\n');	
+		}
+
 	}
 	
 	/**
@@ -187,5 +197,5 @@ public class ChatRoomView extends JPanel{
 	
 	public void setRoomRoster(Set<String> roomRoster) {
 		this.roomRoster = roomRoster;
-	} 
+	}
 }
