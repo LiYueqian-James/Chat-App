@@ -17,6 +17,7 @@ import common.connector.ConnectorDataPacket;
 import common.connector.IConnector;
 import common.connector.INamedConnector;
 import common.connector.messages.IInviteMsg;
+import common.connector.messages.ISyncPeersMsg;
 import common.receiver.INamedReceiver;
 import common.receiver.IReceiver;
 import common.receiver.ReceiverDataPacket;
@@ -30,6 +31,7 @@ import hpn2_yl176.main_mvc.view.MainView;
 import hpn2_yl176.mini_mvc.controller.IMini2MainAdptr;
 import hpn2_yl176.mini_mvc.controller.MiniController;
 import hpn2_yl176.msg.connectorMsgImpl.InviteMsg;
+import hpn2_yl176.msg.connectorMsgImpl.SyncPeersMsg;
 import provided.discovery.IEndPointData;
 import provided.discovery.impl.model.DiscoveryModel;
 import provided.discovery.impl.view.DiscoveryPanel;
@@ -111,7 +113,7 @@ public class MainController {
 				INamedConnector namedConnector;
 				try {
 					namedConnector = stub.makeNamedConnector();
-					mainModel.addContact(namedConnector);
+					namedConnector.sendMessage(new ConnectorDataPacket<ISyncPeersMsg>(new SyncPeersMsg(mainModel.getContacts()), namedConnector));
 				} catch (RemoteException e) {
 					sysLogger.log(LogLevel.DEBUG, "Failed to make Named connector");
 					e.printStackTrace();
