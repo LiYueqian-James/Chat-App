@@ -1,7 +1,7 @@
 /**
  * 
  */
-package hpn2_yl176.controller;
+package hpn2_yl176.main_mvc.controller;
 
 import java.rmi.RemoteException;
 import java.util.HashSet;
@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.text.View;
 
 import common.connector.ConnectorDataPacket;
@@ -21,12 +22,14 @@ import common.receiver.IReceiver;
 import common.receiver.ReceiverDataPacket;
 import common.receiver.ReceiverDataPacketAlgo;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
+import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.main_mvc.model.IMainModel2ViewAdpt;
 import hpn2_yl176.main_mvc.model.MainModel;
 import hpn2_yl176.main_mvc.view.IMainViewToModelAdapter;
 import hpn2_yl176.main_mvc.view.MainView;
 import hpn2_yl176.mini_mvc.controller.IMini2MainAdptr;
 import hpn2_yl176.mini_mvc.controller.MiniController;
+import hpn2_yl176.msg.connectorMsgImpl.InviteMsg;
 import provided.discovery.IEndPointData;
 import provided.discovery.impl.model.DiscoveryModel;
 import provided.discovery.impl.view.DiscoveryPanel;
@@ -39,6 +42,7 @@ import provided.logger.impl.Logger;
 import provided.pubsubsync.IPubSubSyncChannelUpdate;
 import provided.pubsubsync.IPubSubSyncManager;
 import provided.pubsubsync.IPubSubSyncUpdater;
+import provided.rmiUtils.IRMI_Defs;
 
 /**
  * @author James Li
@@ -76,19 +80,23 @@ public class MainController {
 	 * The system logger to use. Change and/or customize this logger as desired.
 	 */
 	private ILogger sysLogger = ILoggerControl.getSharedLogger();
+	
+	private ChatAppConfig appConfig0;
 
 	
 	/**
 	 * Instantiate the view, model, discovery server, and the mini mvc.
 	 */
 	public MainController() {
-		
+		this.appConfig0 = new ChatAppConfig("App1", IRMI_Defs.STUB_PORT_CLIENT, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+//		ChatAppConfig appConfig1 = new ChatAppConfig("App2", IRMI_Defs.STUB_PORT_SERVER);
+//		ChatAppConfig appConfig2 = new ChatAppConfig("App3", IRMI_Defs.STUB_PORT_EXTRA);
 		discPnl = new DiscoveryPanel<IEndPointData>(new IDiscoveryPanelAdapter<IEndPointData>() {
 
 			@Override
 			public void connectToDiscoveryServer(String category, boolean watchOnly,
 					Consumer<Iterable<IEndPointData>> endPtsUpdateFn) {
-				discModel.connectToDiscoveryServer(category, true, endPtsUpdateFn);
+				discModel.connectToDiscoveryServer(category, false, endPtsUpdateFn);
 			}
 
 			@Override
@@ -96,7 +104,7 @@ public class MainController {
 				discModel.connectToEndPoint(selectedEndPt);
 			}
 
-		}, false, true);
+		}, true, true);
 		
 		discModel = new DiscoveryModel<IConnector>(this.sysLogger, new IDiscoveryModelToViewAdapter<IConnector>() {
 
@@ -110,9 +118,7 @@ public class MainController {
 					sysLogger.log(LogLevel.DEBUG, "Failed to make Named connector");
 					e.printStackTrace();
 				}
-
 			}
-			
 		}
 		);
 
@@ -133,41 +139,44 @@ public class MainController {
 				mainModel.quit(0);
 			};
 			
-			public void invite(INamedConnector namedConnector) {
-				ConnectorDataPacket<IInviteMsg> msg = new ConnectorDataPacket<>(new IInviteMsg() {
 
-					@Override
-					public UUID getUUID() {
-						IMain2MiniAdptr main2mini = mainModel.getPanel2RoomMap().get(mainView.getCurrentChatRoom());
-						return main2mini.getChatRoomID();
+			public void invite(INamedConnector receiver) {
+				IMain2MiniAdptr currentChatRoom = mainModel.getPanel2RoomMap().get(mainView.getCurrentChatRoom());
+				ConnectorDataPacket<IInviteMsg> msg = new ConnectorDataPacket<IInviteMsg>(
+						new InviteMsg(currentChatRoom.getChatRoomID(), currentChatRoom.getRoomName()), 
+						receiver);
+				Thread t = new Thread(() -> {
+					try {
+						receiver.sendMessage(msg);
+					} catch (RemoteException e) {
+						sysLogger.log(LogLevel.DEBUG, "Failed to send message "+msg.toString());
+						e.printStackTrace();
 					}
-
-					@Override
-					public String getFriendlyName() {
-						IMain2MiniAdptr main2mini = mainModel.getPanel2RoomMap().get(mainView.getCurrentChatRoom());
-						return main2mini.getRoomName();
-					}}, 
-						namedConnector);
-				try {
-					namedConnector.sendMessage(msg);
-				} catch (RemoteException e) {
-					sysLogger.log(LogLevel.DEBUG, "Failed to send message "+msg.toString());
-					e.printStackTrace();
-				}
+				}); 	
 			}
-		});
+
+			@Override
+			public void start() {
+				// start the main model.  THE MODEL MUST BE STARTED _BEFORE_  model.getRMIUtils() IS CALLED!!
+				mainModel.start(); // starts the internal IRMIUtils instance too.
+				
+				// start the discovery model using the already started IRMIUtils instance.
+				discModel.start(mainModel.getRMIUtils(), mainView.getServerName(), appConfig0.getName()); 
+				
+			}
+		}, appConfig0);
 		
 		mainModel = new MainModel(sysLogger, new IMainModel2ViewAdpt() {
 
 			@Override
 			public void displayStatusMsg(String msg) {
-				// TODO Auto-generated method stub
+				mainView.appendStatus(msg);
 				
 			}
 
 			@Override
 			public void addComponent(JPanel Panel) {
-				// TODO Auto-generated method stub
+				//toDO: add a new JPanel
 				
 			}
 
@@ -183,6 +192,7 @@ public class MainController {
 				 */
 				IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(roomName, roster, 
 						(pubSubSyncData) -> {
+							// roster.clear();
 							roster.addAll(pubSubSyncData.getData());
 						},
 						(statusMessage) -> {
@@ -323,7 +333,49 @@ public class MainController {
 			public String getUserName() {
 				// TODO Auto-generated method stub
 				return null;
-			}});
+			}
+
+			@Override
+			public void removeStub(INamedConnector stub) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void updateContacts(Set<INamedConnector> stubs) {
+				mainView.updateConnectedHosts(stubs);
+				
+			}}, appConfig0);
+	}
+	
+	/**
+	 * Starts the view then the model plus the discovery panel and model.  The view needs to be started first so that it can display 
+	 * the model status updates as it starts.   The discovery panel is added to the main view after the discovery model starts. 
+	 */
+	public void start() {
+//		System.out.println("bruh!");
+
+
+		discPnl.start(); // start the discovery panel	
+		
+		mainView.addCtrlComponent(discPnl); // Add the discovery panel to the view's "control" panel.
+
+		// start the main view.  Starting the view here will keep the view from showing before the discovery panel is installed.
+		mainView.start();
+
+	}
+	
+	/**
+	 * Run the app.
+	 * @param args Not used
+	 */
+	public static void main(String[] args) {
+//		System.out.println("bruh!");
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				(new MainController()).start();
+			}
+		});
 	}
 	
 }

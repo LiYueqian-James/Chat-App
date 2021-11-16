@@ -6,10 +6,11 @@ package hpn2_yl176.main_mvc.view;
 import common.connector.INamedConnector;
 
 /**
- * @author hungnguyen
+ * @author hungnguyen, James Li
+ * @param <Stub> the view holds the stub of other chat app instances.
  *
  */
-public interface IMainViewToModelAdapter<ConnectedHostname> {
+public interface IMainViewToModelAdapter<Stub> {
 	/**
 	 * Allows the view to set up a connection with the remote IP
 	 * @param remoteIP the IP address we are connecting to
@@ -23,5 +24,14 @@ public interface IMainViewToModelAdapter<ConnectedHostname> {
 	 */
 	void quit();
 	
-	void invite(INamedConnector namedConnector);
+	/**
+	 * Invite the chat room app instance to the current chat room.
+	 * @param app the app to be invited.
+	 */
+	void invite(Stub app);
+	
+	/**
+	 * Start the model.
+	 */
+	void start();
 }
