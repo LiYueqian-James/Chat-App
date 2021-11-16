@@ -28,6 +28,7 @@ public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg>{
 	public StringMsgCmd(IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
 	}
+	
 	@Override
 	public Void apply(IDataPacketID index, ReceiverDataPacket<IStringMsg> host, Void... params) {
 		// TODO Auto-generated method stub

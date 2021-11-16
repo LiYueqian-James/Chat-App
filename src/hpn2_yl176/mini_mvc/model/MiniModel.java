@@ -133,15 +133,7 @@ public class MiniModel {
 	private ILogger viewLogger;
 	private ILogger sysLogger;
 	
-	private IReceiver receiver = new IReceiver() {
-		
-		@Override
-		public void sendMessage(ReceiverDataPacket<?> packet) throws RemoteException {
-			// TODO Auto-generated method stub
-			packet.execute(receiverVisitor);
-		}
-	};
-	
+	private IReceiver receiver;
 	private INamedReceiver namedReceiver;
 	
 //	private ChatRoom chatRoom;
@@ -164,6 +156,14 @@ public class MiniModel {
 		viewLogger.append(sysLogger);
 		config = adptr.getConfig();
 		this.roomRoster = adptr.getRoomRoster();
+		this.receiver = new IReceiver() {
+			
+			@Override
+			public void sendMessage(ReceiverDataPacket<?> packet) throws RemoteException {
+				// TODO Auto-generated method stub
+				packet.execute(receiverVisitor);
+			}
+		};
 	}
 
 	private void initVisitor() {
@@ -186,7 +186,6 @@ public class MiniModel {
 	public INamedReceiver getMyNamedReceiver(){
 		return this.namedReceiver;
 	}
-	
 	/**
 	 * @return
 	 */
@@ -198,10 +197,11 @@ public class MiniModel {
 	 * start the chat room - create a pubsubsync manager
 	 */
 	public void start() {
-		this.initVisitor();
 		try {
-			IReceiver receiver = (IReceiver) UnicastRemoteObject.exportObject(this.receiver, config.getRMIPort());
-			this.namedReceiver = new NamedReceiver(receiver, adptr);
+			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.receiver, config.getRMIPort());
+			
+			this.namedReceiver = new NamedReceiver(receiverStub, adptr);
+			this.initVisitor();
 			adptr.updateMemberList(roomRoster);
 		}
 		catch (Exception e) {
@@ -221,18 +221,18 @@ public class MiniModel {
 		thread.start();
 	}
 	
-	/**
-	 * Send a message to the chat room.
-	 * @param msg the message to be sent
-	 */
-	public void sendMsg(String msg) {
-		try {
-			adptr.displayStatus("Message " + msg + "successfully sent!");
-		}
-		catch (Exception e){
-			adptr.displayStatus("Exception occured: "+e.toString());
-		}
-	}
+//	/**
+//	 * Send a message to the chat room.
+//	 * @param msg the message to be sent
+//	 */
+//	public void sendMsg(String msg) {
+//		try {
+//			adptr.displayStatus("Message " + msg + "successfully sent!");
+//		}
+//		catch (Exception e){
+//			adptr.displayStatus("Exception occured: "+e.toString());
+//		}
+//	}
 	
 	/**
 	 * Send a ballworld instance to the chat room

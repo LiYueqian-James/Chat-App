@@ -163,8 +163,7 @@ public class MiniController {
 
 			@Override
 			public void sendMsg(String msg) {
-				model.sendMsg(msg);
-				
+				model.sendTextMsg(msg);
 			}
 
 			@Override
@@ -196,8 +195,8 @@ public class MiniController {
 	 * @param pubSubSyncManager data channel manager.
 	 */
 	public void start() {
-		view.start();
 		model.start();
+		view.start();
 	}
 	
 	/**
