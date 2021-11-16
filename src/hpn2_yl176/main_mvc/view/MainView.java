@@ -258,6 +258,11 @@ public class MainView<Stub> extends JFrame {
 		newRoomName.setColumns(10);
 		
 		makeChatroomPnl.add(newRoomName);
+		makeChatroomBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewToModelAdapter.makeNewRoom(newRoomName.getText());
+			}
+		});
 		
 		makeChatroomPnl.add(makeChatroomBtn);
 		connectedHostsPanel.setBorder(new TitledBorder(
@@ -347,16 +352,10 @@ public class MainView<Stub> extends JFrame {
 	public void removeRoomPanel(Component comp){
 		this.chatroomTabPane.remove(comp);
 	}
-	/**
-	 * James: I don't think we need the name from the mini mvc.
-	 * When we make a chat room, the view provides the chat room name
-	 * When we join a chat room, the main model receive an invitation 
-	 * From there we can retrieve the name/stub of the chatroom
-	 */
-//	private void installTab(IMain2MiniAdptr main2MiniAdapter) {
-//		this.chatroomTabPane.addTab(main2MiniAdapter.getName(), null, main2MiniAdapter.getView(), null);
-//		
-//	}
+
+	public void addNewTab(Component tab, String tabName) {
+		this.chatroomTabPane.add(tab, tabName);
+	}
 
 	/**
 	 * starts the client GUI

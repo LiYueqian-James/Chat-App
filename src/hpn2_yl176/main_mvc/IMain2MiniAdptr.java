@@ -34,16 +34,18 @@ public interface IMain2MiniAdptr {
 	 */
 	public void start();
 	
-	/**
-	 * Remove the person that has quit from the room.
-	 * @param person the person who has quit.
-	 */
-	public void removeParticipant(INamedReceiver person);
+//	/**
+//	 * Remove the person that has quit from the room.
+//	 * @param person the person who has quit.
+//	 */
+//	public void removeParticipant(INamedReceiver person);
+	
+
 	
 	/**
-	 * Quit the chat room.
+	 * Quit the chat room - when the entire chat app quit, notify each room that we quit.
 	 */
-	// public void quit();
+	 public void quit();
 	
 	/**
 	 * @return the visitor to execute a receiver message.

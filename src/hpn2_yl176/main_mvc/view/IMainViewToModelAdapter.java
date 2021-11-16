@@ -20,7 +20,7 @@ public interface IMainViewToModelAdapter<Stub> {
 	String connectTo(String remoteIP, String boundName);
 
 	/**
-	 * Terminate the program
+	 * Terminate the program, clean up(send IQuitMsg).
 	 */
 	void quit();
 	
@@ -31,7 +31,9 @@ public interface IMainViewToModelAdapter<Stub> {
 	void invite(Stub app);
 	
 	/**
-	 * Start the model.
+	 * Start the model, used by the start button.
 	 */
 	void start();
+	
+	void makeNewRoom(String roomName);
 }

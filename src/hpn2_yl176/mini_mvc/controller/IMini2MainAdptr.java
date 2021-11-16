@@ -24,11 +24,12 @@ public interface IMini2MainAdptr {
 	 */
 	public IPubSubSyncManager getPubSubSyncManager();
 	
+
+	// public void removeRoom();
+	
 	/**
 	 * Upon exit, tell the main to clean up.
 	 */
-	// public void removeRoom();
-	
 	public void removePanel(Component roomPanel);
 	/**
 	 * @return the logger to be used to display status.
