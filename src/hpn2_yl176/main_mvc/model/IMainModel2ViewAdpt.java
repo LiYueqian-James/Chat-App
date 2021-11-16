@@ -33,11 +33,10 @@ public interface IMainModel2ViewAdpt {
 	
 	/**
 	 * Make a new chat room.
-	 * @param roomName the name of the chatRoom.
 	 * @param pubSubManager the manager.
 	 * @return an IMain2MiniAdptr to interact with it
 	 */
-	public IMain2MiniAdptr makeNewRoom(String roomName, IPubSubSyncManager pubSubManager);
+	public IMain2MiniAdptr makeNewRoom(IPubSubSyncManager pubSubManager);
 	
 	/**
 	 * Join a chat room.

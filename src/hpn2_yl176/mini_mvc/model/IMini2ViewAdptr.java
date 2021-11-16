@@ -9,6 +9,7 @@ import common.connector.INamedConnector;
 import common.receiver.INamedReceiver;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import provided.logger.ILogger;
+import provided.rmiUtils.IRMIUtils;
 import provided.rmiUtils.RMIUtils;
 
 /**
@@ -35,7 +36,7 @@ public interface IMini2ViewAdptr {
 	
 	public ILogger getSysLogger();
 
-	public RMIUtils getRmiUtils();
+	public IRMIUtils getRmiUtils();
 	
 	public void updateMemberList(Set<INamedReceiver> namedReceivers);
 	
@@ -44,4 +45,6 @@ public interface IMini2ViewAdptr {
 	public ChatAppConfig getConfig();
 	
 	public INamedConnector getNamedConnector();
+	
+	public void removeRoom();
 }

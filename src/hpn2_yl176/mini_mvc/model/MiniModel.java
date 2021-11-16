@@ -54,11 +54,8 @@ public class MiniModel {
 	
 	private Set<INamedReceiver> roomRoster;
 	
-	private IPubSubSyncManager pubSubManager; 
 	private ILogger viewLogger;
 	private ILogger sysLogger;
-	
-	private IRMIUtils rmiUtils;
 	
 	private IReceiver receiver = new IReceiver() {
 		
@@ -88,16 +85,7 @@ public class MiniModel {
 			}
 		}, LogLevel.INFO);
 		viewLogger.append(sysLogger);
-		rmiUtils = adptr.getRmiUtils();
 		config = adptr.getConfig();
-		addUser(namedReceiver);
-		try {
-			pubSubManager = IPubSubSyncConnection.getPubSubSyncManager(sysLogger, rmiUtils, config.getPort());
-		}
-		catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
 		this.roomRoster = adptr.getRoomRoster();
 	}
 
@@ -107,11 +95,19 @@ public class MiniModel {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ICommandRequestMsg.class), new CommandRequestMsgCmd(adptr, receiverVisitor));
-		this.roomRoster = adptr.getRoomRoster();
 	}
 	
 	public Set<INamedReceiver> getRoomRoster(){
 		return this.roomRoster;
+	}
+
+	public void removeParticipant(INamedReceiver person){
+		roomRoster.remove(person);
+		this.adptr.updateMemberList(roomRoster);
+	}
+
+	public INamedReceiver getMyNamedReceiver(){
+		return this.namedReceiver;
 	}
 	
 	/**
@@ -127,35 +123,13 @@ public class MiniModel {
 	public void start() {
 		this.initVisitor();
 		try {
-			IReceiver receiver = (IReceiver) UnicastRemoteObject.exportObject(this.receiver, config.getPort());
-			this.namedReceiver = new INamedReceiver() {
-				
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = -472661494405857810L;
-
-				@Override
-				public IReceiver getStub() {
-					// TODO Auto-generated method stub
-					return receiver;
-				}
-				
-				@Override
-				public String getName() {
-					// TODO Auto-generated method stub
-					return adptr.getUserName();
-				}
-				
-				@Override
-				public INamedConnector getConnector() {
-					// TODO Auto-generated method stub
-					return adptr.getNamedConnector();
-				}
-			};
+			IReceiver receiver = (IReceiver) UnicastRemoteObject.exportObject(this.receiver, config.getRMIPort());
+			this.namedReceiver = new NamedReceiver(receiver, adptr);
+			adptr.updateMemberList(roomRoster);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
+			// TODO: handle exception 
+			e.printStackTrace();
 		}
 	}
 	
@@ -200,8 +174,8 @@ public class MiniModel {
 		}
 	}
 	
-	public void leaveRoom() {
-		
+	public void leaveRoom() {	
+		adptr.removeRoom();
 	}
 	
 	public void removeUser(INamedReceiver namedReceiver) {

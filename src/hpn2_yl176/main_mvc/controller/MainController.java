@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.text.View;
-
+import java.awt.Component;
 import common.connector.ConnectorDataPacket;
 import common.connector.IConnector;
 import common.connector.INamedConnector;
@@ -44,7 +44,9 @@ import provided.logger.impl.Logger;
 import provided.pubsubsync.IPubSubSyncChannelUpdate;
 import provided.pubsubsync.IPubSubSyncManager;
 import provided.pubsubsync.IPubSubSyncUpdater;
+import provided.rmiUtils.IRMIUtils;
 import provided.rmiUtils.IRMI_Defs;
+import provided.rmiUtils.RMIUtils;
 
 /**
  * @author James Li
@@ -181,145 +183,92 @@ public class MainController {
 			}
 
 			@Override
-			public IMain2MiniAdptr makeNewRoom(String roomName, IPubSubSyncManager pubSubSyncManager) {
-				
-				// empty room roster - nobody is in the room yet
-				HashSet<INamedReceiver> roster = new HashSet<>();
-				
+			public IMain2MiniAdptr makeNewRoom(IPubSubSyncManager pubSubSyncManager) {
+				String newRoomName = mainView.getNewRoomName();			
+
 				/*
-				 * The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
-				 * the data channel changes.
-				 */
-				IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(roomName, roster, 
-						(pubSubSyncData) -> {
-							// roster.clear();
-							roster.addAll(pubSubSyncData.getData());
-						},
-						(statusMessage) -> {
-							sysLogger.log(LogLevel.DEBUG, "room " + roomName +" has been made sucessfully.");
-						});
-				
-				UUID chatRoomID = chatRoom.getChannelID();
-				/*
-				 * Instantiate the Mini-controller
-				 * */
-				MiniController miniController = new MiniController(new IMini2MainAdptr() {
+					* Instantiate the Mini-controller
+					* */
+				MiniController miniController = new MiniController(newRoomName, new IMini2MainAdptr() {
 
 					@Override
 					public IPubSubSyncManager getPubSubSyncManager() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public void removeRoom() {
-						// TODO Auto-generated method stub
-						
-					}
+						return pubSubSyncManager;
+					};
 
 					@Override
 					public ILogger getLogger() {
-						// TODO Auto-generated method stub
-						return null;
+						return sysLogger;
 					}
 
 					@Override
-					public Set<INamedReceiver> getRoomRoster() {
-						return roster;
+					public ChatAppConfig getConfig() {
+						return appConfig0;
 					}
-					
-				}, chatRoomID);
-				
-				
+
+					@Override
+					public INamedConnector getNamedConnector() {
+						return mainModel.getNamedConnector();
+					}
+
+					@Override
+					public String getUserName() {
+						return mainView.getUserName();
+					}
+
+					@Override
+					public IRMIUtils getRmiUtils() {
+						return mainModel.getRMIUtils();
+					}
+
+					@Override
+					public void removePanel(Component roomPanel) {
+						mainView.remove(roomPanel);						
+					}					
+				});
+
 				/*
-				 * Instantiate the adapter, get information needed from the mini-controller above!
+						
 				 */
 				IMain2MiniAdptr chatRoomAdptr = new IMain2MiniAdptr() {
 
 					@Override
 					public INamedReceiver getNamedReceiver() {
-						// TODO Auto-generated method stub
-						return null;
+						return miniController.getMyNamedReceiver();
 					}
 
 					@Override
-					public JPanel getRoomPanel() {
-						// TODO Auto-generated method stub
-						return null;
+					public Component getRoomPanel() {
+						return miniController.getMyRoomPanel();
 					}
 
 					@Override
 					public void start() {
-						// TODO Auto-generated method stub
+						miniController.start();
 						
 					}
 
 					@Override
 					public void removeParticipant(INamedReceiver person) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void quit() {
-						// TODO Auto-generated method stub
-						
+						miniController.removePerson(person);
 					}
 
 					@Override
 					public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
-						// TODO Auto-generated method stub
-						return null;
+						return miniController.getReceiverMsgAlgo();
 					}
 
 					@Override
 					public UUID getChatRoomID() {
-						// TODO Auto-generated method stub
-						return null;
+						return miniController.getRoomID();
 					}
 
 					@Override
 					public String getRoomName() {
-						// TODO Auto-generated method stub
-						return null;
+						return newRoomName;
 					}
 					
 				};
-				
-				
-//				 add the host of the room to the data channel.
-				INamedReceiver host = new INamedReceiver() {
-
-					/**
-					 * Serialization purpose.
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public String getName() {
-						return mainModel.getUserName();
-					}
-
-					@Override
-					public INamedConnector getConnector() {
-						return mainModel.getNamedConnector();
-					}
-
-					@Override
-					public IReceiver getStub() {
-						return new IReceiver() {
-
-							@Override
-							public void sendMessage(ReceiverDataPacket<?> packet) throws RemoteException {
-								packet.execute(chatRoomAdptr.getReceiverMsgAlgo(), null);
-								
-							}
-							
-						};
-					}
-					
-				};
-				chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(host));
 				return chatRoomAdptr;
 			}
 
@@ -331,8 +280,7 @@ public class MainController {
 
 			@Override
 			public String getUserName() {
-				// TODO Auto-generated method stub
-				return null;
+				return mainView.getUserName();
 			}
 
 			@Override

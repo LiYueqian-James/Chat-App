@@ -4,11 +4,11 @@
 package hpn2_yl176.main_mvc.view;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,7 +66,7 @@ public class MainView<Stub> extends JFrame {
 	/**
 	 * the view to model adapter 
 	 */
-	private IMainViewToModelAdapter viewToModelAdapter;
+	private IMainViewToModelAdapter<Stub> viewToModelAdapter;
 
 	/**
 	 * Holds the send message options
@@ -150,14 +150,14 @@ public class MainView<Stub> extends JFrame {
 	private final JComboBox<Stub> connectedHostsMenu = new JComboBox<Stub>();
 	private final JButton inviteButton = new JButton("Invite");
 	private final JPanel makeChatroomPnl = new JPanel();
-	private final JTextField textField_1 = new JTextField();
+	private final JTextField newRoomName = new JTextField();
 	private final JButton makeChatroomBtn = new JButton("Make room!");
 	/**
 	 * Constructs the view
 	 * @param adapter the view to model adapter specified in the controller
 	 * @param chatAppConfig the chat app configuration.
 	 */
-	public MainView(IMainViewToModelAdapter adapter, ChatAppConfig chatAppConfig) {
+	public MainView(IMainViewToModelAdapter<Stub> adapter, ChatAppConfig chatAppConfig) {
 		this.viewToModelAdapter = adapter;
 		this.appConfig = chatAppConfig;
 		setPreferredSize(new Dimension(1000, 700));
@@ -177,6 +177,10 @@ public class MainView<Stub> extends JFrame {
 	 */
 	public void appendStatus(String statusMsg) {
 		this.statusText.append(statusMsg);
+	}
+
+	public String getNewRoomName(){
+		return this.newRoomName.getText();
 	}
 	
 	/**
@@ -251,9 +255,9 @@ public class MainView<Stub> extends JFrame {
 		makeChatroomPnl.setBorder(new TitledBorder(null, "Make Chat Room", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		makeJoinPanel.add(makeChatroomPnl);
-		textField_1.setColumns(10);
+		newRoomName.setColumns(10);
 		
-		makeChatroomPnl.add(textField_1);
+		makeChatroomPnl.add(newRoomName);
 		
 		makeChatroomPnl.add(makeChatroomBtn);
 		connectedHostsPanel.setBorder(new TitledBorder(
@@ -336,6 +340,13 @@ public class MainView<Stub> extends JFrame {
 		return this.servernameInput.getText();
 	}
 	
+	public String getUserName() {
+		return this.usernameInput.getText();
+	}
+	
+	public void removeRoomPanel(Component comp){
+		this.chatroomTabPane.remove(comp);
+	}
 	/**
 	 * James: I don't think we need the name from the mini mvc.
 	 * When we make a chat room, the view provides the chat room name

@@ -6,6 +6,7 @@ package hpn2_yl176.main_mvc;
 import java.util.UUID;
 
 import javax.swing.JPanel;
+import java.awt.Component;
 
 import common.receiver.INamedReceiver;
 import common.receiver.ReceiverDataPacketAlgo;
@@ -26,7 +27,7 @@ public interface IMain2MiniAdptr {
 	/**
 	 * @return the panel containing the view of a chat room.
 	 */
-	public JPanel getRoomPanel();
+	public Component getRoomPanel();
 	
 	/**
 	 * Start the mini controller - start the chat room!
@@ -42,7 +43,7 @@ public interface IMain2MiniAdptr {
 	/**
 	 * Quit the chat room.
 	 */
-	public void quit();
+	// public void quit();
 	
 	/**
 	 * @return the visitor to execute a receiver message.

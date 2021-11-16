@@ -4,13 +4,14 @@
 package hpn2_yl176.mini_mvc.controller;
 
 import java.util.Set;
+import java.awt.Component;
 
 import common.connector.INamedConnector;
 import common.receiver.INamedReceiver;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import provided.logger.ILogger;
 import provided.pubsubsync.IPubSubSyncManager;
-import provided.rmiUtils.RMIUtils;
+import provided.rmiUtils.IRMIUtils;
 
 /**
  * @author James Li
@@ -26,17 +27,13 @@ public interface IMini2MainAdptr {
 	/**
 	 * Upon exit, tell the main to clean up.
 	 */
-	public void removeRoom();
+	// public void removeRoom();
 	
+	public void removePanel(Component roomPanel);
 	/**
 	 * @return the logger to be used to display status.
 	 */
 	public ILogger getLogger();
-	
-	/**
-	 * @return
-	 */
-	public Set<INamedReceiver> getRoomRoster();
 	
 	public ChatAppConfig getConfig();
 	
@@ -44,5 +41,5 @@ public interface IMini2MainAdptr {
 	
 	public String getUserName();
 	
-	public RMIUtils getRmiUtils();
+	public IRMIUtils getRmiUtils();
 }
