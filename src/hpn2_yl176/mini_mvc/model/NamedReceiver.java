@@ -43,5 +43,23 @@ public class NamedReceiver implements INamedReceiver{
 		// TODO Auto-generated method stub
 		return receiver;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getName();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof INamedConnector) {
+			return ((INamedConnector) obj).getStub().equals(this.receiver);
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.receiver.hashCode();
+	}
 
 }

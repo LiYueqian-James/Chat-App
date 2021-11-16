@@ -105,7 +105,7 @@ public class MiniController {
 
 			@Override
 			public void displayMsg(String msg) {
-				view.appendMessage(friendlyName, msg);
+				view.appendMessage(msg);
 			}
 
 			@Override
@@ -164,7 +164,6 @@ public class MiniController {
 			@Override
 			public void sendMsg(String msg) {
 				model.sendStringMsg(msg);
-				
 			}
 
 			@Override
@@ -196,8 +195,8 @@ public class MiniController {
 	 * @param pubSubSyncManager data channel manager.
 	 */
 	public void start() {
-		view.start();
 		model.start();
+		view.start();
 	}
 	
 	/**

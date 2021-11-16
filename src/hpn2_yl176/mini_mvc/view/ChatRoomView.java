@@ -95,6 +95,7 @@ public class ChatRoomView extends JPanel{
 	 * @param adptr the adapter.
 	 */
 	public ChatRoomView(IView2MiniAdptr adptr) {
+		this.adptr = adptr;
 		textField.setToolTipText("The string message to be sent");
 		textField.setColumns(30);
 		roomRoster = adptr.getRoomRoster();
@@ -190,8 +191,9 @@ public class ChatRoomView extends JPanel{
 	 * @param user who sent the msg
 	 * @param msg the msg
 	 */
-	public void appendMessage(String user, String msg) {
-		msgArea.append(user+": "+msg);
+	public void appendMessage(String msg) {
+		System.out.println("TEXTING " + msg);
+		msgArea.append(msg);
 	}
 	
 	/**

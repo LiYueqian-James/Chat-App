@@ -21,8 +21,9 @@ public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<ICommandReq
 
 	private IMini2ViewAdptr adptr;
 	private ReceiverDataPacketAlgo receiverVisitor;
+	private ICmd2ModelAdapter cmd2ModelAdpt;
 	
-	public CommandRequestMsgCmd(IMini2ViewAdptr adptr, ReceiverDataPacketAlgo receiverVisitor) {
+	public CommandRequestMsgCmd(IMini2ViewAdptr adptr, ReceiverDataPacketAlgo receiverVisitor, ICmd2ModelAdapter cmd2ModelAdpt) {
 		this.adptr = adptr;
 		this.receiverVisitor = receiverVisitor;
 	}
@@ -32,23 +33,10 @@ public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<ICommandReq
 	 */
 	private static final long serialVersionUID = -452405725602635887L;
 
-//	@Override
-//	public Void apply(IDataPacketID index, ReceiverDataPacket<ICommandRequestMsg> host, Void... params) {
-//		// TODO Auto-generated method stub
-//		IDataPacketID cmdId = host.getData().getID();
-//		Thread thread = new Thread(() -> {
-//			host.getSender().sendMessage(host)
-//		});
-//		host.getSender().sendMessage(host);
-//		thread.start();
-//		return null;
-//	}
-		
-
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
-		
+		this.cmd2ModelAdpt = cmd2ModelAdpt;
 	}
 
 	@Override
