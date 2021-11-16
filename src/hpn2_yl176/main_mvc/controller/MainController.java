@@ -253,11 +253,11 @@ public class MainController {
 //						miniController.removePerson(person);
 //					}
 
-					@Override
-					public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
-						return miniController.getReceiverMsgAlgo();
-					}
-
+//					@Override
+//					public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
+//						return miniController.getReceiverMsgAlgo();
+//					}
+//
 					@Override
 					public UUID getChatRoomID() {
 						return miniController.getRoomID();

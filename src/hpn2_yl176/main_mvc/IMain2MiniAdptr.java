@@ -47,11 +47,11 @@ public interface IMain2MiniAdptr {
 	 */
 	 public void quit();
 	
-	/**
-	 * @return the visitor to execute a receiver message.
-	 */
-	public ReceiverDataPacketAlgo getReceiverMsgAlgo();
-	
+//	/**
+//	 * @return the visitor to execute a receiver message.
+//	 */
+//	public ReceiverDataPacketAlgo getReceiverMsgAlgo();
+//	
 	/**
 	 * @return the chatRoomID.
 	 */
