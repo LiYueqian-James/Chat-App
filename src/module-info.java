@@ -17,6 +17,13 @@ module hw08 {
 	exports provided.datapacket;
 	exports provided.pubsubsync;
 	exports provided.pubsubsync.impl;
+
+	
+	exports common.connector;
+	exports common.receiver;
+	exports common.adapter;
+	exports common.connector.messages;
+	exports common.receiver.messages;
 	
 	/**
 	 *  Add exports for at least the following package and necessary sub-packages: 

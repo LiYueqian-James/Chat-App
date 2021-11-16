@@ -3,6 +3,7 @@
  */
 package hpn2_yl176.main_mvc.model;
 
+import java.util.Set;
 import java.util.UUID;
 
 import javax.swing.JPanel;
@@ -18,6 +19,10 @@ import provided.pubsubsync.IPubSubSyncManager;
 public interface IMainModel2ViewAdpt {
 //	void makeMiniController();
 	
+	/**
+	 * The main view will just display some status message.
+	 * @param msg the status message.
+	 */
 	public void displayStatusMsg(String msg);
 	
 	/**
@@ -53,4 +58,10 @@ public interface IMainModel2ViewAdpt {
 	 * @param stub the stub of the chat app instance who has quit.
 	 */
 	public void removeStub(INamedConnector stub);
+	
+	/**
+	 * Tell the view to update its list of contacts.
+	 * @param stubs a set of stubs.
+	 */
+	public void updateContacts(Set<INamedConnector> stubs);
 }
