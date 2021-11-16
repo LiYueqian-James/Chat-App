@@ -6,30 +6,43 @@ package hpn2_yl176.main_mvc.model;
 import provided.config.AppConfig;
 
 /**
- * A configura
+ * A configuration.
  * @author James Li
  *
  */
 public class ChatAppConfig extends AppConfig{
-
-	private int port;
+	
+	/**
+	 * Port used by RMI stubs.
+	 */
+	private int RMIPort;
+	
+	/**
+	 * Port used by the class server.
+	 */
+	private int classServerPort;
 
 	/**
 	 * Instantiate a chatapp config;
-	 * @param appName the name of the chat app
-	 * @param port the port number
+	 * @param boundName the name of the chat app.
+	 * @param RMIport Port used by RMI stubs.
+	 * @param classServerPort the class server port. 
 	 */
-	public ChatAppConfig(String appName, int port) {
-		super(appName);
-		this.port = port;
-		
+	public ChatAppConfig(String boundName, int RMIport, int classServerPort) {
+		super(boundName);
+		this.RMIPort = RMIport;
+		this.classServerPort = classServerPort;
 	}
 
 	/**
-	 * @return the port number
+	 * @return the RMI port number
 	 */
-	public int getPort() {
-		return this.port;
+	public int getRMIPort() {
+		return this.RMIPort;
+	}
+	
+	public int getClassPort() {
+		return this.classServerPort;
 	}
 
 	/**

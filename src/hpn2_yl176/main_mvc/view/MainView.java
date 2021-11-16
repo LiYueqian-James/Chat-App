@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,16 +24,18 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import hpn2_yl176.main_mvc.model.ChatAppConfig;
+
 import javax.swing.JTabbedPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
  * @author hungnguyen, James Li
- * @param <TDropListItem> Stubs of the chat app instances that this chat app instance can connect to
+ * @param <Stub> Stubs of the chat app instances that this chat app instance can connect to
  *
  */
-public class MainView<TDropListItem> extends JFrame {
+public class MainView<Stub> extends JFrame {
 	/**
 	 * Holds the main content of the application
 	 */
@@ -62,7 +66,7 @@ public class MainView<TDropListItem> extends JFrame {
 	/**
 	 * the view to model adapter 
 	 */
-	private IMainViewToModelAdapter<TDropListItem> viewToModelAdapter;
+	private IMainViewToModelAdapter viewToModelAdapter;
 
 	/**
 	 * Holds the send message options
@@ -103,34 +107,19 @@ public class MainView<TDropListItem> extends JFrame {
 	 * combines the selected tasks and makes that a new list option in the menu
 	 */
 	private final JButton combineTasksBtn = new JButton("Combine Tasks");
-	
-	/**
-	 * text field for the input running parameter
-	 */
-	private final JTextField makeChatRoomInput = new JTextField();
-	
-	/**
-	 * Runs task specified
-	 */
-	private final JButton makeChatroomBtn = new JButton("Make room!");
 
 	/**
-	 * Task panel
-	 */
-	private final JPanel connectedHostsPanel = new JPanel();
-
-	/**
-	 * Creates username and server
+	 * Creates username and server.
 	 */
 	private final JPanel appStartupPanel = new JPanel();
 	
 	/**
-	 * Holds remote server connection utilities
+	 * Holds remote server connection utilities.
 	 */
 	private final JPanel remoteHostPanel = new JPanel();
 	
 	/**
-	 * Holds remote server connection utilities
+	 * Holds remote server connection utilities.
 	 */
 	private final JPanel connectByIPPanel = new JPanel();
 	
@@ -139,31 +128,38 @@ public class MainView<TDropListItem> extends JFrame {
 	 */
 	private final JButton connectBtn = new JButton("Connect");
 	
-	private ArrayList<TDropListItem> connectedHostList;
+	/**
+	 * A set of connected hosts.
+	 */
+	private Set<Stub> connectedHosts = new HashSet<>();
 
 	private final JButton startButton = new JButton("Start");
-	private final JPanel makeChatroomPnl = new JPanel();
-	
-	private final JButton inviteButton = new JButton("Invite");
-
-	/**
-	 * a Connected Hosts menu
-	 */
-	private final JComboBox<TDropListItem> connectedHostsMenu = new JComboBox<TDropListItem>();
 	private final JTabbedPane chatroomTabPane = new JTabbedPane(JTabbedPane.TOP);
-	private final JPanel panel = new JPanel();
+	private final JPanel statusPanel = new JPanel();
 	private final JPanel panel_1 = new JPanel();
 	private final JPanel boundNamePanel = new JPanel();
-	private final JTextField textField = new JTextField();
+	private final JTextField boundName = new JTextField();
 	private final JPanel panel_2 = new JPanel();
 	private final JTextField hostIP = new JTextField();
+	private final JScrollPane statusPane = new JScrollPane();
+	private final JTextArea statusText = new JTextArea();
 	
+	private ChatAppConfig appConfig;
+	private final JPanel makeJoinPanel = new JPanel();
+	private final JPanel connectedHostsPanel = new JPanel();
+	private final JComboBox<Stub> connectedHostsMenu = new JComboBox<Stub>();
+	private final JButton inviteButton = new JButton("Invite");
+	private final JPanel makeChatroomPnl = new JPanel();
+	private final JTextField textField_1 = new JTextField();
+	private final JButton makeChatroomBtn = new JButton("Make room!");
 	/**
 	 * Constructs the view
 	 * @param adapter the view to model adapter specified in the controller
+	 * @param chatAppConfig the chat app configuration.
 	 */
-	public MainView(IMainViewToModelAdapter<TDropListItem> adapter) {
+	public MainView(IMainViewToModelAdapter adapter, ChatAppConfig chatAppConfig) {
 		this.viewToModelAdapter = adapter;
+		this.appConfig = chatAppConfig;
 		setPreferredSize(new Dimension(1000, 700));
 		initGUI();
 	}
@@ -175,30 +171,37 @@ public class MainView<TDropListItem> extends JFrame {
 		return chatroomTabPane.getSelectedComponent();
 		
 	}
+	
+	/**
+	 * @param statusMsg a status message.
+	 */
+	public void appendStatus(String statusMsg) {
+		this.statusText.append(statusMsg);
+	}
+	
 	/**
 	 * Initializes the GUI
 	 */
 	private void initGUI() {
-		setTitle("Client GUI");
-		makeChatRoomInput.setColumns(10);
+		setBounds(20, 25, 1000, 400);
+		setTitle("ChatApp");
 		usernameInput.setColumns(10);
 		servernameInput.setColumns(10);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1063, 453);
 		contentPane = new JPanel();
+		contentPane.setToolTipText("The entire gui");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		menuPanel.setToolTipText("Here is the menu of the application");
 
 		contentPane.add(menuPanel, BorderLayout.NORTH);
-//		quitBtn.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				viewToModelAdapter.quit();
-//			}
-//		});
+		quitBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewToModelAdapter.quit();
+			}
+		});
 		quitBtn.setToolTipText("Quits the Application");
 
 		appStartupPanel.setToolTipText("Holds the info for remote hosts");
@@ -224,46 +227,51 @@ public class MainView<TDropListItem> extends JFrame {
 		appStartupPanel.add(servernamePanel);
 		
 		appStartupBtnPanel.setLayout(new GridLayout(1, 2, 0, 0));
+		startButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewToModelAdapter.start();
+			}
+		});
 		
 		appStartupBtnPanel.add(startButton);
 		appStartupBtnPanel.add(quitBtn);
 		
 		appStartupPanel.add(appStartupBtnPanel);
-
-		makeChatroomPnl.setBorder(
-				new TitledBorder(null, "Make Chat Room", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		makeChatroomPnl.add(makeChatRoomInput);
-		makeChatroomBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		makeChatroomPnl.add(makeChatroomBtn);
 		
 		remoteHostPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		connectByIPPanel.setBorder(new TitledBorder(
-				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-				"Connect To...", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		connectedHostsPanel.setBorder(new TitledBorder(
-				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-				"Connected Hosts", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		addBtn.setToolTipText("Click to add new task name to task menus");
 		
 		menuPanel.add(appStartupPanel);
-
-		/**
-		 * Constructs the Connect panel
-		 */
-		connectedHostsPanel.add(connectedHostsMenu);
-		connectedHostsPanel.add(inviteButton);
-		this.updateConnectedHosts();
-		connectedHostsMenu.insertItemAt(null, 0);
-		connectedHostsMenu.setSelectedIndex(0);
 		combineTasksBtn.setToolTipText("Click to combine two tasks");
-		makeChatroomPnl.setToolTipText("Makes a chatroom");
+		menuPanel.add(remoteHostPanel);
 		
-		menuPanel.add(makeChatroomPnl);
-		connectByIPPanel.add(connectBtn);
-		remoteHostPanel.add(connectByIPPanel);
+		menuPanel.add(makeJoinPanel);
+		makeJoinPanel.setLayout(new GridLayout(2, 1, 0, 0));
+		makeChatroomPnl.setToolTipText("Makes a chatroom");
+		makeChatroomPnl.setBorder(new TitledBorder(null, "Make Chat Room", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		makeJoinPanel.add(makeChatroomPnl);
+		textField_1.setColumns(10);
+		
+		makeChatroomPnl.add(textField_1);
+		
+		makeChatroomPnl.add(makeChatroomBtn);
+		connectedHostsPanel.setBorder(new TitledBorder(
+						new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+						"Connected Hosts", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		
+		makeJoinPanel.add(connectedHostsPanel);
+		connectedHostsPanel.setLayout(new GridLayout(0, 2, 0, 0));
+//		connectedHostsMenu.setSelectedIndex(0);
+		
+		connectedHostsPanel.add(connectedHostsMenu);
+		
+		connectedHostsPanel.add(inviteButton);
+		menuPanel.add(connectByIPPanel);
+		connectByIPPanel.setBorder(new TitledBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Connect To...", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		connectByIPPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		panel_2.setBorder(new TitledBorder(null, "Host", TitledBorder.LEFT, TitledBorder.TOP, null, null));
 		
 		connectByIPPanel.add(panel_2);
@@ -275,16 +283,25 @@ public class MainView<TDropListItem> extends JFrame {
 						"Bound name", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		connectByIPPanel.add(boundNamePanel);
-		textField.setColumns(10);
+		boundName.setColumns(10);
 		
-		boundNamePanel.add(textField);
-		remoteHostPanel.add(connectedHostsPanel);
-		menuPanel.add(remoteHostPanel);
+		boundNamePanel.add(boundName);
+		connectBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewToModelAdapter.connectTo(hostIP.getText(), boundName.getText());
+			}
+		});
+		connectByIPPanel.add(connectBtn);
 		
 		contentPane.add(chatroomTabPane, BorderLayout.CENTER);
 		chatroomTabPane.setToolTipText("A chatroom's tab");
 		
-		chatroomTabPane.addTab("Info", null, panel, null);
+		chatroomTabPane.addTab("Info", null, statusPanel, null);
+		statusPanel.setLayout(new BorderLayout(0, 0));
+		
+		statusPanel.add(statusPane, BorderLayout.CENTER);
+		
+		statusPane.setViewportView(statusText);
 		
 		chatroomTabPane.addTab("New tab", null, panel_1, null);
 	}
@@ -294,19 +311,29 @@ public class MainView<TDropListItem> extends JFrame {
 	 * @param comp the component to be added
 	 */
 	public void addCtrlComponent(JComponent comp) {
-		contentPane.add(comp);
+		menuPanel.add(comp);
 		validate();
-		pack();
+//		pack();
 	}
 	
 	/**
-	 * Updates connected host lists
+	 * Updates connected host lists.
+	 * @param newHosts the set of new hosts.
 	 */
-	private void updateConnectedHosts() {
-		for (TDropListItem connectedHost: connectedHostList) {
+	public void updateConnectedHosts(Set<Stub> newHosts) {
+		this.connectedHosts = new HashSet<Stub>(newHosts);
+		connectedHostsMenu.removeAllItems();
+		for (Stub connectedHost: connectedHosts) {
 			connectedHostsMenu.addItem(connectedHost);
 		}
 		connectedHostsMenu.setSelectedIndex(0);
+	}
+	
+	/**
+	 * @return the server name.
+	 */
+	public String getServerName() {
+		return this.servernameInput.getText();
 	}
 	
 	/**
