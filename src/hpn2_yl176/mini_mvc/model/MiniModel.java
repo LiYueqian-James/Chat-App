@@ -143,10 +143,10 @@ public class MiniModel {
 	}
 	
 	/**
-	 * Send a message to the chat room.
+	 * Send a string message to the chat room.
 	 * @param msg the message to be sent
 	 */
-	public void sendMsg(String msg) {
+	public void sendStringMsg(String msg) {
 		try {
 			adptr.displayStatus("Message \"" + msg + "\" successfully sent!");
 		}

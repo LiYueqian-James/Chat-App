@@ -163,7 +163,7 @@ public class MiniController {
 
 			@Override
 			public void sendMsg(String msg) {
-				model.sendMsg(msg);
+				model.sendStringMsg(msg);
 				
 			}
 
