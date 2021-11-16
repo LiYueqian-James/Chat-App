@@ -86,21 +86,7 @@ public class MiniController {
 		this.sysLogger = this.mini2MainAdptr.getLogger();
 
 		HashSet<INamedReceiver> roster = new HashSet<>();
-		/*
-		* The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
-		* the data channel changes.
-		*/
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(this.roomName, roster, 
-			(pubSubSyncData) -> {
-				roster.clear();
-				roster.addAll(pubSubSyncData.getData());
-			},
-			(statusMessage) -> {
-				sysLogger.log(LogLevel.DEBUG, "room " + this.roomName +" has been made sucessfully.");
-			});
-		
-		this.chatRoomID = chatRoom.getChannelID();
-		
+
 		model = new MiniModel(chatRoomID, friendlyName, new IMini2ViewAdptr() {
 
 			@Override
@@ -188,6 +174,22 @@ public class MiniController {
 			}
 			
 		});
+		
+		/*
+		* The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
+		* the data channel changes.
+		*/
+		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(this.roomName, roster, 
+			(pubSubSyncData) -> {
+				roster.clear();
+				roster.addAll(pubSubSyncData.getData());
+			},
+			(statusMessage) -> {
+				sysLogger.log(LogLevel.DEBUG, "room " + this.roomName +" has been made sucessfully.");
+			});
+		
+		this.chatRoomID = chatRoom.getChannelID();
+		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(model.getMyNamedReceiver()));
 	}
 	
 	/**
