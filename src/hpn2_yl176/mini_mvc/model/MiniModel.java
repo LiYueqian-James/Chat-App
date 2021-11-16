@@ -133,8 +133,8 @@ public class MiniModel {
 	private ILogger viewLogger;
 	private ILogger sysLogger;
 	
-	private IReceiver receiver;
-	private INamedReceiver namedReceiver;
+	private IReceiver myReceiver;
+	private INamedReceiver myNamedReceiver;
 	
 //	private ChatRoom chatRoom;
 	
@@ -144,6 +144,8 @@ public class MiniModel {
 	 */
 	public MiniModel(UUID id, String friendlyName, IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
+		
+		// Logger to log the status to the console.
 		sysLogger = adptr.getSysLogger();
 		viewLogger = ILoggerControl.makeLogger(new ILogEntryProcessor() {
 			ILogEntryFormatter formatter = ILogEntryFormatter.MakeFormatter("[%1s] %2s");
@@ -154,9 +156,13 @@ public class MiniModel {
 			}
 		}, LogLevel.INFO);
 		viewLogger.append(sysLogger);
+		
 		config = adptr.getConfig();
+		
+		// room information
 		this.roomRoster = adptr.getRoomRoster();
-		this.receiver = new IReceiver() {
+		System.out.println(this.roomRoster.size());
+		this.myReceiver = new IReceiver() {
 			
 			@Override
 			public void sendMessage(ReceiverDataPacket<?> packet) throws RemoteException {
@@ -184,7 +190,7 @@ public class MiniModel {
 	}
 
 	public INamedReceiver getMyNamedReceiver(){
-		return this.namedReceiver;
+		return this.myNamedReceiver;
 	}
 	/**
 	 * @return
@@ -198,9 +204,9 @@ public class MiniModel {
 	 */
 	public void start() {
 		try {
-			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.receiver, config.getRMIPort());
+			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.myReceiver, config.getRMIPort());
 			
-			this.namedReceiver = new NamedReceiver(receiverStub, adptr);
+			this.myNamedReceiver = new NamedReceiver(receiverStub, adptr);
 			this.initVisitor();
 			adptr.updateMemberList(roomRoster);
 		}
@@ -226,12 +232,17 @@ public class MiniModel {
 	 * @param msg the message to be sent
 	 */
 	public void sendStringMsg(String msg) {
-		try {
-			adptr.displayStatus("Message \"" + msg + "\" successfully sent!");
+		
+		IStringMsg stringMsg = new StringMsg(msg);
+		for (INamedReceiver person: this.roomRoster) {
+			try {
+				person.sendMessage(new ReceiverDataPacket<IStringMsg>(stringMsg, this.myNamedReceiver));
+			} catch (RemoteException e) {
+				adptr.displayMsg("Message \"" + msg +"\" failed to be sent!.");
+				e.printStackTrace();
+			}
 		}
-		catch (Exception e){
-			adptr.displayStatus("Exception occured: "+e.toString());
-		}
+		adptr.displayStatus("Message \"" + msg + "\" successfully sent to the ChatRoom!");
 	}
 	
 	/**
@@ -267,7 +278,7 @@ public class MiniModel {
 	
 	public void sendTextMsg(String text) {
 		try {
-			receiver.sendMessage(new ReceiverDataPacket<IStringMsg>(new StringMsg(text), namedReceiver));
+			myReceiver.sendMessage(new ReceiverDataPacket<IStringMsg>(new StringMsg(text), myNamedReceiver));
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -276,7 +287,7 @@ public class MiniModel {
 	
 	public void sendCmdMsg(AReceiverDataPacketAlgoCmd<?> cmd, IDataPacketID cmdId) {
 		try {
-			receiver.sendMessage(new ReceiverDataPacket<ICommandMsg>(new CommandMsg(cmd,cmdId), namedReceiver));
+			myReceiver.sendMessage(new ReceiverDataPacket<ICommandMsg>(new CommandMsg(cmd,cmdId), myNamedReceiver));
 		}
 		catch (Exception e) {
 			// TODO: handle exception
