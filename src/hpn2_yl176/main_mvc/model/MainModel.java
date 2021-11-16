@@ -99,7 +99,7 @@ public class MainModel {
 	 /**
 	  * The user name of the chat app instance.
 	  */
-	private String userName;
+//	private String userName;
 	
 	/**
 	 * The local Registry
@@ -180,12 +180,12 @@ public class MainModel {
 		return this.myNamedConnector;
 	}
 	
-	/**
-	 * @return the user name.
-	 */
-	public String getUserName() {
-		return this.userName;
-	}
+//	/**
+//	 * @return the user name.
+//	 */
+//	public String getUserName() {
+//		return this.userName;
+//	}
 
 	
 	/**
@@ -298,7 +298,7 @@ public class MainModel {
 		}
 		
 		// get the username from the view
-		this.userName = this.model2ViewAdpt.getUserName();
+//		this.userName = this.model2ViewAdpt.getUserName();
 		
 		// make the Connector and the namedConnector
 		this.myConnector = new Connector(connectoMsgVisitor, chatAppConfig);
@@ -359,5 +359,9 @@ public class MainModel {
 		return this.rmiUtils;
 	}
 	
+	
+	public void makeRoom() {
+		this.model2ViewAdpt.makeNewRoom(pubSubManager);
+	}
 	
 }

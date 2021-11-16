@@ -149,7 +149,7 @@ public class MiniController {
 
 			@Override
 			public void removeRoom() {
-				MiniController.this.removeRoomHelper();
+				MiniController.this.stop();
 			}
 
 			@Override
@@ -201,6 +201,15 @@ public class MiniController {
 	}
 	
 	/**
+	 * Stop the current chat room - i.e. remove myself from the room.
+	 */
+	public void stop() {
+		chatRoom.update(IPubSubSyncUpdater.makeSetRemoveFn(this.getMyNamedReceiver()));
+		chatRoom.unsubscribe();
+		this.mini2MainAdptr.removePanel(view);
+	}
+	
+	/**
 	 * @return the chat room id.
 	 */
 	public UUID getRoomID() {
@@ -223,12 +232,12 @@ public class MiniController {
 		return this.model.getReceiverMsgAlgo();
 	} 
 
-	public void removeRoomHelper() {
-	HashSet<INamedReceiver> roster = new HashSet<>();
-	chatRoom.update(IPubSubSyncUpdater.makeSetRemoveFn(this.getMyNamedReceiver()));
-	chatRoom.unsubscribe();
-	this.mini2MainAdptr.removePanel(view);
-	}
+//	public void removeRoomHelper() {
+//	HashSet<INamedReceiver> roster = new HashSet<>();
+//	chatRoom.update(IPubSubSyncUpdater.makeSetRemoveFn(this.getMyNamedReceiver()));
+//	chatRoom.unsubscribe();
+//	this.mini2MainAdptr.removePanel(view);
+//	}
 	
 	
 }

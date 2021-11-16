@@ -1,6 +1,3 @@
-/**
- * 
- */
 package hpn2_yl176.mini_mvc.model;
 import java.io.File;
 import java.rmi.RemoteException;
@@ -148,6 +145,7 @@ public class MiniModel {
 	private INamedReceiver namedReceiver;
 	
 //	private ChatRoom chatRoom;
+	
 	private ChatAppConfig config;
 	/**
 	 * @param adptr the adapter

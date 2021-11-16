@@ -166,6 +166,12 @@ public class MainController {
 				discModel.start(mainModel.getRMIUtils(), mainView.getServerName(), appConfig0.getName()); 
 				
 			}
+
+			@Override
+			public void makeNewRoom(String roomName) {
+				mainModel.makeRoom();
+				
+			}
 		}, appConfig0);
 		
 		mainModel = new MainModel(sysLogger, new IMainModel2ViewAdpt() {
@@ -173,12 +179,6 @@ public class MainController {
 			@Override
 			public void displayStatusMsg(String msg) {
 				mainView.appendStatus(msg);
-				
-			}
-
-			@Override
-			public void addComponent(JPanel Panel) {
-				//toDO: add a new JPanel
 				
 			}
 
@@ -248,16 +248,16 @@ public class MainController {
 						
 					}
 
-					@Override
-					public void removeParticipant(INamedReceiver person) {
-						miniController.removePerson(person);
-					}
+//					@Override
+//					public void removeParticipant(INamedReceiver person) {
+//						miniController.removePerson(person);
+//					}
 
-					@Override
-					public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
-						return miniController.getReceiverMsgAlgo();
-					}
-
+//					@Override
+//					public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
+//						return miniController.getReceiverMsgAlgo();
+//					}
+//
 					@Override
 					public UUID getChatRoomID() {
 						return miniController.getRoomID();
@@ -267,8 +267,15 @@ public class MainController {
 					public String getRoomName() {
 						return newRoomName;
 					}
+
+					@Override
+					public void quit() {
+						miniController.stop();
+						
+					}
 					
 				};
+				mainView.addNewTab(miniController.getMyRoomPanel(), newRoomName);
 				return chatRoomAdptr;
 			}
 
@@ -278,16 +285,10 @@ public class MainController {
 				return null;
 			}
 
-			@Override
-			public String getUserName() {
-				return mainView.getUserName();
-			}
-
-			@Override
-			public void removeStub(INamedConnector stub) {
-				// TODO Auto-generated method stub
-				
-			}
+//			@Override
+//			public String getUserName() {
+//				return mainView.getUserName();
+//			}
 
 			@Override
 			public void updateContacts(Set<INamedConnector> stubs) {
@@ -326,8 +327,8 @@ public class MainController {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				(new MainController(appConfig0)).start();
-				(new MainController(appConfig1)).start();
-				(new MainController(appConfig2)).start();
+//				(new MainController(appConfig1)).start();
+//				(new MainController(appConfig2)).start();
 			}
 		});
 	}

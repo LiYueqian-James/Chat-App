@@ -25,11 +25,11 @@ public interface IMainModel2ViewAdpt {
 	 */
 	public void displayStatusMsg(String msg);
 	
-	/**
-	 * Add a tab to the main view
-	 * @param Panel the panel of a chat room
-	 */
-	public void addComponent(JPanel Panel);
+//	/**
+//	 * Add a tab to the main view
+//	 * @param Panel the panel of a chat room
+//	 */
+//	public void addComponent(JPanel Panel);
 	
 	/**
 	 * Make a new chat room.
@@ -46,17 +46,11 @@ public interface IMainModel2ViewAdpt {
 	 */
 	public IMain2MiniAdptr join(UUID roomID, IPubSubSyncManager pubSubManager);
 	
-	/**
-	 * Get the user name of the chat app instance from the view.
-	 * @return the chat app user name.
-	 */
-	public String getUserName();
-	
-	/**
-	 * Tell the rest of the world to remove this stub.
-	 * @param stub the stub of the chat app instance who has quit.
-	 */
-	public void removeStub(INamedConnector stub);
+//	/**
+//	 * Get the user name of the chat app instance from the view.
+//	 * @return the chat app user name.
+//	 */
+//	public String getUserName();
 	
 	/**
 	 * Tell the view to update its list of contacts.
