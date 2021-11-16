@@ -105,7 +105,7 @@ public class MiniController {
 
 			@Override
 			public void displayMsg(String msg) {
-				view.appendMessage(friendlyName, msg);
+				view.appendMessage(msg);
 			}
 
 			@Override

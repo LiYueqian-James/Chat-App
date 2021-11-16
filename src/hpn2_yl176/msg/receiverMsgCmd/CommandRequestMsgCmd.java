@@ -21,8 +21,9 @@ public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<ICommandReq
 
 	private IMini2ViewAdptr adptr;
 	private ReceiverDataPacketAlgo receiverVisitor;
+	private ICmd2ModelAdapter cmd2ModelAdpt;
 	
-	public CommandRequestMsgCmd(IMini2ViewAdptr adptr, ReceiverDataPacketAlgo receiverVisitor) {
+	public CommandRequestMsgCmd(IMini2ViewAdptr adptr, ReceiverDataPacketAlgo receiverVisitor, ICmd2ModelAdapter cmd2ModelAdpt) {
 		this.adptr = adptr;
 		this.receiverVisitor = receiverVisitor;
 	}
@@ -35,7 +36,7 @@ public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<ICommandReq
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
-		
+		this.cmd2ModelAdpt = cmd2ModelAdpt;
 	}
 
 	@Override

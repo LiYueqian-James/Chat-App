@@ -2,6 +2,7 @@
  * 
  */
 package hpn2_yl176.mini_mvc.model;
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Formatter;
@@ -11,6 +12,8 @@ import java.util.UUID;
 
 import javax.swing.text.StyledEditorKit.ForegroundAction;
 
+import common.adapter.ICmd2ModelAdapter;
+import common.adapter.IComponentFactory;
 import common.connector.AConnectorDataPacketAlgoCmd;
 import common.connector.INamedConnector;
 import common.receiver.AReceiverDataPacketAlgoCmd;
@@ -39,6 +42,8 @@ import provided.logger.ILogEntryProcessor;
 import provided.logger.ILogger;
 import provided.logger.ILoggerControl;
 import provided.logger.LogLevel;
+import provided.mixedData.MixedDataDictionary;
+import provided.mixedData.MixedDataKey;
 import provided.pubsubsync.IPubSubSyncChannelUpdate;
 import provided.pubsubsync.IPubSubSyncConnection;
 import provided.pubsubsync.IPubSubSyncManager;
@@ -56,6 +61,77 @@ public class MiniModel {
 	private ReceiverDataPacketAlgo receiverVisitor;
 	
 	private Set<INamedReceiver> roomRoster;
+	
+	private MixedDataDictionary mixedDictionary;
+	
+	private ICmd2ModelAdapter cmd2ModelAdapter = new ICmd2ModelAdapter() {
+		
+		@Override
+		public <T extends IReceiverMsg> void send(T data, INamedReceiver recv) {
+			// TODO Auto-generated method stub
+		
+		}
+		
+		@Override
+		public File saveFile(String defaultName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public <T> T put(MixedDataKey<T> key, T value) {
+			// TODO Auto-generated method stub
+			return mixedDictionary.put(key, value);
+		}
+		
+		@Override
+		public String getRoomName() {
+			// TODO Auto-generated method stub
+			return getRoomName();
+		}
+		
+		@Override
+		public String getInstanceName() {
+			// TODO Auto-generated method stub
+			return adptr.getUserName();
+		}
+		
+		@Override
+		public File getFile() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public <T> T get(MixedDataKey<T> key) {
+			// TODO Auto-generated method stub
+			return mixedDictionary.get(key);
+		}
+		
+		@Override
+		public boolean containsKey(MixedDataKey<?> key) {
+			// TODO Auto-generated method stub
+			return mixedDictionary.containsKey(key);
+		}
+		
+		@Override
+		public void buildScrollingComponent(IComponentFactory fac, String name) {
+			// TODO Auto-generated method stub
+//			adptr.addScrollingComponent(fac, name);
+		}
+		
+		@Override
+		public void buildFixedComponent(IComponentFactory fac, String name) {
+			// TODO Auto-generated method stub
+//			adptr.addFixedComponent(fac, name);
+		}
+		
+		@Override
+		public <T extends IReceiverMsg> void broadcast(T msg) {
+			// TODO Auto-generated method stub
+//			ReceiverDataPacket<T> dataPacket = new ReceiverDataPacket<MiniModel>(msg, namedReceiver)
+		}
+	};
 	
 	private ILogger viewLogger;
 	private ILogger sysLogger;
@@ -97,7 +173,7 @@ public class MiniModel {
 		
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		
-		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ICommandRequestMsg.class), new CommandRequestMsgCmd(adptr, receiverVisitor));
+		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ICommandRequestMsg.class), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
 	}
 	
 	public Set<INamedReceiver> getRoomRoster(){

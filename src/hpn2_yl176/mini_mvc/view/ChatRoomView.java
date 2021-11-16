@@ -183,8 +183,8 @@ public class ChatRoomView extends JPanel{
 	 * @param user who sent the msg
 	 * @param msg the msg
 	 */
-	public void appendMessage(String user, String msg) {
-		msgArea.append(user+": "+msg);
+	public void appendMessage(String msg) {
+		msgArea.append(msg);
 	}
 	
 	/**
