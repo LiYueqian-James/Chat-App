@@ -198,7 +198,7 @@ public class MiniModel {
 	private void initVisitor() {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		receiverVisitor.setCmd(ICommandMsg.GetID(), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
-//		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(HeartMessage.class), new HeartMessageCmd(cmd2ModelAdapter));
+		receiverVisitor.setCmd(HeartMessage.GetID(), new HeartMessageCmd(cmd2ModelAdapter));
 	}
 	
 	public Set<INamedReceiver> getRoomRoster(){
@@ -245,32 +245,34 @@ public class MiniModel {
 	public void sendStringMsg(String msg) {
 		
 		IStringMsg stringMsg = new StringMsg(msg);
-		for (INamedReceiver person: this.roomRoster) {
-			try {
-				person.sendMessage(new ReceiverDataPacket<IStringMsg>(stringMsg, this.myNamedReceiver));
-			} catch (RemoteException e) {
-				adptr.displayMsg("Message \"" + msg +"\" failed to be sent!.");
-				e.printStackTrace();
-			}
-		}
-		adptr.displayStatus("Message \"" + msg + "\" successfully sent to the ChatRoom!");
+		this.sendMsg(stringMsg);
 	}
 	
 	/**
-	 * Send a ballworld instance to the chat room
+	 * Send a heart message to the chat room
 	 */
-	public void sendBallWorld() {
+	public void sendHeartMsg() {
 		
 		//toDo: determine what data is needed to send a ball world
 		// just the controller, all everything(model,view, controller?)
 		
-		try {
-			BallWorldController controller = new BallWorldController();
-			adptr.displayStatus("A Ball World program has been successfully sent!");
+		HeartMessage msg = new HeartMessage();
+		this.sendMsg(msg);	
+	}
+	
+	/**
+	 * @param msg the message to be sent; can be any IRecevierMsg.
+	 */
+	private void sendMsg(IReceiverMsg msg) {
+		for (INamedReceiver person: this.roomRoster) {
+			try {
+				person.sendMessage(new ReceiverDataPacket<IReceiverMsg>(msg, this.myNamedReceiver));
+			} catch (RemoteException e) {
+				adptr.displayMsg("Message \"" + msg.toString() +"\" failed to be sent!.");
+				e.printStackTrace();
+			}
 		}
-		catch (Exception e) {
-			adptr.displayStatus("Exception occured: "+e.toString());
-		}
+		adptr.displayStatus("Message \"" + msg.toString() + "\" successfully sent to the ChatRoom!");
 	}
 	
 //	public void leaveRoom() {
@@ -287,16 +289,16 @@ public class MiniModel {
 //		adptr.updateMemberList(this.roomRoster);
 //	}
 	
-	public void sendCmdMsg(CommandMsg msg) {
-		for (INamedReceiver person: this.roomRoster) {
-			try {
-				person.sendMessage(new ReceiverDataPacket<IReceiverMsg>(msg, myNamedReceiver));
-			}
-			catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-		}
-	}
+//	public void sendCmdMsg(CommandMsg msg) {
+//		for (INamedReceiver person: this.roomRoster) {
+//			try {
+//				person.sendMessage(new ReceiverDataPacket<IReceiverMsg>(msg, myNamedReceiver));
+//			}
+//			catch (Exception e) {
+//				// TODO: handle exception
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
 }

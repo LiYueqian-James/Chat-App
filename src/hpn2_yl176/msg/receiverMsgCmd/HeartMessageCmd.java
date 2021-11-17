@@ -23,9 +23,12 @@ import provided.datapacket.IDataPacketID;
  */
 public class HeartMessageCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg>{	
 	
-	private ICmd2ModelAdapter cmd2ModelAdapter;
+	private transient ICmd2ModelAdapter cmd2ModelAdapter;
 	
 
+	/**
+	 * 
+	 */
 	public HeartMessageCmd(ICmd2ModelAdapter cmd2ModelAdapter) {
 		// TODO Auto-generated constructor stub
 		this.cmd2ModelAdapter = cmd2ModelAdapter;
@@ -57,9 +60,7 @@ public class HeartMessageCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg>{
 
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
-		 cmd2ModelAdapter = cmd2ModelAdpt;
-		// TODO Auto-generated method stub
-		
+		 cmd2ModelAdapter = cmd2ModelAdpt;		
 	}
 
 	@Override
@@ -79,6 +80,6 @@ public class HeartMessageCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg>{
 		+ "_____________$";
 		IReceiverMsg receiverMsg = new StringMsg(heartMessage);
 		cmd2ModelAdapter.broadcast(receiverMsg);
-return null;
+		return null;
 	}
 }

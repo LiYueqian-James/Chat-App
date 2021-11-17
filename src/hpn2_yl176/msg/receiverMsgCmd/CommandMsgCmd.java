@@ -47,7 +47,6 @@ public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg>{
 		receivedCmd.setCmd2ModelAdpt(cmd2ModelAdapter);
 		for (ReceiverDataPacket<IReceiverMsg> message: unexecutedMsgs.get(id)) {
 			message.execute(receiverVisitor);
-//			cmd2ModelAdapter.broadcast(message.getData());
 		}
 		unexecutedMsgs.put(id, new ArrayList<ReceiverDataPacket<IReceiverMsg>>());
 		return null;

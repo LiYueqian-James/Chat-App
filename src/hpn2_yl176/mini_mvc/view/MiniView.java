@@ -130,7 +130,7 @@ public class MiniView extends JPanel{
 		Msg.add(sendMsg);
 		sendBallWorld.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				adptr.sendBallWorld();
+				adptr.sendHeartMsg();
 			}
 		});
 		sendBallWorld.setToolTipText("button to send ball world message");

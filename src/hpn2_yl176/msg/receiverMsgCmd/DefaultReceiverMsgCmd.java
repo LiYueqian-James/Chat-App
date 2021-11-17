@@ -35,7 +35,7 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	@Override
 	public Void apply(IDataPacketID index, ReceiverDataPacket<IReceiverMsg> host, Void... params) {
 		// TODO Auto-generated method stub
-	 
+		unexecutedMsgs.get(index).add(host);
 		Thread thread = new Thread(() -> {
 			try {
 				host.getSender().sendMessage(new ReceiverDataPacket<IReceiverMsg>(
