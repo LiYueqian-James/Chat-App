@@ -4,8 +4,7 @@
 package hpn2_yl176.main_mvc.model;
 
 import java.awt.Component;
-
-
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -14,6 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import common.adapter.ICmd2ModelAdapter;
+import common.adapter.IComponentFactory;
 import common.connector.ConnectorDataPacket;
 import common.connector.ConnectorDataPacketAlgo;
 import common.connector.IConnector;
@@ -22,6 +24,8 @@ import common.connector.messages.IAddPeersMsg;
 import common.connector.messages.IInviteMsg;
 import common.connector.messages.IQuitMsg;
 import common.connector.messages.ISyncPeersMsg;
+import common.receiver.INamedReceiver;
+import common.receiver.messages.IReceiverMsg;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.msg.connectorMsgCmd.AddPeersMsgCmd;
 import hpn2_yl176.msg.connectorMsgCmd.DefaultConnectorMsgCmd;
@@ -36,6 +40,7 @@ import provided.logger.ILogEntryProcessor;
 import provided.logger.ILogger;
 import provided.logger.ILoggerControl;
 import provided.logger.LogLevel;
+import provided.mixedData.MixedDataKey;
 import provided.pubsubsync.IPubSubSyncConnection;
 import provided.pubsubsync.IPubSubSyncManager;
 import provided.rmiUtils.IRMIUtils;
@@ -127,8 +132,7 @@ public class MainModel {
 	 * A dyad containing the name and the stub of the current chat app.
 	 */
 	private INamedConnector myNamedConnector;
-	
-	
+		
 	/**
 	 * Constructor for the model.
 	 * @param logger the logger being used by the pubsubSync manager.

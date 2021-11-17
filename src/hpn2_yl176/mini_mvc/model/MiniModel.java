@@ -2,30 +2,25 @@ package hpn2_yl176.mini_mvc.model;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Formatter;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.swing.text.StyledEditorKit.ForegroundAction;
+import javax.swing.JFileChooser;
+
+import java.awt.Component;
 
 import common.adapter.ICmd2ModelAdapter;
 import common.adapter.IComponentFactory;
-import common.connector.AConnectorDataPacketAlgoCmd;
-import common.connector.INamedConnector;
 import common.receiver.AReceiverDataPacketAlgoCmd;
 import common.receiver.INamedReceiver;
 import common.receiver.IReceiver;
 import common.receiver.ReceiverDataPacket;
 import common.receiver.ReceiverDataPacketAlgo;
 import common.receiver.messages.ICommandMsg;
-import common.receiver.messages.ICommandRequestMsg;
 import common.receiver.messages.IReceiverMsg;
 import common.receiver.messages.IStringMsg;
 import controller.BallWorldController;
-import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
-import hpn2_yl176.mini_mvc.view.MiniView;
 import hpn2_yl176.msg.receiverMsgCmd.CommandRequestMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.DefaultReceiverMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.StringMsgCmd;
@@ -41,12 +36,6 @@ import provided.logger.ILoggerControl;
 import provided.logger.LogLevel;
 import provided.mixedData.MixedDataDictionary;
 import provided.mixedData.MixedDataKey;
-import provided.pubsubsync.IPubSubSyncChannelUpdate;
-import provided.pubsubsync.IPubSubSyncConnection;
-import provided.pubsubsync.IPubSubSyncManager;
-import provided.pubsubsync.IPubSubSyncUpdater;
-import provided.rmiUtils.IRMIUtils;
-import provided.rmiUtils.RMIUtils;
 /**
  * @author James Li
  *
@@ -65,14 +54,33 @@ public class MiniModel {
 		
 		@Override
 		public <T extends IReceiverMsg> void send(T data, INamedReceiver recv) {
-			// TODO Auto-generated method stub
-		
+			if (roomRoster.contains(recv)) {
+				try {
+					recv.sendMessage(new ReceiverDataPacket<T>(data, myNamedReceiver));
+				} catch (RemoteException e) {
+					sysLogger.log(LogLevel.ERROR, "Request to send message failed");
+					e.printStackTrace();
+				}
+			}
+			
 		}
 		
 		@Override
 		public File saveFile(String defaultName) {
-			// TODO Auto-generated method stub
-			return null;
+			// parent component of the dialog
+			Component parentFrame = adptr.getViewPanel();
+			 
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setDialogTitle("Specify a file to save");   
+			 
+			int userSelection = fileChooser.showSaveDialog(parentFrame);
+			 
+			if (userSelection == JFileChooser.APPROVE_OPTION) {
+			    File fileToSave = fileChooser.getSelectedFile();
+			    fileToSave.n
+			    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+			}
+			fileToSave.
 		}
 		
 		@Override

@@ -4,6 +4,7 @@
 package hpn2_yl176.mini_mvc.model;
 
 import java.util.Set;
+import java.awt.Component;
 
 import common.adapter.IComponentFactory;
 import common.connector.INamedConnector;
@@ -51,4 +52,6 @@ public interface IMini2ViewAdptr {
 	
 	public void addScrollingComponent(IComponentFactory fac, String name);
 	public void addFixedComponent(IComponentFactory fac, String name);
+	
+	public Component getViewPanel();
 }
