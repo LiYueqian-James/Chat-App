@@ -14,28 +14,35 @@ import common.receiver.IReceiver;
 public class NamedReceiver implements INamedReceiver{
 
 	/**
-	 * 
+	 * Serialization purpose.
 	 */
 	private static final long serialVersionUID = -6162987341184298439L;
 	
 	private IReceiver receiver;
-	private IMini2ViewAdptr adptr;
 	
-	public NamedReceiver(IReceiver receiver, IMini2ViewAdptr adptr) {
+//	private transient IMini2ViewAdptr adptr;
+	
+	private String userName;
+	
+	private INamedConnector app;
+	
+	public NamedReceiver(IReceiver receiver, String userName, INamedConnector app) {
 		this.receiver = receiver;
-		this.adptr = adptr;
+//		this.adptr = adptr;
+		this.userName = userName;
+		this.app = app;
 	}
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return adptr.getUserName();
+		return this.userName;
 	}
 
 	@Override
 	public INamedConnector getConnector() {
 		// TODO Auto-generated method stub
-		return adptr.getNamedConnector();
+		return this.app;
 	}
 
 	@Override
@@ -51,8 +58,8 @@ public class NamedReceiver implements INamedReceiver{
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof INamedConnector) {
-			return ((INamedConnector) obj).getStub().equals(this.receiver);
+		if (obj instanceof INamedReceiver) {
+			return ((INamedReceiver) obj).getStub().equals(this.receiver);
 		}
 		return false;
 	}

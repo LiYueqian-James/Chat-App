@@ -161,20 +161,21 @@ public class MiniModel {
 		
 		// room information
 		this.roomRoster = adptr.getRoomRoster();
-		System.out.println(this.roomRoster.size());
-		this.myReceiver = new IReceiver() {
-			
-			@Override
-			public void sendMessage(ReceiverDataPacket<?> packet) throws RemoteException {
-				// TODO Auto-generated method stub
-				packet.execute(receiverVisitor);
-			}
-		};
+		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd());
+		this.myReceiver = new Receiver(this.receiverVisitor);
+		this.adptr = adptr;
+		
+		try {
+			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.myReceiver, config.getRMIPort());
+			this.myNamedReceiver = new NamedReceiver(receiverStub, this.adptr.getUserName(), this.adptr.getNamedConnector());			
+		}
+		catch (Exception e) {
+			 sysLogger.log(LogLevel.ERROR, "Can't make receiver stub");
+			e.printStackTrace();
+		}
 	}
 
-	private void initVisitor() {
-		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd());
-		
+	private void initVisitor() {	
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ICommandRequestMsg.class), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
@@ -184,10 +185,10 @@ public class MiniModel {
 		return this.roomRoster;
 	}
 
-	public void removeParticipant(INamedReceiver person){
-		roomRoster.remove(person);
-		this.adptr.updateMemberList(roomRoster);
-	}
+//	public void removeParticipant(INamedReceiver person){
+//		roomRoster.remove(person);
+//		this.adptr.updateMemberList(roomRoster);
+//	}
 
 	public INamedReceiver getMyNamedReceiver(){
 		return this.myNamedReceiver;
@@ -203,17 +204,7 @@ public class MiniModel {
 	 * start the chat room - create a pubsubsync manager
 	 */
 	public void start() {
-		try {
-			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.myReceiver, config.getRMIPort());
-			
-			this.myNamedReceiver = new NamedReceiver(receiverStub, adptr);
-			this.initVisitor();
-			adptr.updateMemberList(roomRoster);
-		}
-		catch (Exception e) {
-			// TODO: handle exception 
-			e.printStackTrace();
-		}
+		this.initVisitor();
 	}
 	
 	public void sendThreadedMessage(INamedReceiver receiver, ReceiverDataPacket<? extends IReceiverMsg> message) {
@@ -266,15 +257,15 @@ public class MiniModel {
 		adptr.removeRoom();
 	}
 	
-	public void removeUser(INamedReceiver namedReceiver) {
-		this.roomRoster.remove(namedReceiver);
-		adptr.updateMemberList(roomRoster);
-	}
-	
-	public void addUser(INamedReceiver namedUser) {
-		this.roomRoster.add(namedUser);
-		adptr.updateMemberList(this.roomRoster);
-	}
+//	public void removeUser(INamedReceiver namedReceiver) {
+//		this.roomRoster.remove(namedReceiver);
+//		adptr.updateMemberList(roomRoster);
+//	}
+//	
+//	public void addUser(INamedReceiver namedUser) {
+//		this.roomRoster.add(namedUser);
+//		adptr.updateMemberList(this.roomRoster);
+//	}
 	
 	public void sendTextMsg(String text) {
 		try {

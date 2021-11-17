@@ -173,9 +173,6 @@ public class ChatRoomView extends JPanel{
 		users.add(usersPanel, BorderLayout.CENTER);
 		
 		usersPanel.setViewportView(memberList);
-		for (String member: roomRoster) {
-			memberList.append(member + '\n');	
-		}
 
 	}
 	
@@ -192,7 +189,7 @@ public class ChatRoomView extends JPanel{
 	 * @param msg the msg
 	 */
 	public void appendMessage(String msg) {
-		System.out.println("TEXTING " + msg);
+		System.out.println("TEXTING " + msg+"\n");
 		msgArea.append(msg);
 	}
 	
@@ -204,7 +201,11 @@ public class ChatRoomView extends JPanel{
 		statusArea.append(status+"\n");
 	}
 	
-	public void setRoomRoster(Set<String> roomRoster) {
+	public void updateRoomRoster(Set<String> roomRoster) {
 		this.roomRoster = roomRoster;
+		this.memberList.setText("");
+		for (String member: roomRoster) {
+			memberList.append(member + '\n');	
+		}
 	}
 }
