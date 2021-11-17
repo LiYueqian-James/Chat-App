@@ -5,6 +5,7 @@ package hpn2_yl176.msg.receiverMsgImpl;
 
 import java.util.UUID;
 
+import common.adapter.ICmd2ModelAdapter;
 import common.receiver.AReceiverDataPacketAlgoCmd;
 import common.receiver.messages.ICommandMsg;
 import provided.datapacket.IDataPacketID;
@@ -26,7 +27,7 @@ public class CommandMsg implements ICommandMsg{
 	 * @param roomID the room Id.
 	 * @param roomName the room name.
 	 */
-	public CommandMsg(AReceiverDataPacketAlgoCmd<?> cmd, IDataPacketID cmdId) {
+	public CommandMsg(AReceiverDataPacketAlgoCmd<?> cmd, IDataPacketID cmdId, ICmd2ModelAdapter cmd2ModelAdapter) {
 		this.cmd = cmd;
 		this.cmdId = cmdId;
 	}

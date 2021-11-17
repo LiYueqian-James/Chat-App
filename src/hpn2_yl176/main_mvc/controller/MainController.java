@@ -282,7 +282,7 @@ public class MainController {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				(new MainController(appConfig0)).start();
-//				(new MainController(appConfig1)).start();
+				(new MainController(appConfig1)).start();
 //				(new MainController(appConfig2)).start();
 			}
 		});

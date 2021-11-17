@@ -2,6 +2,8 @@ package hpn2_yl176.mini_mvc.model;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,14 +19,17 @@ import common.receiver.IReceiver;
 import common.receiver.ReceiverDataPacket;
 import common.receiver.ReceiverDataPacketAlgo;
 import common.receiver.messages.ICommandMsg;
+import common.receiver.messages.ICommandRequestMsg;
 import common.receiver.messages.IReceiverMsg;
 import common.receiver.messages.IStringMsg;
 import controller.BallWorldController;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.msg.receiverMsgCmd.CommandRequestMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.DefaultReceiverMsgCmd;
+import hpn2_yl176.msg.receiverMsgCmd.HeartMessageCmd;
 import hpn2_yl176.msg.receiverMsgCmd.StringMsgCmd;
 import hpn2_yl176.msg.receiverMsgImpl.CommandMsg;
+import hpn2_yl176.msg.receiverMsgImpl.HeartMessage;
 import hpn2_yl176.msg.receiverMsgImpl.StringMsg;
 import provided.datapacket.DataPacketIDFactory;
 import provided.datapacket.IDataPacketID;
@@ -47,6 +52,8 @@ public class MiniModel {
 	private ReceiverDataPacketAlgo receiverVisitor;
 	
 	private Set<INamedReceiver> roomRoster;
+	
+	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
 	
 	private MixedDataDictionary mixedDictionary;
 	
@@ -176,7 +183,7 @@ public class MiniModel {
 		this.roomRoster = adptr.getRoomRoster();
 		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd());
 		this.myReceiver = new Receiver(this.receiverVisitor);
-		this.adptr = adptr;
+		this.unexecutedMsgs = new HashMap<>();
 		
 		try {
 			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.myReceiver, config.getRMIPort());
@@ -188,9 +195,10 @@ public class MiniModel {
 		}
 	}
 
-	private void initVisitor() {	
+	private void initVisitor() {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		receiverVisitor.setCmd(ICommandMsg.GetID(), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
+		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(HeartMessage.class), new HeartMessageCmd(cmd2ModelAdapter));
 	}
 	
 	public Set<INamedReceiver> getRoomRoster(){
@@ -282,7 +290,7 @@ public class MiniModel {
 	public void sendCmdMsg(CommandMsg msg) {
 		for (INamedReceiver person: this.roomRoster) {
 			try {
-				myReceiver.sendMessage(new ReceiverDataPacket<ICommandMsg>(msg, myNamedReceiver));
+				person.sendMessage(new ReceiverDataPacket<IReceiverMsg>(msg, myNamedReceiver));
 			}
 			catch (Exception e) {
 				// TODO: handle exception

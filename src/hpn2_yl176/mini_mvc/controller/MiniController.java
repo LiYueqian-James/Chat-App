@@ -187,7 +187,7 @@ public class MiniController {
 			@Override
 			public void sendBallWorld() {
 				// TODO Auto-generated method stub
-				model.sendCmdMsg(new HeartMessage());
+				model.sendCmdMsg(new HeartMessage(null, null));
 			}
 
 			@Override
