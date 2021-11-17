@@ -253,9 +253,9 @@ public class MiniModel {
 		}
 	}
 	
-	public void leaveRoom() {	
-		adptr.removeRoom();
-	}
+//	public void leaveRoom() {
+//		adptr.removeRoom();
+//	}
 	
 //	public void removeUser(INamedReceiver namedReceiver) {
 //		this.roomRoster.remove(namedReceiver);

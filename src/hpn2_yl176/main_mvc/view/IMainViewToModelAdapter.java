@@ -36,4 +36,6 @@ public interface IMainViewToModelAdapter<Stub> {
 	void start();
 	
 	void makeNewRoom(String roomName);
+	
+	void removeRoom(int idx);
 }

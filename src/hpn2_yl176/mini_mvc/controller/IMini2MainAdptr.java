@@ -30,7 +30,8 @@ public interface IMini2MainAdptr {
 	/**
 	 * Upon exit, tell the main to clean up.
 	 */
-	public void removePanel(Component roomPanel);
+	public void removeRoom();
+	
 	/**
 	 * @return the logger to be used to display status.
 	 */

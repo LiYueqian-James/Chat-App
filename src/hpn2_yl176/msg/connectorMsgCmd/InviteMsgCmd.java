@@ -37,7 +37,7 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 	 */
 	private IPubSubSyncManager pubSubSyncManager;
 	
-	private INamedReceiver receiver;
+//	private INamedReceiver receiver;
 
 	private IMainModel2ViewAdpt adapter;
 
@@ -49,9 +49,9 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 	 * @param pubSubSyncManager the manager.
 	 * @param receiier the receiver in this room.
 	 */
-	public InviteMsgCmd(INamedReceiver receiver, IMainModel2ViewAdpt adptr) {
+	public InviteMsgCmd(IMainModel2ViewAdpt adptr) {
 //		this.pubSubSyncManager = pubSubSyncManager;
-		this.receiver = receiver;
+//		this.receiver = receiver;
 		this.adapter = adptr;
 	}
 	

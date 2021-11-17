@@ -47,7 +47,7 @@ public interface IMini2ViewAdptr {
 	
 	public INamedConnector getNamedConnector();
 	
-	public void removeRoom();
+//	public void removeRoom();
 	
 	public void addScrollingComponent(IComponentFactory fac, String name);
 	public void addFixedComponent(IComponentFactory fac, String name);

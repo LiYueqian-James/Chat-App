@@ -352,8 +352,10 @@ public class MainView<Stub> extends JFrame {
 		return this.usernameInput.getText();
 	}
 	
-	public void removeRoomPanel(Component comp){
-		this.chatroomTabPane.remove(comp);
+	public void removeCurrentRoomPanel(){
+		int idx = chatroomTabPane.getSelectedIndex();
+		this.chatroomTabPane.remove(idx);
+		this.viewToModelAdapter.removeRoom(idx-1);
 	}
 
 	public void addNewTab(Component tab, String tabName) {

@@ -163,6 +163,12 @@ public class MainController {
 				mainModel.makeRoom(roomName);
 				
 			}
+
+			@Override
+			public void removeRoom(int idx) {
+				mainModel.removeRoom(idx-1);
+				
+			}
 		}, appConfig0);
 		
 		mainModel = new MainModel(sysLogger, new IMainModel2ViewAdpt() {
@@ -201,9 +207,11 @@ public class MainController {
 					}
 
 					@Override
-					public void removePanel(Component roomPanel) {
-						mainView.remove(roomPanel);						
-					}					
+					public void removeRoom() {
+						mainView.removeCurrentRoomPanel();
+//						mainModel.removeRoom(0);
+						
+					}				
 				});
 				miniController.start();
 				return miniController;
@@ -241,7 +249,8 @@ public class MainController {
 			@Override
 			public void updateContacts(Set<INamedConnector> stubs) {
 				mainView.updateConnectedHosts(stubs);
-			}}, appConfig0);
+			}
+		}, appConfig0);
 	}
 	
 	/**
@@ -274,7 +283,7 @@ public class MainController {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				(new MainController(appConfig0)).start();
-				(new MainController(appConfig1)).start();
+//				(new MainController(appConfig1)).start();
 //				(new MainController(appConfig2)).start();
 			}
 		});

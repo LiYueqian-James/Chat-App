@@ -166,7 +166,7 @@ public class MainModel {
 	 */
 	private void startConnectorMsgVisitor() {
 		
-//		connectoMsgVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this, this.main2miniAdptr.getNamedReceiver()));
+		connectoMsgVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(model2ViewAdpt));
 		
 		connectoMsgVisitor.setCmd(ISyncPeersMsg.GetID(), new SyncPeersMsgCmd(this.myContacts, this.getNamedConnector(), this.sysLogger, this.model2ViewAdpt));
 		
@@ -247,7 +247,7 @@ public class MainModel {
 				e.printStackTrace();
 			}
 		}
-//		System.exit(exitCode);
+		System.exit(exitCode);
 		
 	}
 
@@ -372,5 +372,9 @@ public class MainModel {
 	
 	public IPubSubSyncManager getpubSubSyncManager() {
 		return this.pubSubManager;
+	}
+	
+	public void removeRoom(int idx) {
+		this.chatRooms.remove(idx);
 	}
 }

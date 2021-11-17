@@ -139,10 +139,10 @@ public class MiniController {
 //				view.setRoomRoster(memberList);
 //			}
 
-			@Override
-			public void removeRoom() {
-				MiniController.this.stop();
-			}
+//			@Override
+//			public void removeRoom() {
+//				MiniController.this.stop();
+//			}
 
 			@Override
 			public Set<INamedReceiver> getRoomRoster() {
@@ -172,7 +172,7 @@ public class MiniController {
 
 			@Override
 			public void leave() {
-				model.leaveRoom();
+				stop();
 			}
 
 			@Override
@@ -203,7 +203,7 @@ public class MiniController {
 	public void start() {
 		model.start();
 		view.start();
-		
+	
 		chatRoomAdptr = new IMain2MiniAdptr() {
 
 			@Override
@@ -221,17 +221,7 @@ public class MiniController {
 				start();
 				
 			}
-
-//			@Override
-//			public void removeParticipant(INamedReceiver person) {
-//				miniController.removePerson(person);
-//			}
-
-//			@Override
-//			public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
-//				return miniController.getReceiverMsgAlgo();
-//			}
-//
+			
 			@Override
 			public UUID getChatRoomID() {
 				return getRoomID();
@@ -249,7 +239,7 @@ public class MiniController {
 			}
 			
 		};
-		
+//		
 	}
 	
 	public void makeNewRoom() {
@@ -258,7 +248,7 @@ public class MiniController {
 		* The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
 		* the data channel changes.
 		*/
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(this.roomName, roster, 
+		chatRoom = pubSubSyncManager.createChannel(this.roomName, roster, 
 			(pubSubSyncData) -> {
 				roster.clear();
 				nameRoster.clear();
@@ -282,7 +272,7 @@ public class MiniController {
 		* The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
 		* the data channel changes.
 		*/
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.subscribeToUpdateChannel(roomID, 
+		chatRoom = pubSubSyncManager.subscribeToUpdateChannel(roomID, 
 			(pubSubSyncData) -> {
 				roster.clear();
 				nameRoster.clear();
@@ -307,7 +297,7 @@ public class MiniController {
 	public void stop() {
 		chatRoom.update(IPubSubSyncUpdater.makeSetRemoveFn(model.getMyNamedReceiver()));
 		chatRoom.unsubscribe();
-		this.mini2MainAdptr.removePanel(view);
+		this.mini2MainAdptr.removeRoom();
 	}
 	
 	/**
