@@ -28,7 +28,7 @@ import javax.swing.border.TitledBorder;
  * @author James Li
  *
  */
-public class ChatRoomView extends JPanel{
+public class MiniView extends JPanel{
 	
 	/**
 	 * The adapter for the model.
@@ -94,7 +94,7 @@ public class ChatRoomView extends JPanel{
 	 * Constructor for the view
 	 * @param adptr the adapter.
 	 */
-	public ChatRoomView(IView2MiniAdptr adptr) {
+	public MiniView(IView2MiniAdptr adptr) {
 		this.adptr = adptr;
 		textField.setToolTipText("The string message to be sent");
 		textField.setColumns(30);

@@ -273,6 +273,12 @@ public class MainView<Stub> extends JFrame {
 //		connectedHostsMenu.setSelectedIndex(0);
 		
 		connectedHostsPanel.add(connectedHostsMenu);
+		inviteButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent e) {
+				viewToModelAdapter.invite((Stub) connectedHostsMenu.getSelectedItem());
+			}
+		});
 		
 		connectedHostsPanel.add(inviteButton);
 		menuPanel.add(connectByIPPanel);

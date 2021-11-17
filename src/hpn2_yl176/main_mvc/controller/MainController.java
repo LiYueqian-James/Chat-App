@@ -4,14 +4,11 @@
 package hpn2_yl176.main_mvc.controller;
 
 import java.rmi.RemoteException;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.text.View;
 import java.awt.Component;
 import common.connector.ConnectorDataPacket;
 import common.connector.IConnector;
@@ -19,9 +16,6 @@ import common.connector.INamedConnector;
 import common.connector.messages.IInviteMsg;
 import common.connector.messages.ISyncPeersMsg;
 import common.receiver.INamedReceiver;
-import common.receiver.IReceiver;
-import common.receiver.ReceiverDataPacket;
-import common.receiver.ReceiverDataPacketAlgo;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.main_mvc.model.IMainModel2ViewAdpt;
@@ -40,13 +34,9 @@ import provided.discovery.impl.model.IDiscoveryModelToViewAdapter;
 import provided.logger.ILogger;
 import provided.logger.ILoggerControl;
 import provided.logger.LogLevel;
-import provided.logger.impl.Logger;
-import provided.pubsubsync.IPubSubSyncChannelUpdate;
 import provided.pubsubsync.IPubSubSyncManager;
-import provided.pubsubsync.IPubSubSyncUpdater;
 import provided.rmiUtils.IRMIUtils;
 import provided.rmiUtils.IRMI_Defs;
-import provided.rmiUtils.RMIUtils;
 
 /**
  * @author James Li
@@ -169,7 +159,7 @@ public class MainController {
 
 			@Override
 			public void makeNewRoom(String roomName) {
-				mainModel.makeRoom();
+				mainModel.makeRoom(roomName);
 				
 			}
 		}, appConfig0);
@@ -183,8 +173,8 @@ public class MainController {
 			}
 
 			@Override
-			public IMain2MiniAdptr makeNewRoom(IPubSubSyncManager pubSubSyncManager) {
-				String newRoomName = mainView.getNewRoomName();			
+			public IMain2MiniAdptr makeNewRoom(IPubSubSyncManager pubSubSyncManager, String newRoomName) {
+//				String newRoomName = mainView.getNewRoomName();			
 
 				/*
 					* Instantiate the Mini-controller
@@ -304,7 +294,6 @@ public class MainController {
 	public void start() {
 //		System.out.println("bruh!");
 
-
 		discPnl.start(); // start the discovery panel	
 		
 		mainView.addCtrlComponent(discPnl); // Add the discovery panel to the view's "control" panel.
@@ -328,7 +317,7 @@ public class MainController {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				(new MainController(appConfig0)).start();
-//				(new MainController(appConfig1)).start();
+				(new MainController(appConfig1)).start();
 //				(new MainController(appConfig2)).start();
 			}
 		});

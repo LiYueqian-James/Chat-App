@@ -1,5 +1,5 @@
 package hpn2_yl176.mini_mvc.controller;
-import hpn2_yl176.mini_mvc.view.ChatRoomView;
+import hpn2_yl176.mini_mvc.view.MiniView;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.mini_mvc.model.IMini2ViewAdptr;
 import hpn2_yl176.mini_mvc.view.IView2MiniAdptr;
@@ -31,7 +31,7 @@ public class MiniController {
 	/**
 	 * The view of a chat room.
 	 */
-	private ChatRoomView view;
+	private MiniView view;
 	
 	/**
 	 * The model behind a chat room.
@@ -145,7 +145,7 @@ public class MiniController {
 			
 		});
 		
-		view = new ChatRoomView(new IView2MiniAdptr() {
+		view = new MiniView(new IView2MiniAdptr() {
 
 			@Override
 			public void sendMsg(String msg) {

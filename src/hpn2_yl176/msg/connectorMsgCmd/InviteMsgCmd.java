@@ -14,6 +14,7 @@ import common.connector.messages.IInviteMsg;
 import common.receiver.INamedReceiver;
 import common.receiver.IReceiver;
 import common.receiver.ReceiverDataPacket;
+import hpn2_yl176.main_mvc.model.MainModel;
 import provided.datapacket.IDataPacketID;
 import provided.pubsubsync.IPubSubSyncChannelUpdate;
 import provided.pubsubsync.IPubSubSyncUpdater;
@@ -37,13 +38,16 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 	
 	private INamedReceiver receiver;
 	
+	private MainModel model;
+	
 	/**
 	 * Constructor for the invite msg cmd.
 	 * @param pubSubSyncManager the manager.
 	 * @param receiier the receiver in this room.
 	 */
-	public InviteMsgCmd(IPubSubSyncManager pubSubSyncManager, INamedReceiver receiver) {
-		this.pubSubSyncManager = pubSubSyncManager;
+	public InviteMsgCmd(MainModel model, INamedReceiver receiver) {
+//		this.pubSubSyncManager = pubSubSyncManager;
+		this.model = model;
 		this.receiver = receiver;
 	}
 	
@@ -51,13 +55,7 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 	public Void apply(IDataPacketID index, ConnectorDataPacket<IInviteMsg> host, Void... params) {
 		//TODO: instantiate the mini controller!
 		Thread t = new Thread(() -> {
-			Set<INamedReceiver> initialRoster = new HashSet<>();
-			UUID id = host.getData().getUUID();
-			IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = this.pubSubSyncManager.subscribeToUpdateChannel(id, 
-					(data)->{
-						initialRoster.addAll(data.getData());
-					}, null);
-			chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(this.receiver));
+			model.makeRoom(host.getData().getFriendlyName());
 		});
 		t.start();
 		return null;

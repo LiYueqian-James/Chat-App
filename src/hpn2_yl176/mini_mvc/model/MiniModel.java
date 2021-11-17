@@ -25,7 +25,7 @@ import common.receiver.messages.IStringMsg;
 import controller.BallWorldController;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
-import hpn2_yl176.mini_mvc.view.ChatRoomView;
+import hpn2_yl176.mini_mvc.view.MiniView;
 import hpn2_yl176.msg.receiverMsgCmd.CommandRequestMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.DefaultReceiverMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.StringMsgCmd;
