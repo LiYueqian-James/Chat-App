@@ -306,6 +306,7 @@ public class MainModel {
 	 */
 	public void start() {
 		// must start the rmi-utils first
+		System.out.print("START model");
 		this.rmiUtils.startRMI(this.chatAppConfig.getClassPort());
 		
 		// must be here rather than the constructor to ensure the RMI has already started
@@ -369,6 +370,7 @@ public class MainModel {
 		this.model2ViewAdpt.updateContacts(myContacts);
 		
 		this.startConnectorMsgVisitor();
+		System.out.print("DONE START model");
 	}
 
 	/**

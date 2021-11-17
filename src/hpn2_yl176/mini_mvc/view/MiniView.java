@@ -216,10 +216,10 @@ public class MiniView extends JPanel{
 	
 	public void addFixedComponent(Component component, String name) {
 		((JComponent) component).setToolTipText(name);
-//		panel.add(component);
+		panel.add(component);
 	}
 	
 	public void addScrollingComponent(Component component, String name) {
-//		panel.add(component);
+		panel.add(component);
 	}
 }
