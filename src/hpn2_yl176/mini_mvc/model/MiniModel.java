@@ -181,7 +181,7 @@ public class MiniModel {
 		
 		// room information
 		this.roomRoster = adptr.getRoomRoster();
-		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd());
+		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd(unexecutedMsgs));
 		this.myReceiver = new Receiver(this.receiverVisitor);
 		this.unexecutedMsgs = new HashMap<>();
 		
@@ -198,7 +198,7 @@ public class MiniModel {
 	private void initVisitor() {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		receiverVisitor.setCmd(ICommandMsg.GetID(), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
-		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(HeartMessage.class), new HeartMessageCmd(cmd2ModelAdapter));
+//		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(HeartMessage.class), new HeartMessageCmd(cmd2ModelAdapter));
 	}
 	
 	public Set<INamedReceiver> getRoomRoster(){

@@ -47,7 +47,7 @@ public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMs
 		Thread thread = new Thread(() -> {
 			try {
 				host.getSender().sendMessage(new ReceiverDataPacket<IReceiverMsg>(
-						new CommandMsg(cmd, cmdId, cmd2ModelAdapter), host.getSender()));
+						new CommandMsg(cmd, cmdId), host.getSender()));
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

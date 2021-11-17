@@ -27,7 +27,7 @@ public class CommandMsg implements ICommandMsg{
 	 * @param roomID the room Id.
 	 * @param roomName the room name.
 	 */
-	public CommandMsg(AReceiverDataPacketAlgoCmd<?> cmd, IDataPacketID cmdId, ICmd2ModelAdapter cmd2ModelAdapter) {
+	public CommandMsg(AReceiverDataPacketAlgoCmd<?> cmd, IDataPacketID cmdId) {
 		this.cmd = cmd;
 		this.cmdId = cmdId;
 	}
