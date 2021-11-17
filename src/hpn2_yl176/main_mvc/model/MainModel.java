@@ -164,7 +164,7 @@ public class MainModel {
 	 */
 	private void startConnectorMsgVisitor() {
 		
-//		connectoMsgVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this.pubSubManager, this.main2miniAdptr.getNamedReceiver()));
+//		connectoMsgVisitor.setCmd(IInviteMsg.GetID(), new InviteMsgCmd(this, this.main2miniAdptr.getNamedReceiver()));
 		
 		connectoMsgVisitor.setCmd(ISyncPeersMsg.GetID(), new SyncPeersMsgCmd(this.myContacts, this.getNamedConnector(), this.sysLogger, this.model2ViewAdpt));
 		
@@ -360,7 +360,7 @@ public class MainModel {
 	}
 	
 	
-	public void makeRoom() {
-		this.model2ViewAdpt.makeNewRoom(pubSubManager);
+	public void makeRoom(String roomName) {
+		this.model2ViewAdpt.makeNewRoom(pubSubManager, roomName);
 	}
 }

@@ -1,5 +1,5 @@
 package hpn2_yl176.mini_mvc.controller;
-import hpn2_yl176.mini_mvc.view.ChatRoomView;
+import hpn2_yl176.mini_mvc.view.MiniView;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.mini_mvc.model.IMini2ViewAdptr;
 import hpn2_yl176.mini_mvc.view.IView2MiniAdptr;
@@ -32,7 +32,7 @@ public class MiniController {
 	/**
 	 * The view of a chat room.
 	 */
-	private ChatRoomView view;
+	private MiniView view;
 	
 	/**
 	 * The model behind a chat room.
@@ -73,6 +73,8 @@ public class MiniController {
 
 	private IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom;
 	
+	private HashSet<INamedReceiver> roster = new HashSet<>();
+	
 	/**
 	 * Construct a miniController, representing a instance of the chat room!
 	 * @param mini2MainAdptr the adapter towards the main model
@@ -86,22 +88,6 @@ public class MiniController {
 		
 		this.sysLogger = this.mini2MainAdptr.getLogger();
 
-		HashSet<INamedReceiver> roster = new HashSet<>();
-		/*
-		* The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
-		* the data channel changes.
-		*/
-		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(this.roomName, roster, 
-			(pubSubSyncData) -> {
-				roster.clear();
-				roster.addAll(pubSubSyncData.getData());
-			},
-			(statusMessage) -> {
-				sysLogger.log(LogLevel.DEBUG, "room " + this.roomName +" has been made sucessfully.");
-			});
-		
-		this.chatRoomID = chatRoom.getChannelID();
-		
 		model = new MiniModel(chatRoomID, friendlyName, new IMini2ViewAdptr() {
 
 			@Override
@@ -139,14 +125,14 @@ public class MiniController {
 				return mini2MainAdptr.getNamedConnector();
 			}
 
-			@Override
-			public void updateMemberList(Set<INamedReceiver> namedReceivers) {
-				Set<String> memberList = new HashSet<>();
-				for (INamedReceiver namedReceiver: namedReceivers) {
-					memberList.add(namedReceiver.getName());
-				}
-				view.setRoomRoster(memberList);
-			}
+//			@Override
+//			public void updateMemberList(Set<INamedReceiver> namedReceivers) {
+//				Set<String> memberList = new HashSet<>();
+//				for (INamedReceiver namedReceiver: namedReceivers) {
+//					memberList.add(namedReceiver.getName());
+//				}
+//				view.setRoomRoster(memberList);
+//			}
 
 			@Override
 			public void removeRoom() {
@@ -172,11 +158,11 @@ public class MiniController {
 			
 		});
 		
-		view = new ChatRoomView(new IView2MiniAdptr() {
+		view = new MiniView(new IView2MiniAdptr() {
 
 			@Override
 			public void sendMsg(String msg) {
-				model.sendTextMsg(msg);
+				model.sendStringMsg(msg);
 			}
 
 			@Override
@@ -201,6 +187,8 @@ public class MiniController {
 			}
 			
 		});
+		
+
 	}
 	
 	/**
@@ -208,15 +196,37 @@ public class MiniController {
 	 * @param pubSubSyncManager data channel manager.
 	 */
 	public void start() {
+		Set<String> nameRoster = new HashSet<>();
 		model.start();
 		view.start();
+		/*
+		* The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
+		* the data channel changes.
+		*/
+		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.createChannel(this.roomName, roster, 
+			(pubSubSyncData) -> {
+				roster.clear();
+				nameRoster.clear();
+				roster.addAll(pubSubSyncData.getData());
+				for (INamedReceiver person: roster) {
+					nameRoster.add(person.getName());
+				}
+				view.updateRoomRoster(nameRoster);
+			},
+			(statusMessage) -> {
+				sysLogger.log(LogLevel.DEBUG, "room " + this.roomName +" has been made sucessfully.");
+			});
+		
+		this.chatRoomID = chatRoom.getChannelID();
+		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(model.getMyNamedReceiver()));
+		
 	}
 	
 	/**
 	 * Stop the current chat room - i.e. remove myself from the room.
 	 */
 	public void stop() {
-		chatRoom.update(IPubSubSyncUpdater.makeSetRemoveFn(this.getMyNamedReceiver()));
+		chatRoom.update(IPubSubSyncUpdater.makeSetRemoveFn(model.getMyNamedReceiver()));
 		chatRoom.unsubscribe();
 		this.mini2MainAdptr.removePanel(view);
 	}
@@ -236,9 +246,9 @@ public class MiniController {
 		return this.model.getMyNamedReceiver();
 	}
 
-	public void removePerson(INamedReceiver person){
-		this.model.removeParticipant(person);
-	}
+//	public void removePerson(INamedReceiver person){
+//		this.model.removeParticipant(person);
+//	}
 
 	public ReceiverDataPacketAlgo getReceiverMsgAlgo(){
 		return this.model.getReceiverMsgAlgo();

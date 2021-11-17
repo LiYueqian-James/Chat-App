@@ -25,7 +25,7 @@ import common.receiver.messages.IStringMsg;
 import controller.BallWorldController;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
-import hpn2_yl176.mini_mvc.view.ChatRoomView;
+import hpn2_yl176.mini_mvc.view.MiniView;
 import hpn2_yl176.msg.receiverMsgCmd.CommandRequestMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.DefaultReceiverMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.StringMsgCmd;
@@ -126,7 +126,7 @@ public class MiniModel {
 		@Override
 		public <T extends IReceiverMsg> void broadcast(T msg) {
 			// TODO Auto-generated method stub
-			ReceiverDataPacket<T> dataPacket = new ReceiverDataPacket<MiniModel>(msg, namedReceiver);
+//			ReceiverDataPacket<T> dataPacket = new ReceiverDataPacket<MiniModel>(msg, namedReceiver);
 			
 		}
 	};
@@ -134,8 +134,8 @@ public class MiniModel {
 	private ILogger viewLogger;
 	private ILogger sysLogger;
 	
-	private IReceiver receiver;
-	private INamedReceiver namedReceiver;
+	private IReceiver myReceiver;
+	private INamedReceiver myNamedReceiver;
 	
 //	private ChatRoom chatRoom;
 	
@@ -145,6 +145,8 @@ public class MiniModel {
 	 */
 	public MiniModel(UUID id, String friendlyName, IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
+		
+		// Logger to log the status to the console.
 		sysLogger = adptr.getSysLogger();
 		viewLogger = ILoggerControl.makeLogger(new ILogEntryProcessor() {
 			ILogEntryFormatter formatter = ILogEntryFormatter.MakeFormatter("[%1s] %2s");
@@ -155,23 +157,27 @@ public class MiniModel {
 			}
 		}, LogLevel.INFO);
 		viewLogger.append(sysLogger);
+		
 		config = adptr.getConfig();
+		
+		// room information
 		this.roomRoster = adptr.getRoomRoster();
-		this.receiver = new IReceiver() {
-			
-			@Override
-			public void sendMessage(ReceiverDataPacket<?> packet) throws RemoteException {
-				// TODO Auto-generated method stub
-				packet.execute(receiverVisitor);
-			}
-		};
+		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd());
+		this.myReceiver = new Receiver(this.receiverVisitor);
+		this.adptr = adptr;
+		
+		try {
+			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.myReceiver, config.getRMIPort());
+			this.myNamedReceiver = new NamedReceiver(receiverStub, this.adptr.getUserName(), this.adptr.getNamedConnector());			
+		}
+		catch (Exception e) {
+			 sysLogger.log(LogLevel.ERROR, "Can't make receiver stub");
+			e.printStackTrace();
+		}
 	}
 
-	private void initVisitor() {
-		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd());
-		
-		receiverVisitor.setCmd(IStringMsg.GetID(), new StringMsgCmd(adptr));
-		
+	private void initVisitor() {	
+		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		receiverVisitor.setCmd(ICommandMsg.GetID(), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
 	}
 	
@@ -179,13 +185,13 @@ public class MiniModel {
 		return this.roomRoster;
 	}
 
-	public void removeParticipant(INamedReceiver person){
-		roomRoster.remove(person);
-		this.adptr.updateMemberList(roomRoster);
-	}
+//	public void removeParticipant(INamedReceiver person){
+//		roomRoster.remove(person);
+//		this.adptr.updateMemberList(roomRoster);
+//	}
 
 	public INamedReceiver getMyNamedReceiver(){
-		return this.namedReceiver;
+		return this.myNamedReceiver;
 	}
 	/**
 	 * @return
@@ -198,17 +204,7 @@ public class MiniModel {
 	 * start the chat room - create a pubsubsync manager
 	 */
 	public void start() {
-		try {
-			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.receiver, config.getRMIPort());
-			
-			this.namedReceiver = new NamedReceiver(receiverStub, adptr);
-			this.initVisitor();
-			adptr.updateMemberList(roomRoster);
-		}
-		catch (Exception e) {
-			// TODO: handle exception 
-			e.printStackTrace();
-		}
+		this.initVisitor();
 	}
 	
 	public void sendThreadedMessage(INamedReceiver receiver, ReceiverDataPacket<? extends IReceiverMsg> message) {
@@ -222,18 +218,23 @@ public class MiniModel {
 		thread.start();
 	}
 	
-//	/**
-//	 * Send a message to the chat room.
-//	 * @param msg the message to be sent
-//	 */
-//	public void sendMsg(String msg) {
-//		try {
-//			adptr.displayStatus("Message " + msg + "successfully sent!");
-//		}
-//		catch (Exception e){
-//			adptr.displayStatus("Exception occured: "+e.toString());
-//		}
-//	}
+	/**
+	 * Send a string message to the chat room.
+	 * @param msg the message to be sent
+	 */
+	public void sendStringMsg(String msg) {
+		
+		IStringMsg stringMsg = new StringMsg(msg);
+		for (INamedReceiver person: this.roomRoster) {
+			try {
+				person.sendMessage(new ReceiverDataPacket<IStringMsg>(stringMsg, this.myNamedReceiver));
+			} catch (RemoteException e) {
+				adptr.displayMsg("Message \"" + msg +"\" failed to be sent!.");
+				e.printStackTrace();
+			}
+		}
+		adptr.displayStatus("Message \"" + msg + "\" successfully sent to the ChatRoom!");
+	}
 	
 	/**
 	 * Send a ballworld instance to the chat room
@@ -256,19 +257,19 @@ public class MiniModel {
 		adptr.removeRoom();
 	}
 	
-	public void removeUser(INamedReceiver namedReceiver) {
-		this.roomRoster.remove(namedReceiver);
-		adptr.updateMemberList(roomRoster);
-	}
-	
-	public void addUser(INamedReceiver namedUser) {
-		this.roomRoster.add(namedUser);
-		adptr.updateMemberList(this.roomRoster);
-	}
+//	public void removeUser(INamedReceiver namedReceiver) {
+//		this.roomRoster.remove(namedReceiver);
+//		adptr.updateMemberList(roomRoster);
+//	}
+//	
+//	public void addUser(INamedReceiver namedUser) {
+//		this.roomRoster.add(namedUser);
+//		adptr.updateMemberList(this.roomRoster);
+//	}
 	
 	public void sendTextMsg(String text) {
 		try {
-			receiver.sendMessage(new ReceiverDataPacket<IStringMsg>(new StringMsg(text), namedReceiver));
+			myReceiver.sendMessage(new ReceiverDataPacket<IStringMsg>(new StringMsg(text), myNamedReceiver));
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -277,7 +278,7 @@ public class MiniModel {
 	
 	public void sendCmdMsg(AReceiverDataPacketAlgoCmd<?> cmd, IDataPacketID cmdId) {
 		try {
-			receiver.sendMessage(new ReceiverDataPacket<ICommandMsg>(new CommandMsg(cmd,cmdId), namedReceiver));
+			myReceiver.sendMessage(new ReceiverDataPacket<ICommandMsg>(new CommandMsg(cmd,cmdId), myNamedReceiver));
 		}
 		catch (Exception e) {
 			// TODO: handle exception

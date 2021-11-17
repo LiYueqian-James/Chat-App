@@ -39,7 +39,7 @@ public interface IMini2ViewAdptr {
 
 	public IRMIUtils getRmiUtils();
 	
-	public void updateMemberList(Set<INamedReceiver> namedReceivers);
+//	public void updateMemberList(Set<INamedReceiver> namedReceivers);
 	
 	public String getUserName();
 	

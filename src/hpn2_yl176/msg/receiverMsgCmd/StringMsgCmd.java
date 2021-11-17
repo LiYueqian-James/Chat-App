@@ -33,7 +33,7 @@ public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg>{
 	public Void apply(IDataPacketID index, ReceiverDataPacket<IStringMsg> host, Void... params) {
 		// TODO Auto-generated method stub
 		Thread thread = new Thread(() -> {
-			this.adptr.displayMsg(host.getSender().getName() + ": " + host.getData().toString());
+			this.adptr.displayMsg(host.getSender().getName() + ": " + host.getData().getString()+"\n");
 		});
 		thread.start();
 		return null;
