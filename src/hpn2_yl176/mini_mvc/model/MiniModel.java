@@ -22,7 +22,6 @@ import common.receiver.messages.ICommandMsg;
 import common.receiver.messages.ICommandRequestMsg;
 import common.receiver.messages.IReceiverMsg;
 import common.receiver.messages.IStringMsg;
-import controller.BallWorldController;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.msg.receiverMsgCmd.CommandRequestMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.DefaultReceiverMsgCmd;
