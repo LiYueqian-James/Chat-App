@@ -4,6 +4,8 @@
 package hpn2_yl176.mini_mvc.view;
 
 import javax.swing.JPanel;
+
+import java.awt.Component;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -11,6 +13,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JScrollPane;
 import java.awt.Color;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+
 import java.awt.FlowLayout;
 import javax.swing.SwingConstants;
 
@@ -23,6 +27,7 @@ import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.basic.BasicSliderUI.ComponentHandler;
 
 /**
  * @author James Li
@@ -207,5 +212,14 @@ public class MiniView extends JPanel{
 		for (String member: roomRoster) {
 			memberList.append(member + '\n');	
 		}
+	}
+	
+	public void addFixedComponent(Component component, String name) {
+		((JComponent) component).setToolTipText(name);
+//		panel.add(component);
+	}
+	
+	public void addScrollingComponent(Component component, String name) {
+//		panel.add(component);
 	}
 }

@@ -1,5 +1,6 @@
 package hpn2_yl176.mini_mvc.controller;
 import hpn2_yl176.mini_mvc.view.MiniView;
+import hpn2_yl176.msg.receiverMsgImpl.HeartMessage;
 import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.mini_mvc.model.IMini2ViewAdptr;
@@ -9,6 +10,8 @@ import hpn2_yl176.mini_mvc.model.MiniModel;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.swing.plaf.basic.BasicSliderUI.ComponentHandler;
 
 import java.awt.Component;
 
@@ -152,13 +155,19 @@ public class MiniController {
 			@Override
 			public void addScrollingComponent(IComponentFactory fac, String name) {
 				// TODO Auto-generated method stub
-				
+				view.addScrollingComponent(fac.make(), name);
 			}
 
 			@Override
 			public void addFixedComponent(IComponentFactory fac, String name) {
 				// TODO Auto-generated method stub
-				
+				view.addFixedComponent(fac.make(), name);
+			}
+
+			@Override
+			public Component getViewPanel() {
+				// TODO Auto-generated method stub
+				return view;
 			}
 			
 		});
@@ -178,7 +187,7 @@ public class MiniController {
 			@Override
 			public void sendBallWorld() {
 				// TODO Auto-generated method stub
-				
+				model.sendCmdMsg(new HeartMessage());
 			}
 
 			@Override
