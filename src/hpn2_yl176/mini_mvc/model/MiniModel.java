@@ -114,19 +114,20 @@ public class MiniModel {
 		@Override
 		public void buildScrollingComponent(IComponentFactory fac, String name) {
 			// TODO Auto-generated method stub
-//			adptr.addScrollingComponent(fac, name);
+			adptr.addScrollingComponent(fac, name);
 		}
 		
 		@Override
 		public void buildFixedComponent(IComponentFactory fac, String name) {
 			// TODO Auto-generated method stub
-//			adptr.addFixedComponent(fac, name);
+			adptr.addFixedComponent(fac, name);
 		}
 		
 		@Override
 		public <T extends IReceiverMsg> void broadcast(T msg) {
 			// TODO Auto-generated method stub
-//			ReceiverDataPacket<T> dataPacket = new ReceiverDataPacket<MiniModel>(msg, namedReceiver)
+			ReceiverDataPacket<T> dataPacket = new ReceiverDataPacket<MiniModel>(msg, namedReceiver);
+			
 		}
 	};
 	
@@ -169,9 +170,9 @@ public class MiniModel {
 	private void initVisitor() {
 		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd());
 		
-		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
+		receiverVisitor.setCmd(IStringMsg.GetID(), new StringMsgCmd(adptr));
 		
-		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(ICommandRequestMsg.class), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
+		receiverVisitor.setCmd(ICommandMsg.GetID(), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
 	}
 	
 	public Set<INamedReceiver> getRoomRoster(){

@@ -44,7 +44,7 @@ public interface IMainModel2ViewAdpt {
 	 * @param pubSubManager the manager.
 	 * @return the adapter so that the main can add the IRecevier to the room roster.
 	 */
-	public IMain2MiniAdptr join(UUID roomID, IPubSubSyncManager pubSubManager);
+	public IMain2MiniAdptr join(UUID roomID, String roomName, IPubSubSyncManager pubSubManager);
 	
 //	/**
 //	 * Get the user name of the chat app instance from the view.

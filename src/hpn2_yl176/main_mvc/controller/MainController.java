@@ -154,7 +154,8 @@ public class MainController {
 						sysLogger.log(LogLevel.DEBUG, "Failed to send message "+msg.toString());
 						e.printStackTrace();
 					}
-				}); 	
+				});
+				t.start();
 			}
 
 			@Override
@@ -280,11 +281,93 @@ public class MainController {
 			}
 
 			@Override
-			public IMain2MiniAdptr join(UUID roomID, IPubSubSyncManager pubSubManager) {
+			public IMain2MiniAdptr join(UUID id, String roomName, IPubSubSyncManager pubSubManager) {
 				// TODO Auto-generated method stub
-				return null;
-			}
+				MiniController miniController = new MiniController(roomName, new IMini2MainAdptr() {
+					
+					@Override
+					public void removePanel(Component roomPanel) {
+						// TODO Auto-generated method stub
+						mainView.remove(roomPanel);	
+					}
+					
+					@Override
+					public String getUserName() {
+						// TODO Auto-generated method stub
+						return mainView.getUserName();
+					}
+					
+					@Override
+					public IRMIUtils getRmiUtils() {
+						// TODO Auto-generated method stub
+						return mainModel.getRMIUtils();
+					}
+					
+					@Override
+					public IPubSubSyncManager getPubSubSyncManager() {
+						// TODO Auto-generated method stub
+						return pubSubManager;
+					}
+					
+					@Override
+					public INamedConnector getNamedConnector() {
+						// TODO Auto-generated method stub
+						return mainModel.getNamedConnector();
+					}
+					
+					@Override
+					public ILogger getLogger() {
+						// TODO Auto-generated method stub
+						return sysLogger;
+					}
+					
+					@Override
+					public ChatAppConfig getConfig() {
+						// TODO Auto-generated method stub
+						return appConfig0;
+					}
+				});
+				mainView.addNewTab(miniController.getMyRoomPanel(), roomName);
+				return new IMain2MiniAdptr() {
+					
+					@Override
+					public void start() {
+						// TODO Auto-generated method stub
+						miniController.start();
+					}
+					
+					@Override
+					public void quit() {
+						// TODO Auto-generated method stub
+						miniController.stop();
+					}
+					
+					@Override
+					public Component getRoomPanel() {
+						// TODO Auto-generated method stub
+						return miniController.getMyRoomPanel();
+					}
+					
+					@Override
+					public String getRoomName() {
+						// TODO Auto-generated method stub
+						return roomName;
+					}
+					
+					@Override
+					public INamedReceiver getNamedReceiver() {
+						// TODO Auto-generated method stub
+						return miniController.getMyNamedReceiver();
+					}
+					
+					@Override
+					public UUID getChatRoomID() {
+						// TODO Auto-generated method stub
+						return miniController.getRoomID();
+					}
+				};
 
+			}
 //			@Override
 //			public String getUserName() {
 //				return mainView.getUserName();

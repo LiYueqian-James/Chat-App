@@ -5,6 +5,7 @@ package hpn2_yl176.mini_mvc.model;
 
 import java.util.Set;
 
+import common.adapter.IComponentFactory;
 import common.connector.INamedConnector;
 import common.receiver.INamedReceiver;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
@@ -47,4 +48,7 @@ public interface IMini2ViewAdptr {
 	public INamedConnector getNamedConnector();
 	
 	public void removeRoom();
+	
+	public void addScrollingComponent(IComponentFactory fac, String name);
+	public void addFixedComponent(IComponentFactory fac, String name);
 }

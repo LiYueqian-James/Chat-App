@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import java.awt.Component;
 
+import common.adapter.IComponentFactory;
 import common.connector.INamedConnector;
 import common.receiver.INamedReceiver;
 import common.receiver.ReceiverDataPacketAlgo;
@@ -155,6 +156,18 @@ public class MiniController {
 			@Override
 			public Set<INamedReceiver> getRoomRoster() {
 				return roster;
+			}
+
+			@Override
+			public void addScrollingComponent(IComponentFactory fac, String name) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void addFixedComponent(IComponentFactory fac, String name) {
+				// TODO Auto-generated method stub
+				
 			}
 			
 		});

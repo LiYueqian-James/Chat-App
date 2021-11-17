@@ -14,6 +14,9 @@ import common.connector.messages.IInviteMsg;
 import common.receiver.INamedReceiver;
 import common.receiver.IReceiver;
 import common.receiver.ReceiverDataPacket;
+import hpn2_yl176.main_mvc.IMain2MiniAdptr;
+import hpn2_yl176.main_mvc.model.IMainModel2ViewAdpt;
+import model.IModel2ViewAdapter;
 import provided.datapacket.IDataPacketID;
 import provided.pubsubsync.IPubSubSyncChannelUpdate;
 import provided.pubsubsync.IPubSubSyncUpdater;
@@ -36,15 +39,19 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 	private IPubSubSyncManager pubSubSyncManager;
 	
 	private INamedReceiver receiver;
+
+	private IMainModel2ViewAdpt adapter;
+
 	
 	/**
 	 * Constructor for the invite msg cmd.
 	 * @param pubSubSyncManager the manager.
 	 * @param receiier the receiver in this room.
 	 */
-	public InviteMsgCmd(IPubSubSyncManager pubSubSyncManager, INamedReceiver receiver) {
+	public InviteMsgCmd(IPubSubSyncManager pubSubSyncManager, INamedReceiver receiver, IMainModel2ViewAdpt adptr) {
 		this.pubSubSyncManager = pubSubSyncManager;
 		this.receiver = receiver;
+		this.adapter = adptr;
 	}
 	
 	@Override
@@ -58,6 +65,7 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 						initialRoster.addAll(data.getData());
 					}, null);
 			chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(this.receiver));
+			this.adapter.join(id, chatRoom.getFriendlyName(), pubSubSyncManager);
 		});
 		t.start();
 		return null;

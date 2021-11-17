@@ -363,5 +363,4 @@ public class MainModel {
 	public void makeRoom() {
 		this.model2ViewAdpt.makeNewRoom(pubSubManager);
 	}
-	
 }
