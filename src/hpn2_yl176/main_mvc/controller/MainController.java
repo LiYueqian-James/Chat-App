@@ -277,13 +277,13 @@ public class MainController {
 		
 		ChatAppConfig appConfig0 = new ChatAppConfig("James", IRMI_Defs.STUB_PORT_CLIENT, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
 		ChatAppConfig appConfig1 = new ChatAppConfig("App2", IRMI_Defs.STUB_PORT_SERVER, IRMI_Defs.CLASS_SERVER_PORT_SERVER);
-		ChatAppConfig appConfig2 = new ChatAppConfig("App3", IRMI_Defs.STUB_PORT_EXTRA, IRMI_Defs.CLASS_SERVER_PORT_EXTRA);
+		ChatAppConfig appConfig2 = new ChatAppConfig("Swong", IRMI_Defs.STUB_PORT_EXTRA, IRMI_Defs.CLASS_SERVER_PORT_EXTRA);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				(new MainController(appConfig0)).start();
-				(new MainController(appConfig1)).start();
-//				(new MainController(appConfig2)).start();
+//				(new MainController(appConfig0)).start();
+//				(new MainController(appConfig1)).start();
+				(new MainController(appConfig2)).start();
 			}
 		});
 	}

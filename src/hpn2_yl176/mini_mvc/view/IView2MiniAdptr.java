@@ -25,7 +25,7 @@ public interface IView2MiniAdptr {
 	/**
 	 * 
 	 */
-	public void sendBallWorld();
+	public void sendHeartMsg();
 	
 	/**
 	 * @return
