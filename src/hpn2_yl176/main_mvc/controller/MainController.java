@@ -133,7 +133,7 @@ public class MainController {
 			
 
 			public void invite(INamedConnector receiver) {
-				IMain2MiniAdptr currentChatRoom = mainModel.getPanel2RoomMap().get(mainView.getCurrentChatRoom());
+				IMain2MiniAdptr currentChatRoom = mainModel.getChatRooms().get(mainView.getCurrentChatRoom()-1);
 				ConnectorDataPacket<IInviteMsg> msg = new ConnectorDataPacket<IInviteMsg>(
 						new InviteMsg(currentChatRoom.getChatRoomID(), currentChatRoom.getRoomName()), 
 						receiver);
@@ -141,7 +141,7 @@ public class MainController {
 					try {
 						receiver.sendMessage(msg);
 					} catch (RemoteException e) {
-						sysLogger.log(LogLevel.DEBUG, "Failed to send message "+msg.toString());
+						sysLogger.log(LogLevel.ERROR, "Failed to send message "+msg.toString());
 						e.printStackTrace();
 					}
 				});
@@ -166,25 +166,13 @@ public class MainController {
 		}, appConfig0);
 		
 		mainModel = new MainModel(sysLogger, new IMainModel2ViewAdpt() {
-
-			@Override
-			public void displayStatusMsg(String msg) {
-				mainView.appendStatus(msg);
-				
-			}
-
-			@Override
-			public IMain2MiniAdptr makeNewRoom(IPubSubSyncManager pubSubSyncManager, String newRoomName) {
-//				String newRoomName = mainView.getNewRoomName();			
-
-				/*
-					* Instantiate the Mini-controller
-					* */
+			
+			private MiniController makeController(String newRoomName) {
 				MiniController miniController = new MiniController(newRoomName, new IMini2MainAdptr() {
 
 					@Override
 					public IPubSubSyncManager getPubSubSyncManager() {
-						return pubSubSyncManager;
+						return mainModel.getpubSubSyncManager();
 					};
 
 					@Override
@@ -218,151 +206,37 @@ public class MainController {
 					}					
 				});
 				miniController.start();
-
-				/*
-						
-				 */
-				IMain2MiniAdptr chatRoomAdptr = new IMain2MiniAdptr() {
-
-					@Override
-					public INamedReceiver getNamedReceiver() {
-						return miniController.getMyNamedReceiver();
-					}
-
-					@Override
-					public Component getRoomPanel() {
-						return miniController.getMyRoomPanel();
-					}
-
-					@Override
-					public void start() {
-						miniController.start();
-						
-					}
-
-//					@Override
-//					public void removeParticipant(INamedReceiver person) {
-//						miniController.removePerson(person);
-//					}
-
-//					@Override
-//					public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
-//						return miniController.getReceiverMsgAlgo();
-//					}
-//
-					@Override
-					public UUID getChatRoomID() {
-						return miniController.getRoomID();
-					}
-
-					@Override
-					public String getRoomName() {
-						return newRoomName;
-					}
-
-					@Override
-					public void quit() {
-						miniController.stop();
-						
-					}
-					
-				};
-				mainView.addNewTab(miniController.getMyRoomPanel(), newRoomName);
-				return chatRoomAdptr;
+				return miniController;
+			}
+			@Override
+			public void displayStatusMsg(String msg) {
+				mainView.appendStatus(msg);
+				
 			}
 
 			@Override
-			public IMain2MiniAdptr join(UUID id, String roomName, IPubSubSyncManager pubSubManager) {
-				// TODO Auto-generated method stub
-				MiniController miniController = new MiniController(roomName, new IMini2MainAdptr() {
-					
-					@Override
-					public void removePanel(Component roomPanel) {
-						// TODO Auto-generated method stub
-						mainView.remove(roomPanel);	
-					}
-					
-					@Override
-					public String getUserName() {
-						// TODO Auto-generated method stub
-						return mainView.getUserName();
-					}
-					
-					@Override
-					public IRMIUtils getRmiUtils() {
-						// TODO Auto-generated method stub
-						return mainModel.getRMIUtils();
-					}
-					
-					@Override
-					public IPubSubSyncManager getPubSubSyncManager() {
-						// TODO Auto-generated method stub
-						return pubSubManager;
-					}
-					
-					@Override
-					public INamedConnector getNamedConnector() {
-						// TODO Auto-generated method stub
-						return mainModel.getNamedConnector();
-					}
-					
-					@Override
-					public ILogger getLogger() {
-						// TODO Auto-generated method stub
-						return sysLogger;
-					}
-					
-					@Override
-					public ChatAppConfig getConfig() {
-						// TODO Auto-generated method stub
-						return appConfig0;
-					}
-				});
-				mainView.addNewTab(miniController.getMyRoomPanel(), roomName);
-				return new IMain2MiniAdptr() {
-					
-					@Override
-					public void start() {
-						// TODO Auto-generated method stub
-						miniController.start();
-					}
-					
-					@Override
-					public void quit() {
-						// TODO Auto-generated method stub
-						miniController.stop();
-					}
-					
-					@Override
-					public Component getRoomPanel() {
-						// TODO Auto-generated method stub
-						return miniController.getMyRoomPanel();
-					}
-					
-					@Override
-					public String getRoomName() {
-						// TODO Auto-generated method stub
-						return roomName;
-					}
-					
-					@Override
-					public INamedReceiver getNamedReceiver() {
-						// TODO Auto-generated method stub
-						return miniController.getMyNamedReceiver();
-					}
-					
-					@Override
-					public UUID getChatRoomID() {
-						// TODO Auto-generated method stub
-						return miniController.getRoomID();
-					}
-				};
+			public IMain2MiniAdptr makeNewRoom(String newRoomName) {	
 
+				/*
+					* Instantiate the Mini-controller
+					* */
+				MiniController miniController = this.makeController(newRoomName);
+				miniController.makeNewRoom();
+				mainView.addNewTab(miniController.getMyRoomPanel(), newRoomName);
+				mainModel.getChatRooms().add(miniController.getRoomAdptr());
+				return miniController.getRoomAdptr();
 			}
-//			@Override
-//			public String getUserName() {
-//				return mainView.getUserName();
-//			}
+
+			@Override
+			public IMain2MiniAdptr join(UUID id, String newRoomName) {
+				System.out.println("joining!");
+				MiniController miniController = this.makeController(newRoomName);
+				miniController.joinRoom(id);
+				mainView.addNewTab(miniController.getMyRoomPanel(), newRoomName);
+				mainModel.getChatRooms().add(miniController.getRoomAdptr());
+				return miniController.getRoomAdptr();
+			}
+
 
 			@Override
 			public void updateContacts(Set<INamedConnector> stubs) {

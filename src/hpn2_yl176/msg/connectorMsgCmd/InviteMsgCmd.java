@@ -59,7 +59,9 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
 	public Void apply(IDataPacketID index, ConnectorDataPacket<IInviteMsg> host, Void... params) {
 		//TODO: instantiate the mini controller!
 		Thread t = new Thread(() -> {
-//			model.makeRoom(host.getData().getFriendlyName());
+			System.out.println("running");
+			adapter.join(host.getData().getUUID(), host.getData().getFriendlyName());
+			System.out.println("done");
 		});
 		t.start();
 		return null;

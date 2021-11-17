@@ -9,7 +9,9 @@ import java.awt.Component;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import common.connector.ConnectorDataPacket;
@@ -119,7 +121,7 @@ public class MainModel {
 	/**
 	 * Map a panel to the chat room, used to get information about the current chat room.
 	 */
-	private Map<Component, IMain2MiniAdptr> panel2chatRoom;
+	private List<IMain2MiniAdptr> chatRooms;
 	
 	/**
 	 * A dyad containing the name and the stub of the current chat app.
@@ -138,7 +140,7 @@ public class MainModel {
 		this.model2ViewAdpt = model2ViewAdpt;
 		this.chatAppConfig = chatAppConfig;
 		this.connectoMsgVisitor = new ConnectorDataPacketAlgo(new DefaultConnectorMsgCmd(this.sysLogger));
-		
+		this.chatRooms = new ArrayList<>();
 		
 		rmiUtils = new RMIUtils(logger);
 		
@@ -188,11 +190,15 @@ public class MainModel {
 //	}
 
 	
-	/**
-	 * @return the panel to room mapping.
-	 */
-	public Map<Component, IMain2MiniAdptr> getPanel2RoomMap(){
-		return this.panel2chatRoom;
+//	/**
+//	 * @return the panel to room mapping.
+//	 */
+//	public Map<Component, IMain2MiniAdptr> getPanel2RoomMap(){
+//		return this.panel2chatRoom;
+//	}
+	
+	public List<IMain2MiniAdptr> getChatRooms(){
+		return this.chatRooms;
 	}
 	
 	/**
@@ -361,6 +367,10 @@ public class MainModel {
 	
 	
 	public void makeRoom(String roomName) {
-		this.model2ViewAdpt.makeNewRoom(pubSubManager, roomName);
+		this.model2ViewAdpt.makeNewRoom(roomName);
+	}
+	
+	public IPubSubSyncManager getpubSubSyncManager() {
+		return this.pubSubManager;
 	}
 }

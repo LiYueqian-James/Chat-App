@@ -36,7 +36,7 @@ public interface IMainModel2ViewAdpt {
 	 * @param pubSubManager the manager.
 	 * @return an IMain2MiniAdptr to interact with it
 	 */
-	public IMain2MiniAdptr makeNewRoom(IPubSubSyncManager pubSubManager, String roomName);
+	public IMain2MiniAdptr makeNewRoom(String roomName);
 	
 	/**
 	 * Join a chat room.
@@ -44,7 +44,7 @@ public interface IMainModel2ViewAdpt {
 	 * @param pubSubManager the manager.
 	 * @return the adapter so that the main can add the IRecevier to the room roster.
 	 */
-	public IMain2MiniAdptr join(UUID roomID, String roomName, IPubSubSyncManager pubSubManager);
+	public IMain2MiniAdptr join(UUID roomID, String roomName);
 	
 //	/**
 //	 * Get the user name of the chat app instance from the view.

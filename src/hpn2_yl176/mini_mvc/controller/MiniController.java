@@ -1,5 +1,6 @@
 package hpn2_yl176.mini_mvc.controller;
 import hpn2_yl176.mini_mvc.view.MiniView;
+import hpn2_yl176.main_mvc.IMain2MiniAdptr;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
 import hpn2_yl176.mini_mvc.model.IMini2ViewAdptr;
 import hpn2_yl176.mini_mvc.view.IView2MiniAdptr;
@@ -75,6 +76,8 @@ public class MiniController {
 	
 	private HashSet<INamedReceiver> roster = new HashSet<>();
 	
+	private IMain2MiniAdptr chatRoomAdptr;
+	
 	/**
 	 * Construct a miniController, representing a instance of the chat room!
 	 * @param mini2MainAdptr the adapter towards the main model
@@ -83,10 +86,12 @@ public class MiniController {
 	public MiniController(String friendlyName, IMini2MainAdptr mini2MainAdptr) {
 		
 		this.mini2MainAdptr = mini2MainAdptr;
-		
+
 		this.pubSubSyncManager = this.mini2MainAdptr.getPubSubSyncManager();
 		
 		this.sysLogger = this.mini2MainAdptr.getLogger();
+		
+		this.roomName = friendlyName;
 
 		model = new MiniModel(chatRoomID, friendlyName, new IMini2ViewAdptr() {
 
@@ -196,9 +201,59 @@ public class MiniController {
 	 * @param pubSubSyncManager data channel manager.
 	 */
 	public void start() {
-		Set<String> nameRoster = new HashSet<>();
 		model.start();
 		view.start();
+		
+		chatRoomAdptr = new IMain2MiniAdptr() {
+
+			@Override
+			public INamedReceiver getNamedReceiver() {
+				return getMyNamedReceiver();
+			}
+
+			@Override
+			public Component getRoomPanel() {
+				return getMyRoomPanel();
+			}
+
+			@Override
+			public void start() {
+				start();
+				
+			}
+
+//			@Override
+//			public void removeParticipant(INamedReceiver person) {
+//				miniController.removePerson(person);
+//			}
+
+//			@Override
+//			public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
+//				return miniController.getReceiverMsgAlgo();
+//			}
+//
+			@Override
+			public UUID getChatRoomID() {
+				return getRoomID();
+			}
+
+			@Override
+			public String getRoomName() {
+				return roomName;
+			}
+
+			@Override
+			public void quit() {
+				stop();
+				
+			}
+			
+		};
+		
+	}
+	
+	public void makeNewRoom() {
+		Set<String> nameRoster = new HashSet<>();
 		/*
 		* The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
 		* the data channel changes.
@@ -219,7 +274,31 @@ public class MiniController {
 		
 		this.chatRoomID = chatRoom.getChannelID();
 		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(model.getMyNamedReceiver()));
+	}
+	
+	public void joinRoom(UUID roomID) {
+		Set<String> nameRoster = new HashSet<>();
+		/*
+		* The (reference to the) roster will be passed to the mini controller so that it gets updated whenever 
+		* the data channel changes.
+		*/
+		IPubSubSyncChannelUpdate<HashSet<INamedReceiver>> chatRoom = pubSubSyncManager.subscribeToUpdateChannel(roomID, 
+			(pubSubSyncData) -> {
+				roster.clear();
+				nameRoster.clear();
+				roster.addAll(pubSubSyncData.getData());
+				for (INamedReceiver person: roster) {
+//					System.out.println(person.getName()+"is already in the room");
+					nameRoster.add(person.getName());
+				}
+				view.updateRoomRoster(nameRoster);
+			},
+			(statusMessage) -> {
+				sysLogger.log(LogLevel.DEBUG, "room " + this.roomName +" has been made sucessfully.");
+			});
 		
+		this.chatRoomID = roomID;
+		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(model.getMyNamedReceiver()));
 	}
 	
 	/**
@@ -235,7 +314,7 @@ public class MiniController {
 	 * @return the chat room id.
 	 */
 	public UUID getRoomID() {
-		return this.getRoomID();
+		return chatRoomID;
 	}
 
 	public Component getMyRoomPanel(){
@@ -253,6 +332,10 @@ public class MiniController {
 	public ReceiverDataPacketAlgo getReceiverMsgAlgo(){
 		return this.model.getReceiverMsgAlgo();
 	} 
+	
+	public IMain2MiniAdptr getRoomAdptr() {
+		return chatRoomAdptr;
+	}
 
 //	public void removeRoomHelper() {
 //	HashSet<INamedReceiver> roster = new HashSet<>();

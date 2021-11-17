@@ -166,8 +166,8 @@ public class MainView<Stub> extends JFrame {
 	/**
 	 * @return the current component representing the chat room.
 	 */
-	public Component getCurrentChatRoom() {
-		return chatroomTabPane.getSelectedComponent();
+	public int getCurrentChatRoom() {
+		return chatroomTabPane.getSelectedIndex();
 		
 	}
 	
