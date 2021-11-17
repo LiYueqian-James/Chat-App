@@ -55,7 +55,7 @@ public class MiniModel {
 	
 	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
 	
-	private MixedDataDictionary mixedDictionary;
+	private MixedDataDictionary mixedDictionary = new MixedDataDictionary();
 	
 	private ICmd2ModelAdapter cmd2ModelAdapter = new ICmd2ModelAdapter() {
 		
@@ -84,11 +84,11 @@ public class MiniModel {
 			 
 			if (userSelection == JFileChooser.APPROVE_OPTION) {
 			    File fileToSave = fileChooser.getSelectedFile();
-//			    fileToSave.n
-			    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+			    return fileToSave;
 			}
-//			fileToSave.
+			
 			return null;
+			
 		}
 		
 		@Override
@@ -99,14 +99,12 @@ public class MiniModel {
 		
 		@Override
 		public String getRoomName() {
-			// TODO Auto-generated method stub
-			return getRoomName();
+			return this.getRoomName();
 		}
 		
 		@Override
 		public String getInstanceName() {
-			// TODO Auto-generated method stub
-			return adptr.getUserName();
+			return adptr.getBoundName();
 		}
 		
 		@Override

@@ -211,6 +211,11 @@ public class MainController {
 						mainView.removeCurrentRoomPanel();
 //						mainModel.removeRoom(0);
 						
+					}
+
+					@Override
+					public String getBoundName() {
+						return this.getConfig().getName();
 					}				
 				});
 				miniController.start();

@@ -43,5 +43,7 @@ public interface IMini2MainAdptr {
 	
 	public String getUserName();
 	
+	public String getBoundName();
+	
 	public IRMIUtils getRmiUtils();
 }

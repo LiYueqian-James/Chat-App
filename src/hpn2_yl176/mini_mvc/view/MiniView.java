@@ -91,7 +91,6 @@ public class MiniView extends JPanel{
 
 	private Set<String> roomRoster;
 	private final JTextArea memberList = new JTextArea();
-	private final JPanel panel = new JPanel();
 	private final JPanel statusPanel = new JPanel();
 	private final JTextArea statusArea = new JTextArea();
 	
@@ -151,8 +150,6 @@ public class MiniView extends JPanel{
 		msgArea.setToolTipText("Display messages");
 		
 		tabs.addTab("Messages", null, msgArea, null);
-		
-		tabs.addTab("New tab", null, panel, null);
 		statusPanel.setBorder(new TitledBorder(null, "Status", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		splitPane.setRightComponent(statusPanel);
@@ -206,6 +203,9 @@ public class MiniView extends JPanel{
 		statusArea.append(status+"\n");
 	}
 	
+	/**
+	 * @param roomRoster
+	 */
 	public void updateRoomRoster(Set<String> roomRoster) {
 		this.roomRoster = roomRoster;
 		this.memberList.setText("");
@@ -214,12 +214,20 @@ public class MiniView extends JPanel{
 		}
 	}
 	
+	/**
+	 * @param component
+	 * @param name
+	 */
 	public void addFixedComponent(Component component, String name) {
-		((JComponent) component).setToolTipText(name);
-		panel.add(component);
+//		((JComponent) component).setToolTipText(name);
+		tabs.add(component);
 	}
 	
+	/**
+	 * @param component
+	 * @param name
+	 */
 	public void addScrollingComponent(Component component, String name) {
-		panel.add(component);
+		tabs.add(component);
 	}
 }

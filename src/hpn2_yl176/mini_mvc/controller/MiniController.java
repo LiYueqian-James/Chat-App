@@ -169,6 +169,11 @@ public class MiniController {
 				// TODO Auto-generated method stub
 				return view;
 			}
+
+			@Override
+			public String getBoundName() {
+				return mini2MainAdptr.getBoundName();
+			}
 			
 		});
 		

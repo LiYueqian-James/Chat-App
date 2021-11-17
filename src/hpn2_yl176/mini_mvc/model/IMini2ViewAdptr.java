@@ -54,4 +54,6 @@ public interface IMini2ViewAdptr {
 	public void addFixedComponent(IComponentFactory fac, String name);
 	
 	public Component getViewPanel();
+	
+	public String getBoundName();
 }
