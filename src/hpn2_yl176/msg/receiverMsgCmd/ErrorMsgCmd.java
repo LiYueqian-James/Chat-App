@@ -29,6 +29,5 @@ public class ErrorMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverErrMsg>{
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
-		
 	}
 }

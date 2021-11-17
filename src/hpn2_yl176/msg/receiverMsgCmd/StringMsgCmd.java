@@ -42,5 +42,6 @@ public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg>{
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
+		
 	}
 }

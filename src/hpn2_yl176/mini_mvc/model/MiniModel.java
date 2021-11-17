@@ -66,7 +66,7 @@ public class MiniModel {
 		@Override
 		public <T extends IReceiverMsg> void send(T data, INamedReceiver recv) {
 			// TODO Auto-generated method stub
-		
+			recv
 		}
 		
 		@Override
@@ -96,7 +96,7 @@ public class MiniModel {
 		@Override
 		public File getFile() {
 			// TODO Auto-generated method stub
-			return null;
+			return 
 		}
 		
 		@Override
@@ -267,22 +267,15 @@ public class MiniModel {
 //		adptr.updateMemberList(this.roomRoster);
 //	}
 	
-	public void sendTextMsg(String text) {
-		try {
-			myReceiver.sendMessage(new ReceiverDataPacket<IStringMsg>(new StringMsg(text), myNamedReceiver));
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public void sendCmdMsg(AReceiverDataPacketAlgoCmd<?> cmd, IDataPacketID cmdId) {
-		try {
-			myReceiver.sendMessage(new ReceiverDataPacket<ICommandMsg>(new CommandMsg(cmd,cmdId), myNamedReceiver));
-		}
-		catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+		for (INamedReceiver person: this.roomRoster) {
+			try {
+				myReceiver.sendMessage(new ReceiverDataPacket<ICommandMsg>(new CommandMsg(cmd,cmdId), myNamedReceiver));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
 		}
 	}
 
