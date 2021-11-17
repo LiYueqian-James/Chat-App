@@ -9,7 +9,7 @@ import common.connector.messages.IQuitMsg;
  * @author James Li
  *
  */
-public class QuitMsg implements IQuitMsg{
+public class QuitMsg implements IQuitMsg {
 
 	/**
 	 * 

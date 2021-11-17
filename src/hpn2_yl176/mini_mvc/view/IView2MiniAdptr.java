@@ -10,26 +10,26 @@ import java.util.Set;
  *
  */
 public interface IView2MiniAdptr {
-	
+
 	/**
 	 * Send a string message to the chat room.
 	 * @param msg the msg to be sent.
 	 */
 	public void sendMsg(String msg);
-	
+
 	/**
 	 * Leave this chat room
 	 */
 	public void leave();
-	
+
 	/**
 	 * 
 	 */
 	public void sendHeartMsg();
-	
+
 	/**
 	 * @return
 	 */
 	public Set<String> getRoomRoster();
-	
+
 }

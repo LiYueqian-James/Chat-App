@@ -23,27 +23,26 @@ public interface IMini2MainAdptr {
 	 * @return the manager.
 	 */
 	public IPubSubSyncManager getPubSubSyncManager();
-	
 
 	// public void removeRoom();
-	
+
 	/**
 	 * Upon exit, tell the main to clean up.
 	 */
 	public void removeRoom();
-	
+
 	/**
 	 * @return the logger to be used to display status.
 	 */
 	public ILogger getLogger();
-	
+
 	public ChatAppConfig getConfig();
-	
+
 	public INamedConnector getNamedConnector();
-	
+
 	public String getUserName();
-	
+
 	public String getBoundName();
-	
+
 	public IRMIUtils getRmiUtils();
 }

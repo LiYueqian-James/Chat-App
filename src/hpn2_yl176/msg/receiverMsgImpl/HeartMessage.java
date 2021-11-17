@@ -9,13 +9,14 @@ import hpn2_yl176.msg.receiverMsgCmd.CommandRequestMsgCmd;
 import provided.datapacket.DataPacketIDFactory;
 import provided.datapacket.IDataPacketID;
 
-public class HeartMessage implements IReceiverMsg{
+public class HeartMessage implements IReceiverMsg {
 
 	private static final long serialVersionUID = 8183288106602993218L;
+
 	public static IDataPacketID GetID() {
 		return DataPacketIDFactory.Singleton.makeID(HeartMessage.class);
 	}
-	
+
 	/**
 	 * Get the data packet ID associated with an instance of this class.
 	 * 

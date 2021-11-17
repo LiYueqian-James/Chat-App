@@ -17,8 +17,8 @@ import provided.datapacket.IDataPacketID;
  * @author hungnguyen
  *
  */
-public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg>{
-	
+public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg> {
+
 	/**
 	 * 
 	 */
@@ -28,12 +28,12 @@ public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg>{
 	public StringMsgCmd(IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
 	}
-	
+
 	@Override
 	public Void apply(IDataPacketID index, ReceiverDataPacket<IStringMsg> host, Void... params) {
 		// TODO Auto-generated method stub
 		Thread thread = new Thread(() -> {
-			this.adptr.displayMsg(host.getSender().getName() + ": " + host.getData().getString()+"\n");
+			this.adptr.displayMsg(host.getSender().getName() + ": " + host.getData().getString() + "\n");
 		});
 		thread.start();
 		return null;
@@ -42,6 +42,6 @@ public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg>{
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -13,10 +13,10 @@ import common.receiver.ReceiverDataPacketAlgo;
  * @author James Li
  *
  */
-public class Receiver implements IReceiver{
-	
+public class Receiver implements IReceiver {
+
 	private ReceiverDataPacketAlgo receiverVisitor;
-	
+
 	public Receiver(ReceiverDataPacketAlgo receiverVisitor) {
 		this.receiverVisitor = receiverVisitor;
 	}
@@ -24,7 +24,7 @@ public class Receiver implements IReceiver{
 	@Override
 	public void sendMessage(ReceiverDataPacket<?> packet) throws RemoteException {
 		packet.execute(this.receiverVisitor, null);
-		
+
 	}
 
 }

@@ -16,18 +16,18 @@ import provided.datapacket.IDataPacketID;
  * @author James Li
  *
  */
-public class QuitMsgCmd extends AConnectorDataPacketAlgoCmd<IQuitMsg>{
-	
+public class QuitMsgCmd extends AConnectorDataPacketAlgoCmd<IQuitMsg> {
+
 	/**
 	 * Serialization purpose.
 	 */
 	private static final long serialVersionUID = 4719656209285663477L;
-	
+
 	/**
 	 * the model2view adptr.
 	 */
-	private IMainModel2ViewAdpt adpt; 
-	
+	private IMainModel2ViewAdpt adpt;
+
 	/**
 	 * the set of known stub.
 	 */
@@ -42,10 +42,10 @@ public class QuitMsgCmd extends AConnectorDataPacketAlgoCmd<IQuitMsg>{
 		this.adpt = adpt;
 		this.contacts = contacts;
 	}
-	
+
 	@Override
 	public Void apply(IDataPacketID index, ConnectorDataPacket<IQuitMsg> host, Void... params) {
-		Thread t = new Thread(()->{
+		Thread t = new Thread(() -> {
 			System.out.println(contacts.size());
 			contacts.remove(host.getSender());
 			System.out.println(contacts.size());
