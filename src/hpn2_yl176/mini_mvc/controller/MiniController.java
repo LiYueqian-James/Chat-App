@@ -218,7 +218,7 @@ public class MiniController {
 
 			@Override
 			public void start() {
-				start();
+				MiniController.this.start();
 				
 			}
 			

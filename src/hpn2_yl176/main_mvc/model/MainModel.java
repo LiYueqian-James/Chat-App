@@ -228,11 +228,8 @@ public class MainModel {
 	 * @param exitCode the exit code.
 	 */
 	public void quit(int exitCode) {
+//		System.out.println("model quit");
 		rmiUtils.stopRMI();
-		/*
-		 * This is intentionally implemented as SYNCHROUNOUS as the app needs to finish sending the msg
-		 * before it can actually quit.
-		 */
 		QuitMsg quitMsg = new QuitMsg();
 		ConnectorDataPacket<IQuitMsg> quitData = new ConnectorDataPacket<>(quitMsg, this.myNamedConnector);
 		Set<INamedConnector> prevContact = new HashSet<>(this.myContacts);
@@ -240,13 +237,26 @@ public class MainModel {
 		// Tell everyone I know(including myself) that I have quit!
 		// A copy is necessary to avoid concurrent modification.
 		for (INamedConnector app: prevContact) {
-			try {
-				app.sendMessage(quitData);
-			} catch (RemoteException e) {
-				sysLogger.log(LogLevel.ERROR, "Failed to send quit msg.");
-				e.printStackTrace();
-			}
+			
+			Thread t = new Thread(() ->{
+				try {
+					app.sendMessage(quitData);
+				} catch (RemoteException e) {
+					sysLogger.log(LogLevel.ERROR, "Failed to send quit msg.");
+					e.printStackTrace();
+				}
+			});
+			
+			t.start();
 		}
+		
+		for (IMain2MiniAdptr room: this.chatRooms) {
+			Thread t = new Thread(() ->{
+				room.quit();
+			});
+			t.start();
+		}
+		
 		System.exit(exitCode);
 		
 	}
@@ -332,7 +342,6 @@ public class MainModel {
 			viewLogger.log(LogLevel.INFO, "Local Registry = " + registry);
 		} catch (Exception e) {
 			viewLogger.log(LogLevel.ERROR, "Exception while intializing RMI: " + e);
-			System.out.println("here");
 			e.printStackTrace();
 			quit(-1); // exit the program.
 		}
