@@ -9,9 +9,22 @@ import hpn2_yl176.msg.receiverMsgCmd.CommandRequestMsgCmd;
 import provided.datapacket.DataPacketIDFactory;
 import provided.datapacket.IDataPacketID;
 
+/**
+ * A message that sends a big loving heart to your screen
+ * @author hungnguyen
+ *
+ */
 public class HeartMessage implements IReceiverMsg{
 
+	/**
+	 * generated serial versionUID
+	 */
 	private static final long serialVersionUID = 8183288106602993218L;
+	
+	/**
+	 * Makes an id for this message type
+	 * @return the data packet id of this message type
+	 */
 	public static IDataPacketID GetID() {
 		return DataPacketIDFactory.Singleton.makeID(HeartMessage.class);
 	}

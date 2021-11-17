@@ -9,8 +9,16 @@ public class CommandRequestMsg implements ICommandRequestMsg{
 	 * 
 	 */
 	private static final long serialVersionUID = 3157160933415724123L;
+	
+	/**
+	 * 
+	 */
 	private IDataPacketID cmdId;
 	
+	/**
+	 *
+	 * @param cmdId
+	 */
 	public CommandRequestMsg(IDataPacketID cmdId) {
 		this.cmdId = cmdId;
 	}
