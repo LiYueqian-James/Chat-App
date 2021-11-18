@@ -211,6 +211,12 @@ public class MiniController {
 				return stringRoster;
 			}
 
+			@Override
+			public void sendTab() {
+				model.sendTabMsg();
+				
+			}
+
 		});
 
 	}
