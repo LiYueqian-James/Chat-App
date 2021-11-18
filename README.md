@@ -13,17 +13,20 @@ This will prevent name clashes when transmitting classes.   Also, don't forget t
 **ChatApp API design group** *(Enter group name and link to Canvas API proposal page)*:
 
 ## List ALL Partner Names and NetIDs:
-1. 
-1. 
+1. James Li yl176
+1. Hung Nguyen hpn2
 1. (if exists)
 
 ## Notes to Staff:
-(Edit this section to include any notes to the staff to help them during the grading process)
+Three UML diagram:
+1. messages.umlcd: in the messages package, showing message passing and processing
+2. chatRoom.umlcd: in the mini_mvc package, showing the chat room view and model
+3. main_mvc.umlcd: in the main_mvc package, showing the main mvc structure.
 
 
 ## Application Notes:
-(Edit this section to include instructions on how to run your submitted application as well as 
-any other non-code information required by the assignment )
+1. Send Heart will ask everybody to broadcast a string heart message
+2. Send new Tab will pop up a new Tab called "test" in everyone's chat room view.
 
 
 

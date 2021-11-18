@@ -381,14 +381,23 @@ public class MainModel {
 	}
 	
 	
+	/**
+	 * @param roomName the room name.
+	 */
 	public void makeRoom(String roomName) {
 		this.model2ViewAdpt.makeNewRoom(roomName);
 	}
 	
+	/**
+	 * @return the manager.
+	 */
 	public IPubSubSyncManager getpubSubSyncManager() {
 		return this.pubSubManager;
 	}
 	
+	/**
+	 * @param idx the room idx.
+	 */
 	public void removeRoom(int idx) {
 		this.chatRooms.remove(idx);
 	}
