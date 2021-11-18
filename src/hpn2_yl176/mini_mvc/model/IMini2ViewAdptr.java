@@ -56,4 +56,6 @@ public interface IMini2ViewAdptr {
 	public Component getViewPanel();
 
 	public String getBoundName();
+	
+	public String getRoomName();
 }

@@ -100,7 +100,7 @@ public class MiniModel {
 
 		@Override
 		public String getRoomName() {
-			return this.getRoomName();
+			return adptr.getRoomName();
 		}
 
 		@Override

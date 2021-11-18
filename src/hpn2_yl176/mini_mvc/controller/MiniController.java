@@ -175,6 +175,12 @@ public class MiniController {
 				return mini2MainAdptr.getBoundName();
 			}
 
+			@Override
+			public String getRoomName() {
+				// TODO Auto-generated method stub
+				return roomName;
+			}
+
 		});
 
 		view = new MiniView(new IView2MiniAdptr() {
