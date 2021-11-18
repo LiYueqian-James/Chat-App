@@ -71,6 +71,7 @@ public class HeartMessageCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg> {
 				+ "__________$$$$$$$\n" + "____________$$$\n" + "_____________$";
 		IReceiverMsg receiverMsg = new StringMsg(heartMessage);
 		cmd2ModelAdapter.broadcast(receiverMsg);
+//		cmd2ModelAdapter.buildFixedComponent(null, heartMessage);
 		return null;
 	}
 }

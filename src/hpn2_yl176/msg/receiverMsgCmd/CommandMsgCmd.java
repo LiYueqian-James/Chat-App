@@ -28,14 +28,24 @@ public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg> {
 	 */
 	private static final long serialVersionUID = 3540863009064871106L;
 
+	/**
+	 * a receiver 
+	 */
 	private ReceiverDataPacketAlgo receiverVisitor;
 
+	/**
+	 * A cache that maps each data packet id to a list of receiver data packets 
+	 */
 	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
 
+	/**
+	 * The command 2 model adapter
+	 */
 	private ICmd2ModelAdapter cmd2ModelAdapter;
 
-	public CommandMsgCmd(ReceiverDataPacketAlgo receiverVisitor, IDataPacketID cmdId,
-			HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
+	public CommandMsgCmd(ReceiverDataPacketAlgo receiverVisitor, String a, String b, 
+			HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs, ICmd2ModelAdapter cmd2ModelAdapter) {
+		this.cmd2ModelAdapter = cmd2ModelAdapter;
 		this.receiverVisitor = receiverVisitor;
 	}
 
@@ -44,7 +54,7 @@ public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg> {
 		AReceiverDataPacketAlgoCmd<?> receivedCmd = ((ICommandMsg) host.getData()).getCmd();
 		IDataPacketID id = host.getData().getID();
 		receiverVisitor.setCmd(id, receivedCmd);
-		receivedCmd.setCmd2ModelAdpt(cmd2ModelAdapter);
+		receivedCmd.setCmd2ModelAdpt(this.cmd2ModelAdapter);
 		for (ReceiverDataPacket<IReceiverMsg> message : unexecutedMsgs.get(id)) {
 			message.execute(receiverVisitor);
 		}
