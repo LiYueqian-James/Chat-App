@@ -13,12 +13,23 @@ import common.receiver.messages.IReceiverErrMsg;
 public class ErrorMsg implements IReceiverErrMsg {
 
 	/**
-	 * 
+	 * serialization purpose.
 	 */
 	private static final long serialVersionUID = 8859587780223926553L;
+	/**
+	 * data
+	 */
 	private ReceiverDataPacket<?> dataPacket;
+	/**
+	 * The error msg.
+	 */
 	private String errMessage;
 
+	/**
+	 * Constructor
+	 * @param dataPacket data
+	 * @param errMessage msg
+	 */
 	public ErrorMsg(ReceiverDataPacket<?> dataPacket, String errMessage) {
 		this.dataPacket = dataPacket;
 		this.errMessage = errMessage;

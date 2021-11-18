@@ -272,8 +272,8 @@ public class MiniModel {
 	private void initVisitor() {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		receiverVisitor.setCmd(ICommandRequestMsg.GetID(), new CommandRequestMsgCmd(this.myNamedReceiver, receiverVisitor));
-		receiverVisitor.setCmd(HeartMessage.GetID(), new HeartMessageCmd(cmd2ModelAdapter));
-		receiverVisitor.setCmd(TabMsg.GetID(), new TabMsgCmd(cmd2ModelAdapter));
+//		receiverVisitor.setCmd(HeartMessage.GetID(), new HeartMessageCmd(cmd2ModelAdapter));
+//		receiverVisitor.setCmd(TabMsg.GetID(), new TabMsgCmd(cmd2ModelAdapter));
 		CommandMsgCmd cmd = new CommandMsgCmd(receiverVisitor, unexecutedMsgs);
 		cmd.setCmd2ModelAdpt(cmd2ModelAdapter);
 		receiverVisitor.setCmd(ICommandMsg.GetID(), cmd);

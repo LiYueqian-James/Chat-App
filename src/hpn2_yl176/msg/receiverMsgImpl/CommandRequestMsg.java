@@ -9,7 +9,7 @@ import provided.datapacket.IDataPacketID;
 public class CommandRequestMsg implements ICommandRequestMsg {
 
 	/**
-	 * 
+	 * serialization 
 	 */
 	private static final long serialVersionUID = 3157160933415724123L;
 	
@@ -19,7 +19,7 @@ public class CommandRequestMsg implements ICommandRequestMsg {
 	private IDataPacketID cmdId;
 	/**
 	 *
-	 * @param cmdId
+	 * @param cmdId the id
 	 */
 	public CommandRequestMsg(IDataPacketID cmdId) {
 		this.cmdId = cmdId;

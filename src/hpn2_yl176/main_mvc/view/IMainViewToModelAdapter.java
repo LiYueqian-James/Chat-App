@@ -35,7 +35,13 @@ public interface IMainViewToModelAdapter<Stub> {
 	 */
 	void start();
 	
+	/**
+	 * @param roomName the room name.
+	 */
 	void makeNewRoom(String roomName);
 	
+	/**
+	 * @param idx the room index.
+	 */
 	void removeRoom(int idx);
 }

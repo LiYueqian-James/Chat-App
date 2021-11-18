@@ -43,6 +43,11 @@ public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg> {
 	 */
 	private ICmd2ModelAdapter cmd2ModelAdapter;
 
+	/**
+	 * Constructor 
+	 * @param receiverVisitor the visitor
+	 * @param unexecutedMsgs the messages
+	 */
 	public CommandMsgCmd(ReceiverDataPacketAlgo receiverVisitor, HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
 		this.receiverVisitor = receiverVisitor;
 		this.unexecutedMsgs = unexecutedMsgs;

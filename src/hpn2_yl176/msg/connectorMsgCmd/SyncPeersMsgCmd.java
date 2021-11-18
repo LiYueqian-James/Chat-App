@@ -45,7 +45,10 @@ public class SyncPeersMsgCmd extends AConnectorDataPacketAlgoCmd<ISyncPeersMsg> 
 	 * System logger.
 	 */
 	private ILogger sysLogger;
-
+	
+	/**
+	 * The adapter.
+	 */
 	private IMainModel2ViewAdpt adptr;
 
 	/**
