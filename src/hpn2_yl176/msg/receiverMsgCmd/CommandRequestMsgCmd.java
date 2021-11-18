@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 
 import common.adapter.ICmd2ModelAdapter;
 import common.receiver.AReceiverDataPacketAlgoCmd;
+import common.receiver.INamedReceiver;
 import common.receiver.ReceiverDataPacket;
 import common.receiver.ReceiverDataPacketAlgo;
 
@@ -21,9 +22,11 @@ import provided.datapacket.IDataPacketID;
 public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg>{
 
 	private ReceiverDataPacketAlgo receiverVisitor;
+	private INamedReceiver me;
 
-	public CommandRequestMsgCmd(IMini2ViewAdptr adptr, ReceiverDataPacketAlgo receiverVisitor, ICmd2ModelAdapter cmd2ModelAdpt) {
+	public CommandRequestMsgCmd(INamedReceiver me, ReceiverDataPacketAlgo receiverVisitor) {
 		this.receiverVisitor = receiverVisitor;
+		this.me = me;
 	}
 	
 	/**
@@ -45,9 +48,8 @@ public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMs
 		Thread thread = new Thread(() -> {
 			try {
 				host.getSender().sendMessage(new ReceiverDataPacket<IReceiverMsg>(
-						new CommandMsg(cmd, cmdId), host.getSender()));
+						new CommandMsg(cmd, cmdId), me));
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 
 			}
 		});

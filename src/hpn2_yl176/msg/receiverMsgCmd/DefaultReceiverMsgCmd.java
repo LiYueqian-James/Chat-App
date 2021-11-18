@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import common.adapter.ICmd2ModelAdapter;
 import common.receiver.AReceiverDataPacketAlgoCmd;
+import common.receiver.INamedReceiver;
 import common.receiver.ReceiverDataPacket;
 import common.receiver.messages.ICommandRequestMsg;
 import common.receiver.messages.IReceiverMsg;
@@ -26,10 +27,13 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	 */
 	private static final long serialVersionUID = -2325284822657390621L;
 
-	HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
+	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
+	
+	private INamedReceiver me;
 
-	public DefaultReceiverMsgCmd(HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
+	public DefaultReceiverMsgCmd(INamedReceiver me, HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
 		this.unexecutedMsgs = unexecutedMsgs;
+		this.me = me;
 	}
 
 	@Override
@@ -48,7 +52,7 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 		Thread thread = new Thread(() -> {
 			try {
 				host.getSender().sendMessage(new ReceiverDataPacket<IReceiverMsg>(
-						new CommandRequestMsg(host.getData().getID()), host.getSender()));
+						new CommandRequestMsg(host.getData().getID()), me));
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

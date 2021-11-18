@@ -184,7 +184,7 @@ public class MiniModel {
 
 		// room information
 		this.roomRoster = adptr.getRoomRoster();
-		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd(unexecutedMsgs));
+		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd(this.myNamedReceiver, unexecutedMsgs));
 		this.myReceiver = new Receiver(this.receiverVisitor);
 
 		try {
@@ -199,7 +199,7 @@ public class MiniModel {
 
 	private void initVisitor() {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
-		receiverVisitor.setCmd(CommandRequestMsg.GetID(), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
+		receiverVisitor.setCmd(CommandRequestMsg.GetID(), new CommandRequestMsgCmd(this.myNamedReceiver, receiverVisitor));
 		receiverVisitor.setCmd(HeartMessage.GetID(), new HeartMessageCmd(cmd2ModelAdapter));
 		receiverVisitor.setCmd(TabMsg.GetID(), new TabMsgCmd(cmd2ModelAdapter));
 		CommandMsgCmd cmd = new CommandMsgCmd(receiverVisitor, unexecutedMsgs);

@@ -280,7 +280,7 @@ public class MainController {
 	public static void main(String[] args) {
 //		System.out.println("bruh!");
 		
-		ChatAppConfig appConfig0 = new ChatAppConfig("test", IRMI_Defs.STUB_PORT_CLIENT, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
+		ChatAppConfig appConfig0 = new ChatAppConfig("James", IRMI_Defs.STUB_PORT_CLIENT, IRMI_Defs.CLASS_SERVER_PORT_CLIENT);
 //		ChatAppConfig appConfig1 = new ChatAppConfig("James2", IRMI_Defs.STUB_PORT_SERVER, IRMI_Defs.CLASS_SERVER_PORT_SERVER);
 //		ChatAppConfig appConfig2 = new ChatAppConfig("James3", IRMI_Defs.STUB_PORT_EXTRA, IRMI_Defs.CLASS_SERVER_PORT_EXTRA);
 		
