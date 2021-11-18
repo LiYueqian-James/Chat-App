@@ -89,11 +89,34 @@ public class MiniView extends JPanel {
 	 */
 	private final JTextArea msgArea = new JTextArea();
 
+	/**
+	 * The room roster
+	 */
 	private Set<String> roomRoster;
+	
+	/**
+	 * The member list
+	 */
 	private final JTextArea memberList = new JTextArea();
+	
+	/**
+	 * The status panel
+	 */
 	private final JPanel statusPanel = new JPanel();
+	
+	/**
+	 * The status area
+	 */
 	private final JTextArea statusArea = new JTextArea();
+	
+	/**
+	 * Sends new tab message
+	 */
 	private final JButton Tab = new JButton("send New Tab");
+	
+	/**
+	 * Scroll pane for message area
+	 */
 	private final JScrollPane scrollPane = new JScrollPane();
 
 	/**
@@ -199,7 +222,6 @@ public class MiniView extends JPanel {
 
 	/**
 	 * Append a message (along with the user) to the message pane
-	 * @param user who sent the msg
 	 * @param msg the msg
 	 */
 	public void appendMessage(String msg) {
@@ -216,7 +238,7 @@ public class MiniView extends JPanel {
 	}
 
 	/**
-	 * @param roomRoster
+	 * @param roomRoster the room roster
 	 */
 	public void updateRoomRoster(Set<String> roomRoster) {
 		this.roomRoster = roomRoster;
@@ -227,18 +249,17 @@ public class MiniView extends JPanel {
 	}
 
 	/**
-	 * @param component
-	 * @param name
+	 * @param component the component
+	 * @param name the name of the component
 	 */
 	public void addFixedComponent(Component component, String name) {
 		//		((JComponent) component).setToolTipText(name);
-		System.out.println("here?");
 		this.tabs.add(component, name);
 	}
 
 	/**
-	 * @param component
-	 * @param name
+	 * @param component the component
+	 * @param name of the component
 	 */
 	public void addScrollingComponent(Component component, String name) {
 		this.tabs.add(component, name);
