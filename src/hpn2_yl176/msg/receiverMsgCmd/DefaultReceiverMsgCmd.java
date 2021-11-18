@@ -17,17 +17,24 @@ import provided.datapacket.IDataPacketID;
 
 /**
  * @author hungnguyen
- *
+ * DefaultReceiverMsgCmd 
  */
 public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg> {
 
 	/**
-	 * 
+	 * Generated serial version UID
 	 */
 	private static final long serialVersionUID = -2325284822657390621L;
 
+	/**
+	 * A cache of list of messages to data packetID
+	 */
 	HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
 
+	/**
+	 * DefaultReceiverMsgCmd to process the 
+	 * @param unexecutedMsgs
+	 */
 	public DefaultReceiverMsgCmd(HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
 		this.unexecutedMsgs = unexecutedMsgs;
 	}

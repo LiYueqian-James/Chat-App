@@ -94,6 +94,7 @@ public class MiniView extends JPanel {
 	private final JPanel statusPanel = new JPanel();
 	private final JTextArea statusArea = new JTextArea();
 	private final JButton Tab = new JButton("send New Tab");
+	private final JScrollPane scrollPane = new JScrollPane();
 
 	/**
 	 * Constructor for the view
@@ -155,9 +156,11 @@ public class MiniView extends JPanel {
 		tabs.setToolTipText("tabs for tasks");
 
 		splitPane.setLeftComponent(tabs);
-		msgArea.setToolTipText("Display messages");
-
-		tabs.addTab("Messages", null, msgArea, null);
+				
+				tabs.addTab("New tab", null, scrollPane, null);
+				msgArea.setToolTipText("Display messages");
+				
+						tabs.addTab("Messages", null, scrollPane, null);
 		statusPanel.setBorder(new TitledBorder(null, "Status", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
 		splitPane.setRightComponent(statusPanel);
@@ -183,6 +186,7 @@ public class MiniView extends JPanel {
 		users.add(usersPanel, BorderLayout.CENTER);
 
 		usersPanel.setViewportView(memberList);
+		scrollPane.setViewportView(msgArea);
 
 	}
 
