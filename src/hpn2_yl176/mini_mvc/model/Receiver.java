@@ -15,8 +15,14 @@ import common.receiver.ReceiverDataPacketAlgo;
  */
 public class Receiver implements IReceiver {
 
+	/**
+	 * The receiver visitor
+	 */
 	private ReceiverDataPacketAlgo receiverVisitor;
 
+	/*
+	 * The receiver constructor
+	 */
 	public Receiver(ReceiverDataPacketAlgo receiverVisitor) {
 		this.receiverVisitor = receiverVisitor;
 	}

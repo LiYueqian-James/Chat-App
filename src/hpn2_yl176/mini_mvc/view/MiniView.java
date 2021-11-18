@@ -31,7 +31,7 @@ import javax.swing.plaf.basic.BasicSliderUI.ComponentHandler;
 
 /**
  * @author James Li
- *
+ * The MiniView
  */
 public class MiniView extends JPanel {
 

@@ -18,14 +18,29 @@ public class NamedReceiver implements INamedReceiver {
 	 */
 	private static final long serialVersionUID = -6162987341184298439L;
 
+	/**
+	 * The receiver
+	 */
 	private IReceiver receiver;
 
 	//	private transient IMini2ViewAdptr adptr;
 
+	/**
+	 * Username
+	 */
 	private String userName;
 
+	/**
+	 * The named connector of the app
+	 */
 	private INamedConnector app;
 
+	/**
+	 * The Named Receiver constructor
+	 * @param receiver the receiver
+	 * @param userName the username
+	 * @param app the app connector
+	 */
 	public NamedReceiver(IReceiver receiver, String userName, INamedConnector app) {
 		this.receiver = receiver;
 		//		this.adptr = adptr;
@@ -33,12 +48,18 @@ public class NamedReceiver implements INamedReceiver {
 		this.app = app;
 	}
 
+	/**
+	 * Gets the username
+	 */
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return this.userName;
 	}
 
+	/**
+	 * Gets the connector
+	 */
 	@Override
 	public INamedConnector getConnector() {
 		// TODO Auto-generated method stub
@@ -55,6 +76,7 @@ public class NamedReceiver implements INamedReceiver {
 	public String toString() {
 		return this.getName();
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {

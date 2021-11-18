@@ -30,7 +30,7 @@ import provided.rmiUtils.RMIUtils;
 
 /**
  * @author James Li
- *
+ * Mini Controller, the controller of a chat room
  */
 public class MiniController {
 	/**
@@ -267,6 +267,9 @@ public class MiniController {
 		//		
 	}
 
+	/**
+	 * Makes a new room.
+	 */
 	public void makeNewRoom() {
 		Set<String> nameRoster = new HashSet<>();
 		/*
@@ -289,6 +292,10 @@ public class MiniController {
 		chatRoom.update(IPubSubSyncUpdater.makeSetAddFn(model.getMyNamedReceiver()));
 	}
 
+	/**
+	 * Joins a room
+	 * @param roomID the room ID
+	 */
 	public void joinRoom(UUID roomID) {
 		Set<String> nameRoster = new HashSet<>();
 		/*
@@ -328,10 +335,17 @@ public class MiniController {
 		return chatRoomID;
 	}
 
+	/**
+	 * @return the current chat room panel;
+	 */
 	public Component getMyRoomPanel() {
 		return this.view;
 	}
 
+	/**
+	 * 
+	 * @return the named receiver 
+	 */
 	public INamedReceiver getMyNamedReceiver() {
 		return this.model.getMyNamedReceiver();
 	}
@@ -340,10 +354,18 @@ public class MiniController {
 	//		this.model.removeParticipant(person);
 	//	}
 
+	/**
+	 * 
+	 * @return the receiver message algo
+	 */
 	public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
 		return this.model.getReceiverMsgAlgo();
 	}
 
+	/**
+	 * 
+	 * @return the main to mini adapter
+	 */
 	public IMain2MiniAdptr getRoomAdptr() {
 		return chatRoomAdptr;
 	}

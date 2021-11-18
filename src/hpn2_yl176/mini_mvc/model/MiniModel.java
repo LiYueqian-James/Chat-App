@@ -52,18 +52,39 @@ import provided.mixedData.MixedDataKey;
  */
 public class MiniModel {
 
+	/**
+	 * The mini to view adapter
+	 */
 	private IMini2ViewAdptr adptr;
 
+	/**
+	 * The receiver visitor
+	 */
 	private ReceiverDataPacketAlgo receiverVisitor;
 
+	/**
+	 * The room roster
+	 */
 	private Set<INamedReceiver> roomRoster;
 
+	/**
+	 * the message cache
+	 */
 	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs = new HashMap<>();
 
+	/**
+	 * the mixed dictionary 
+	 */
 	private MixedDataDictionary mixedDictionary = new MixedDataDictionary();
 
+	/**
+	 * the command 2 model adapter
+	 */
 	private ICmd2ModelAdapter cmd2ModelAdapter = new ICmd2ModelAdapter() {
 
+		/**
+		 * Sends th e
+		 */
 		@Override
 		public <T extends IReceiverMsg> void send(T data, INamedReceiver recv) {
 			if (roomRoster.contains(recv)) {
@@ -77,6 +98,9 @@ public class MiniModel {
 
 		}
 
+		/**
+		 * Saves a file
+		 */
 		@Override
 		public File saveFile(String defaultName) {
 			// parent component of the dialog
@@ -96,51 +120,78 @@ public class MiniModel {
 
 		}
 
+		/**
+		 * Puts a key-value pair in the mixed dictionary
+		 */
 		@Override
 		public <T> T put(MixedDataKey<T> key, T value) {
 			// TODO Auto-generated method stub
 			return mixedDictionary.put(key, value);
 		}
 
+		/**
+		 * Gets the room name
+		 */
 		@Override
 		public String getRoomName() {
 			return adptr.getRoomName();
 		}
 
+		/**
+		 * Gets the instance name
+		 */
 		@Override
 		public String getInstanceName() {
 			return adptr.getBoundName();
 		}
 
+		/**
+		 * Gets the file
+		 */
 		@Override
 		public File getFile() {
 			return this.saveFile("");
 		}
 
+		/**
+		 * Gets the value associated with a key in mixed dictionary
+		 */
 		@Override
 		public <T> T get(MixedDataKey<T> key) {
 			// TODO Auto-generated method stub
 			return mixedDictionary.get(key);
 		}
 
+		/**
+		 * Check if a key is in mixed dictionary
+		 */
 		@Override
 		public boolean containsKey(MixedDataKey<?> key) {
 			// TODO Auto-generated method stub
 			return mixedDictionary.containsKey(key);
 		}
 
+		/**
+		 * Builds a scrolling component
+		 */
 		@Override
 		public void buildScrollingComponent(IComponentFactory fac, String name) {
 			// TODO Auto-generated method stub
 			adptr.addScrollingComponent(fac, name);
 		}
 
+		/**
+		 * Builds a fixed component
+		 */
 		@Override
 		public void buildFixedComponent(IComponentFactory fac, String name) {
 			// TODO Auto-generated method stub
 			adptr.addFixedComponent(fac, name);
 		}
 
+		/**
+		 * Broadcasts 
+		 */
 		@Override
 		public <T extends IReceiverMsg> void broadcast(T msg) {
 			// TODO Auto-generated method stub
@@ -151,14 +202,30 @@ public class MiniModel {
 		}
 	};
 
+	/**
+	 * view logger
+	 */
 	private ILogger viewLogger;
+	
+	/**
+	 * Sys logger
+	 */
 	private ILogger sysLogger;
 
+	/**
+	 * The receiver associated with the chatroom
+	 */
 	private IReceiver myReceiver;
+	
+	/**
+	 * The named receiver
+	 */
 	private INamedReceiver myNamedReceiver;
 
-	//	private ChatRoom chatRoom;
 
+	/**
+	 * The chat room config
+	 */
 	private ChatAppConfig config;
 
 	/**
@@ -199,6 +266,9 @@ public class MiniModel {
 		dCmd.setNamedReceiver(myNamedReceiver);
 	}
 
+	/**
+	 * Initializes commands
+	 */
 	private void initVisitor() {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		receiverVisitor.setCmd(ICommandRequestMsg.GetID(), new CommandRequestMsgCmd(this.myNamedReceiver, receiverVisitor));
@@ -209,21 +279,24 @@ public class MiniModel {
 		receiverVisitor.setCmd(ICommandMsg.GetID(), cmd);
 	}
 
+	/**
+	 * Gets the room roster
+	 * @return the room roster
+	 */
 	public Set<INamedReceiver> getRoomRoster() {
 		return this.roomRoster;
 	}
 
-	//	public void removeParticipant(INamedReceiver person){
-	//		roomRoster.remove(person);
-	//		this.adptr.updateMemberList(roomRoster);
-	//	}
-
+	/**
+	 * 
+	 * @return the named receiver
+	 */
 	public INamedReceiver getMyNamedReceiver() {
 		return this.myNamedReceiver;
 	}
 
 	/**
-	 * @return
+	 * @return the receiver message algo (visitor)
 	 */
 	public ReceiverDataPacketAlgo getReceiverMsgAlgo() {
 		return this.receiverVisitor;
@@ -236,6 +309,11 @@ public class MiniModel {
 		this.initVisitor();
 	}
 
+	/**
+	 * Sends threaded message
+	 * @param receiver the named receiver
+	 * @param message the data packet
+	 */
 	public void sendThreadedMessage(INamedReceiver receiver, ReceiverDataPacket<? extends IReceiverMsg> message) {
 		Thread thread = new Thread(() -> {
 			try {
@@ -295,31 +373,4 @@ public class MiniModel {
 		}
 		adptr.displayStatus("Message \"" + msg.toString() + "\" successfully sent to the ChatRoom!");
 	}
-
-	//	public void leaveRoom() {
-	//		adptr.removeRoom();
-	//	}
-
-	//	public void removeUser(INamedReceiver namedReceiver) {
-	//		this.roomRoster.remove(namedReceiver);
-	//		adptr.updateMemberList(roomRoster);
-	//	}
-	//	
-	//	public void addUser(INamedReceiver namedUser) {
-	//		this.roomRoster.add(namedUser);
-	//		adptr.updateMemberList(this.roomRoster);
-	//	}
-
-	//	public void sendCmdMsg(CommandMsg msg) {
-	//		for (INamedReceiver person: this.roomRoster) {
-	//			try {
-	//				person.sendMessage(new ReceiverDataPacket<IReceiverMsg>(msg, myNamedReceiver));
-	//			}
-	//			catch (Exception e) {
-	//				// TODO: handle exception
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//	}
-
 }

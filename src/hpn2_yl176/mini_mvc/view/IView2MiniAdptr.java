@@ -23,17 +23,17 @@ public interface IView2MiniAdptr {
 	public void leave();
 
 	/**
-	 * 
+	 * sends message
 	 */
 	public void sendHeartMsg();
 	
 	/**
-	 * 
+	 * sends tab
 	 */
 	public void sendTab();
 
 	/**
-	 * @return
+	 * @return gets roster
 	 */
 	public Set<String> getRoomRoster();
 
