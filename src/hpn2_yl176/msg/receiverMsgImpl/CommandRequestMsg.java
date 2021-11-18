@@ -3,8 +3,8 @@ package hpn2_yl176.msg.receiverMsgImpl;
 import common.receiver.messages.ICommandRequestMsg;
 import provided.datapacket.IDataPacketID;
 
-public class CommandRequestMsg implements ICommandRequestMsg{
-	
+public class CommandRequestMsg implements ICommandRequestMsg {
+
 	/**
 	 * 
 	 */
@@ -14,7 +14,6 @@ public class CommandRequestMsg implements ICommandRequestMsg{
 	 * 
 	 */
 	private IDataPacketID cmdId;
-	
 	/**
 	 *
 	 * @param cmdId

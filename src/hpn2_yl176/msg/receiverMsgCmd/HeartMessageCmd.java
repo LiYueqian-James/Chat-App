@@ -21,10 +21,9 @@ import provided.datapacket.IDataPacketID;
  * @author James Li
  *
  */
-public class HeartMessageCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg>{	
-	
+public class HeartMessageCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg> {
+
 	private transient ICmd2ModelAdapter cmd2ModelAdapter;
-	
 
 	/**
 	 * 
@@ -38,46 +37,38 @@ public class HeartMessageCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg>{
 	 * 
 	 */
 	private static final long serialVersionUID = 6428616618671948978L;
-	
-//	public Void apply(IDataPacketID index, ReceiverDataPacket<IReceiverMsg> host, Void... params) {
-//		// TODO Auto-generated method stub
-//		String heartMessage = "_____$$$$_________$$$$\n"
-//				+ "___$$$$$$$$_____$$$$$$$$\n"
-//				+ "_$$$$$$$$$$$$_$$$$$$$$$$$$\n"
-//				+ "$$$$$$$$$$$$$$$$$$$$$$$$$$$\n"
-//				+ "$$$$$$$$$$$$$$$$$$$$$$$$$$$\n"
-//				+ "_$$$$$$$$$$$$$$$$$$$$$$$$$\n"
-//				+ "__$$$$$$$$$$$$$$$$$$$$$$$\n"
-//				+ "____$$$$$$$$$$$$$$$$$$$\n"
-//				+ "_______$$$$$$$$$$$$$\n"
-//				+ "__________$$$$$$$\n"
-//				+ "____________$$$\n"
-//				+ "_____________$";
-//		IReceiverMsg receiverMsg = new StringMsg(heartMessage);
-//		cmd2ModelAdapter.broadcast(receiverMsg);
-//		return null;
-//	}
+
+	//	public Void apply(IDataPacketID index, ReceiverDataPacket<IReceiverMsg> host, Void... params) {
+	//		// TODO Auto-generated method stub
+	//		String heartMessage = "_____$$$$_________$$$$\n"
+	//				+ "___$$$$$$$$_____$$$$$$$$\n"
+	//				+ "_$$$$$$$$$$$$_$$$$$$$$$$$$\n"
+	//				+ "$$$$$$$$$$$$$$$$$$$$$$$$$$$\n"
+	//				+ "$$$$$$$$$$$$$$$$$$$$$$$$$$$\n"
+	//				+ "_$$$$$$$$$$$$$$$$$$$$$$$$$\n"
+	//				+ "__$$$$$$$$$$$$$$$$$$$$$$$\n"
+	//				+ "____$$$$$$$$$$$$$$$$$$$\n"
+	//				+ "_______$$$$$$$$$$$$$\n"
+	//				+ "__________$$$$$$$\n"
+	//				+ "____________$$$\n"
+	//				+ "_____________$";
+	//		IReceiverMsg receiverMsg = new StringMsg(heartMessage);
+	//		cmd2ModelAdapter.broadcast(receiverMsg);
+	//		return null;
+	//	}
 
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
-		 cmd2ModelAdapter = cmd2ModelAdpt;		
+		cmd2ModelAdapter = cmd2ModelAdpt;
 	}
 
 	@Override
 	public Void apply(IDataPacketID index, ReceiverDataPacket<ICommandMsg> host, Void... params) {
 		// TODO Auto-generated method stub
-		String heartMessage = "_____$$$$_________$$$$\n"
-		+ "___$$$$$$$$_____$$$$$$$$\n"
-		+ "_$$$$$$$$$$$$_$$$$$$$$$$$$\n"
-		+ "$$$$$$$$$$$$$$$$$$$$$$$$$$$\n"
-		+ "$$$$$$$$$$$$$$$$$$$$$$$$$$$\n"
-		+ "_$$$$$$$$$$$$$$$$$$$$$$$$$\n"
-		+ "__$$$$$$$$$$$$$$$$$$$$$$$\n"
-		+ "____$$$$$$$$$$$$$$$$$$$\n"
-		+ "_______$$$$$$$$$$$$$\n"
-		+ "__________$$$$$$$\n"
-		+ "____________$$$\n"
-		+ "_____________$";
+		String heartMessage = "_____$$$$_________$$$$\n" + "___$$$$$$$$_____$$$$$$$$\n" + "_$$$$$$$$$$$$_$$$$$$$$$$$$\n"
+				+ "$$$$$$$$$$$$$$$$$$$$$$$$$$$\n" + "$$$$$$$$$$$$$$$$$$$$$$$$$$$\n" + "_$$$$$$$$$$$$$$$$$$$$$$$$$\n"
+				+ "__$$$$$$$$$$$$$$$$$$$$$$$\n" + "____$$$$$$$$$$$$$$$$$$$\n" + "_______$$$$$$$$$$$$$\n"
+				+ "__________$$$$$$$\n" + "____________$$$\n" + "_____________$";
 		IReceiverMsg receiverMsg = new StringMsg(heartMessage);
 		cmd2ModelAdapter.broadcast(receiverMsg);
 		return null;

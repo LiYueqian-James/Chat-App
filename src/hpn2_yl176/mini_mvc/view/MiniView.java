@@ -33,8 +33,8 @@ import javax.swing.plaf.basic.BasicSliderUI.ComponentHandler;
  * @author James Li
  *
  */
-public class MiniView extends JPanel{
-	
+public class MiniView extends JPanel {
+
 	/**
 	 * The adapter for the model.
 	 */
@@ -93,7 +93,7 @@ public class MiniView extends JPanel{
 	private final JTextArea memberList = new JTextArea();
 	private final JPanel statusPanel = new JPanel();
 	private final JTextArea statusArea = new JTextArea();
-	
+
 	/**
 	 * Constructor for the view
 	 * @param adptr the adapter.
@@ -106,17 +106,17 @@ public class MiniView extends JPanel{
 		this.adptr = adptr;
 		initGUI();
 	}
-	
+
 	/**
 	 * Initialize the gui. 
 	 */
 	private void initGUI() {
 		setLayout(new BorderLayout(0, 0));
 		Msg.setToolTipText("The Panel for sending all messages");
-		
+
 		add(Msg, BorderLayout.SOUTH);
 		Msg.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+
 		Msg.add(textField);
 		sendMsg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -125,7 +125,7 @@ public class MiniView extends JPanel{
 			}
 		});
 		sendMsg.setToolTipText("Button to send string message");
-		
+
 		Msg.add(sendMsg);
 		sendBallWorld.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -133,32 +133,32 @@ public class MiniView extends JPanel{
 			}
 		});
 		sendBallWorld.setToolTipText("button to send ball world message");
-		
+
 		Msg.add(sendBallWorld);
 		control.setToolTipText("Controlling the chat app");
 		control.setResizeWeight(0.05);
-		
+
 		add(control, BorderLayout.CENTER);
 		splitPane.setToolTipText("Messages and their status");
 		splitPane.setResizeWeight(0.8);
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		
+
 		control.setRightComponent(splitPane);
 		tabs.setToolTipText("tabs for tasks");
-		
+
 		splitPane.setLeftComponent(tabs);
 		msgArea.setToolTipText("Display messages");
-		
+
 		tabs.addTab("Messages", null, msgArea, null);
 		statusPanel.setBorder(new TitledBorder(null, "Status", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		
+
 		splitPane.setRightComponent(statusPanel);
 		statusPanel.setLayout(new BorderLayout(0, 0));
 		statusArea.setToolTipText("place to display status msg");
-		
+
 		statusPanel.add(statusArea, BorderLayout.CENTER);
 		users.setToolTipText("List of users");
-		
+
 		control.setLeftComponent(users);
 		users.setLayout(new BorderLayout(0, 0));
 		exit.addActionListener(new ActionListener() {
@@ -168,61 +168,61 @@ public class MiniView extends JPanel{
 		});
 		exit.setToolTipText("Leave this room");
 		exit.setFont(new Font("SimSun", Font.PLAIN, 8));
-		
+
 		users.add(exit, BorderLayout.SOUTH);
 		usersPanel.setToolTipText("The users");
-		
+
 		users.add(usersPanel, BorderLayout.CENTER);
-		
+
 		usersPanel.setViewportView(memberList);
 
 	}
-	
+
 	/**
 	 * Start the view.
 	 */
 	public void start() {
 		setVisible(true);
 	}
-	
+
 	/**
 	 * Append a message (along with the user) to the message pane
 	 * @param user who sent the msg
 	 * @param msg the msg
 	 */
 	public void appendMessage(String msg) {
-		System.out.println("TEXTING " + msg+"\n");
+		System.out.println("TEXTING " + msg + "\n");
 		msgArea.append(msg);
 	}
-	
+
 	/**
 	 * Append a status message to the status pane
 	 * @param status the status msg
 	 */
 	public void appendStatus(String status) {
-		statusArea.append(status+"\n");
+		statusArea.append(status + "\n");
 	}
-	
+
 	/**
 	 * @param roomRoster
 	 */
 	public void updateRoomRoster(Set<String> roomRoster) {
 		this.roomRoster = roomRoster;
 		this.memberList.setText("");
-		for (String member: roomRoster) {
-			memberList.append(member + '\n');	
+		for (String member : roomRoster) {
+			memberList.append(member + '\n');
 		}
 	}
-	
+
 	/**
 	 * @param component
 	 * @param name
 	 */
 	public void addFixedComponent(Component component, String name) {
-//		((JComponent) component).setToolTipText(name);
+		//		((JComponent) component).setToolTipText(name);
 		tabs.add(component);
 	}
-	
+
 	/**
 	 * @param component
 	 * @param name

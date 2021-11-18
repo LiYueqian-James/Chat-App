@@ -14,15 +14,15 @@ import provided.datapacket.IDataPacketID;
  * @author hungnguyen
  *
  */
-public class CommandMsg implements ICommandMsg{
-	
-	
+public class CommandMsg implements ICommandMsg {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -958601882847635293L;
 	private AReceiverDataPacketAlgoCmd<?> cmd;
 	private IDataPacketID cmdId;
+
 	/**
 	 * @param roomID the room Id.
 	 * @param roomName the room name.

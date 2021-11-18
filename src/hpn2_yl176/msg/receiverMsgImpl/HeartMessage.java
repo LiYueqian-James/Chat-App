@@ -25,10 +25,11 @@ public class HeartMessage implements IReceiverMsg{
 	 * Makes an id for this message type
 	 * @return the data packet id of this message type
 	 */
+	
 	public static IDataPacketID GetID() {
 		return DataPacketIDFactory.Singleton.makeID(HeartMessage.class);
 	}
-	
+
 	/**
 	 * Get the data packet ID associated with an instance of this class.
 	 * 

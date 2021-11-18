@@ -19,15 +19,15 @@ import provided.datapacket.IDataPacketID;
  * @author hungnguyen
  *
  */
-public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg>{
+public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2325284822657390621L;
-	
+
 	HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
-	
+
 	public DefaultReceiverMsgCmd(HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
 		this.unexecutedMsgs = unexecutedMsgs;
 	}
@@ -52,6 +52,6 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	@Override
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

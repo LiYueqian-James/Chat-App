@@ -25,36 +25,35 @@ import provided.pubsubsync.IPubSubSyncManager;
  * @author James Li
  *
  */
-public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg>{
+public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg> {
 
 	/**
 	 * for serialization purpose
 	 */
 	private static final long serialVersionUID = 3344719687626090467L;
-	
+
 	/**
 	 * The manager of the pubsubsync system.
 	 */
 	private IPubSubSyncManager pubSubSyncManager;
-	
-//	private INamedReceiver receiver;
+
+	//	private INamedReceiver receiver;
 
 	private IMainModel2ViewAdpt adapter;
 
-	
 	private MainModel model;
-	
+
 	/**
 	 * Constructor for the invite msg cmd.
 	 * @param pubSubSyncManager the manager.
 	 * @param receiier the receiver in this room.
 	 */
 	public InviteMsgCmd(IMainModel2ViewAdpt adptr) {
-//		this.pubSubSyncManager = pubSubSyncManager;
-//		this.receiver = receiver;
+		//		this.pubSubSyncManager = pubSubSyncManager;
+		//		this.receiver = receiver;
 		this.adapter = adptr;
 	}
-	
+
 	@Override
 	public Void apply(IDataPacketID index, ConnectorDataPacket<IInviteMsg> host, Void... params) {
 		//TODO: instantiate the mini controller!

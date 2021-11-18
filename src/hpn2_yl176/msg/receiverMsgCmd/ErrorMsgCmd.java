@@ -13,7 +13,7 @@ import provided.datapacket.IDataPacketID;
  * @author hungnguyen
  *
  */
-public class ErrorMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverErrMsg>{
+public class ErrorMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverErrMsg> {
 
 	/**
 	 * 

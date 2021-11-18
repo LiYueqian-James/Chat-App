@@ -8,8 +8,7 @@ import common.adapter.ICmd2ModelAdapter;
 import common.receiver.AReceiverDataPacketAlgoCmd;
 import common.receiver.ReceiverDataPacket;
 import common.receiver.ReceiverDataPacketAlgo;
-import common.receiver.messages.ICommandMsg;
-import common.receiver.messages.ICommandRequestMsg;
+
 import common.receiver.messages.IReceiverMsg;
 import hpn2_yl176.mini_mvc.model.IMini2ViewAdptr;import hpn2_yl176.msg.receiverMsgImpl.CommandMsg;
 import provided.datapacket.IDataPacketID;
@@ -21,8 +20,6 @@ import provided.datapacket.IDataPacketID;
 public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg>{
 
 	private ReceiverDataPacketAlgo receiverVisitor;
-	
-	private ICmd2ModelAdapter cmd2ModelAdapter;
 
 	public CommandRequestMsgCmd(IMini2ViewAdptr adptr, ReceiverDataPacketAlgo receiverVisitor, ICmd2ModelAdapter cmd2ModelAdpt) {
 		this.receiverVisitor = receiverVisitor;
@@ -50,8 +47,7 @@ public class CommandRequestMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMs
 						new CommandMsg(cmd, cmdId), host.getSender()));
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
-				host.getSender().sendMessage(new ReceiverDataPacket<IReceiverMsg>(
-						new ErrordMsg(), host.getSender()));)
+
 			}
 		});
 		thread.start();

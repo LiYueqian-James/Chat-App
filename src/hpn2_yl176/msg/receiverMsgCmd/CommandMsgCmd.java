@@ -21,21 +21,21 @@ import provided.mixedData.MixedDataKey;
  * @author hungnguyen
  *
  */
-public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg>{
-	
+public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg> {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3540863009064871106L;
-	
+
 	private ReceiverDataPacketAlgo receiverVisitor;
-	
-	
+
 	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
 
 	private ICmd2ModelAdapter cmd2ModelAdapter;
-	
-	public CommandMsgCmd(ReceiverDataPacketAlgo receiverVisitor, IDataPacketID cmdId, HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
+
+	public CommandMsgCmd(ReceiverDataPacketAlgo receiverVisitor, IDataPacketID cmdId,
+			HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
 		this.receiverVisitor = receiverVisitor;
 	}
 
@@ -45,7 +45,7 @@ public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg>{
 		IDataPacketID id = host.getData().getID();
 		receiverVisitor.setCmd(id, receivedCmd);
 		receivedCmd.setCmd2ModelAdpt(cmd2ModelAdapter);
-		for (ReceiverDataPacket<IReceiverMsg> message: unexecutedMsgs.get(id)) {
+		for (ReceiverDataPacket<IReceiverMsg> message : unexecutedMsgs.get(id)) {
 			message.execute(receiverVisitor);
 		}
 		unexecutedMsgs.put(id, new ArrayList<ReceiverDataPacket<IReceiverMsg>>());
@@ -57,7 +57,7 @@ public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg>{
 		// TODO Auto-generated method stub
 		this.cmd2ModelAdapter = cmd2ModelAdpt;
 	}
-	
+
 	public HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> getUnexecutedMsgs() {
 		return this.unexecutedMsgs;
 	}

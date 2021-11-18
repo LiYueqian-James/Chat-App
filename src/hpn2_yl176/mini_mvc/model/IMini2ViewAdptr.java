@@ -19,41 +19,43 @@ import provided.rmiUtils.RMIUtils;
  *
  */
 public interface IMini2ViewAdptr {
-	
+
 	/**
 	 * @param msg the message to be displayed.
 	 */
 	public void displayMsg(String msg);
-	
-	
+
 	/**
 	 * @param status the status message to be displayed.
 	 */
 	public void displayStatus(String status);
-	
+
 	/**
 	 * @return all the INamedReceivers in the room.
 	 */
 	public Set<INamedReceiver> getRoomRoster();
-	
+
 	public ILogger getSysLogger();
 
 	public IRMIUtils getRmiUtils();
-	
-//	public void updateMemberList(Set<INamedReceiver> namedReceivers);
-	
+
+	//	public void updateMemberList(Set<INamedReceiver> namedReceivers);
+
 	public String getUserName();
-	
+
 	public ChatAppConfig getConfig();
-	
+
 	public INamedConnector getNamedConnector();
-	
-//	public void removeRoom();
-	
+
+	//	public void removeRoom();
+
 	public void addScrollingComponent(IComponentFactory fac, String name);
+
 	public void addFixedComponent(IComponentFactory fac, String name);
-	
+
 	public Component getViewPanel();
-	
+
 	public String getBoundName();
+	
+	public String getRoomName();
 }

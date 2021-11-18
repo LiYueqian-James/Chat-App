@@ -11,23 +11,23 @@ import common.connector.messages.IInviteMsg;
  * @author James Li
  *
  */
-public class InviteMsg implements IInviteMsg{
+public class InviteMsg implements IInviteMsg {
 
 	/**
 	 * Serialization purpose.
 	 */
 	private static final long serialVersionUID = -6919276183053373640L;
-	
+
 	/**
 	 * The room ID; 
 	 */
 	private UUID roomID;
-	
+
 	/**
 	 * The room name. 
 	 */
 	private String roomName;
-	
+
 	/**
 	 * @param roomID the room Id.
 	 * @param roomName the room name.
