@@ -31,9 +31,9 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	
 	private INamedReceiver me;
 
-	public DefaultReceiverMsgCmd(INamedReceiver me, HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
+	public DefaultReceiverMsgCmd(HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
 		this.unexecutedMsgs = unexecutedMsgs;
-		this.me = me;
+//		this.me = me;
 	}
 
 	@Override
@@ -66,5 +66,9 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void setNamedReceiver(INamedReceiver me) {
+		this.me = me;
 	}
 }

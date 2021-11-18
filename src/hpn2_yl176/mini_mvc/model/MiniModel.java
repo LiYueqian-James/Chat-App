@@ -184,7 +184,8 @@ public class MiniModel {
 
 		// room information
 		this.roomRoster = adptr.getRoomRoster();
-		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd(this.myNamedReceiver, unexecutedMsgs));
+		DefaultReceiverMsgCmd dCmd = new DefaultReceiverMsgCmd(unexecutedMsgs);
+		receiverVisitor = new ReceiverDataPacketAlgo(dCmd);
 		this.myReceiver = new Receiver(this.receiverVisitor);
 
 		try {
@@ -195,13 +196,14 @@ public class MiniModel {
 			sysLogger.log(LogLevel.ERROR, "Can't make receiver stub");
 			e.printStackTrace();
 		}
+		dCmd.setNamedReceiver(myNamedReceiver);
 	}
 
 	private void initVisitor() {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
 		receiverVisitor.setCmd(CommandRequestMsg.GetID(), new CommandRequestMsgCmd(this.myNamedReceiver, receiverVisitor));
-		receiverVisitor.setCmd(HeartMessage.GetID(), new HeartMessageCmd(cmd2ModelAdapter));
-		receiverVisitor.setCmd(TabMsg.GetID(), new TabMsgCmd(cmd2ModelAdapter));
+//		receiverVisitor.setCmd(HeartMessage.GetID(), new HeartMessageCmd(cmd2ModelAdapter));
+//		receiverVisitor.setCmd(TabMsg.GetID(), new TabMsgCmd(cmd2ModelAdapter));
 		CommandMsgCmd cmd = new CommandMsgCmd(receiverVisitor, unexecutedMsgs);
 		cmd.setCmd2ModelAdpt(cmd2ModelAdapter);
 		receiverVisitor.setCmd(CommandMsg.GetID(), cmd);
