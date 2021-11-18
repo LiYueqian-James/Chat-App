@@ -54,7 +54,7 @@ public class MiniModel {
 
 	private Set<INamedReceiver> roomRoster;
 
-	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
+	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs = new HashMap<>();
 
 	private MixedDataDictionary mixedDictionary = new MixedDataDictionary();
 
@@ -184,7 +184,6 @@ public class MiniModel {
 		this.roomRoster = adptr.getRoomRoster();
 		receiverVisitor = new ReceiverDataPacketAlgo(new DefaultReceiverMsgCmd(unexecutedMsgs));
 		this.myReceiver = new Receiver(this.receiverVisitor);
-		this.unexecutedMsgs = new HashMap<>();
 
 		try {
 			IReceiver receiverStub = (IReceiver) UnicastRemoteObject.exportObject(this.myReceiver, config.getRMIPort());

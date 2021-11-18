@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <com.yattasolutions.uml.diagrams.classifier:ClassDiagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:com.yattasolutions.uml.diagrams.classifier="http://ns.yatta-solutions.com/umllab/diagrams/classifier/1.1.0" xmi:id="_AwhlsEf-EeyHFK4yuWRpJw">
-  <modelElement href="platform:/resource/comp310-f21-hw08-comp310-f21-hw08-20/src/hpn2_yl176/main_mvc/main_mvc.uml#_AuMqcEf-EeyHFK4yuWRpJw"/>
+  <modelElement href="main_mvc.uml#_AuMqcEf-EeyHFK4yuWRpJw"/>
 </com.yattasolutions.uml.diagrams.classifier:ClassDiagram>
