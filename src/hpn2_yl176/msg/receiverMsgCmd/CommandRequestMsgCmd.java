@@ -11,6 +11,7 @@ import common.receiver.ReceiverDataPacketAlgo;
 
 import common.receiver.messages.IReceiverMsg;
 import hpn2_yl176.mini_mvc.model.IMini2ViewAdptr;import hpn2_yl176.msg.receiverMsgImpl.CommandMsg;
+import provided.datapacket.DataPacketIDFactory;
 import provided.datapacket.IDataPacketID;
 
 /**

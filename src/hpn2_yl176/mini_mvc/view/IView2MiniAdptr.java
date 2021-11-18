@@ -26,6 +26,11 @@ public interface IView2MiniAdptr {
 	 * 
 	 */
 	public void sendHeartMsg();
+	
+	/**
+	 * 
+	 */
+	public void sendTab();
 
 	/**
 	 * @return

@@ -67,7 +67,7 @@ public class MiniView extends JPanel {
 	/**
 	 * Send BallWolrd button.
 	 */
-	private final JButton sendBallWorld = new JButton("send Ball World");
+	private final JButton sendBallWorld = new JButton("send Heart");
 	/**
 	 * List of users panel.
 	 */
@@ -93,6 +93,7 @@ public class MiniView extends JPanel {
 	private final JTextArea memberList = new JTextArea();
 	private final JPanel statusPanel = new JPanel();
 	private final JTextArea statusArea = new JTextArea();
+	private final JButton Tab = new JButton("send New Tab");
 
 	/**
 	 * Constructor for the view
@@ -101,7 +102,7 @@ public class MiniView extends JPanel {
 	public MiniView(IView2MiniAdptr adptr) {
 		this.adptr = adptr;
 		textField.setToolTipText("The string message to be sent");
-		textField.setColumns(30);
+		textField.setColumns(15);
 		roomRoster = adptr.getRoomRoster();
 		this.adptr = adptr;
 		initGUI();
@@ -135,6 +136,13 @@ public class MiniView extends JPanel {
 		sendBallWorld.setToolTipText("button to send ball world message");
 
 		Msg.add(sendBallWorld);
+		Tab.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				adptr.sendTab();
+			}
+		});
+		
+		Msg.add(Tab);
 		control.setToolTipText("Controlling the chat app");
 		control.setResizeWeight(0.05);
 
@@ -220,7 +228,8 @@ public class MiniView extends JPanel {
 	 */
 	public void addFixedComponent(Component component, String name) {
 		//		((JComponent) component).setToolTipText(name);
-		tabs.add(component);
+		System.out.println("here?");
+		this.tabs.add(component, name);
 	}
 
 	/**
@@ -228,6 +237,6 @@ public class MiniView extends JPanel {
 	 * @param name
 	 */
 	public void addScrollingComponent(Component component, String name) {
-		tabs.add(component);
+		this.tabs.add(component, name);
 	}
 }
