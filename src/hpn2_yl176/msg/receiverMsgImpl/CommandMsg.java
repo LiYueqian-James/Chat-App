@@ -44,24 +44,6 @@ public class CommandMsg implements ICommandMsg {
 		// TODO Auto-generated method stub
 		return this.cmdId;
 	}
-	
-	/**
-	 * Get the data packet ID associated with this class.
-	 * 
-	 * @return The data packet ID.
-	 */
-	public static IDataPacketID GetID() {
-		return DataPacketIDFactory.Singleton.makeID(CommandMsg.class);
-	}
-	
-	/**
-	 * Get the data packet ID associated with an instance of this class.
-	 * 
-	 * @return The data packet ID.
-	 */
-	@Override
-	public IDataPacketID getID() {
-		return CommandMsg.GetID();
-	}
+
 
 }

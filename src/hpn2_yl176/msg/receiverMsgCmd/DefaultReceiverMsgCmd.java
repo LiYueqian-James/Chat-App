@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import common.adapter.ICmd2ModelAdapter;
 import common.receiver.AReceiverDataPacketAlgoCmd;
+import common.receiver.INamedReceiver;
 import common.receiver.ReceiverDataPacket;
 import common.receiver.messages.ICommandRequestMsg;
 import common.receiver.messages.IReceiverMsg;
@@ -26,10 +27,9 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	 */
 	private static final long serialVersionUID = -2325284822657390621L;
 
-	/**
-	 * A cache of list of messages to data packetID
-	 */
-	HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
+	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
+	
+	private INamedReceiver me;
 
 	/**
 	 * DefaultReceiverMsgCmd to process the 
@@ -37,12 +37,13 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	 */
 	public DefaultReceiverMsgCmd(HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs) {
 		this.unexecutedMsgs = unexecutedMsgs;
+//		this.me = me;
 	}
 
 	@Override
 	public Void apply(IDataPacketID index, ReceiverDataPacket<IReceiverMsg> host, Void... params) {
 		// TODO Auto-generated method stub
-//		System.out.println("wtf?????"+unexecutedMsgs.toString());
+		System.out.println("default case");
 		if (!unexecutedMsgs.containsKey(index)) {
 			ArrayList<ReceiverDataPacket<IReceiverMsg>> list = new ArrayList<>();
 			list.add(host);
@@ -55,7 +56,7 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 		Thread thread = new Thread(() -> {
 			try {
 				host.getSender().sendMessage(new ReceiverDataPacket<IReceiverMsg>(
-						new CommandRequestMsg(host.getData().getID()), host.getSender()));
+						new CommandRequestMsg(host.getData().getID()), me));
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -69,5 +70,9 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	public void setCmd2ModelAdpt(ICmd2ModelAdapter cmd2ModelAdpt) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void setNamedReceiver(INamedReceiver me) {
+		this.me = me;
 	}
 }

@@ -21,7 +21,7 @@ import provided.mixedData.MixedDataKey;
  * @author hungnguyen
  *
  */
-public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg> {
+public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg> {
 
 	/**
 	 * 
@@ -48,11 +48,12 @@ public class CommandMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverMsg> {
 	}
 
 	@Override
-	public Void apply(IDataPacketID index, ReceiverDataPacket<IReceiverMsg> host, Void... params) {
+	public Void apply(IDataPacketID index, ReceiverDataPacket<ICommandMsg> host, Void... params) {
 		AReceiverDataPacketAlgoCmd<?> receivedCmd = ((ICommandMsg) host.getData()).getCmd();
-		IDataPacketID id = host.getData().getID();
+		IDataPacketID id = host.getData().getCmdID();
 		receiverVisitor.setCmd(id, receivedCmd);
-		receivedCmd.setCmd2ModelAdpt(this.cmd2ModelAdapter);
+		receivedCmd.setCmd2ModelAdpt(cmd2ModelAdapter);
+//		unexecutedMsgs.get(id)
 		for (ReceiverDataPacket<IReceiverMsg> message : unexecutedMsgs.get(id)) {
 			message.execute(receiverVisitor);
 		}

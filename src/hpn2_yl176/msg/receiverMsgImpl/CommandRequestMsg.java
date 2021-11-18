@@ -24,30 +24,11 @@ public class CommandRequestMsg implements ICommandRequestMsg {
 	public CommandRequestMsg(IDataPacketID cmdId) {
 		this.cmdId = cmdId;
 	}
-
+	
 	@Override
 	public IDataPacketID getCmdID() {
 		// TODO Auto-generated method stub
 		return cmdId;
-	}
-	
-	/**
-	 * Get the data packet ID associated with this class.
-	 * 
-	 * @return The data packet ID.
-	 */
-	public static IDataPacketID GetID() {
-		return DataPacketIDFactory.Singleton.makeID(CommandRequestMsg.class);
-	}
-	
-	/**
-	 * Get the data packet ID associated with an instance of this class.
-	 * 
-	 * @return The data packet ID.
-	 */
-	@Override
-	public IDataPacketID getID() {
-		return CommandRequestMsg.GetID();
 	}
 
 }
