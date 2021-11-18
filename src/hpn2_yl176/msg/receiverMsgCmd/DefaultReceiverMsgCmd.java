@@ -35,7 +35,7 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	@Override
 	public Void apply(IDataPacketID index, ReceiverDataPacket<IReceiverMsg> host, Void... params) {
 		// TODO Auto-generated method stub
-		System.out.println("wtf?????"+unexecutedMsgs.toString());
+//		System.out.println("wtf?????"+unexecutedMsgs.toString());
 		if (!unexecutedMsgs.containsKey(index)) {
 			ArrayList<ReceiverDataPacket<IReceiverMsg>> list = new ArrayList<>();
 			list.add(host);
