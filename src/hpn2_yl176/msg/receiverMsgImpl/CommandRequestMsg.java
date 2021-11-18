@@ -27,7 +27,6 @@ public class CommandRequestMsg implements ICommandRequestMsg {
 	
 	@Override
 	public IDataPacketID getCmdID() {
-		// TODO Auto-generated method stub
 		return cmdId;
 	}
 
