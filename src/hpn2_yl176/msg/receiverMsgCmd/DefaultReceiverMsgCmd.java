@@ -43,7 +43,6 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	@Override
 	public Void apply(IDataPacketID index, ReceiverDataPacket<IReceiverMsg> host, Void... params) {
 		// TODO Auto-generated method stub
-		System.out.println("default case");
 		if (!unexecutedMsgs.containsKey(index)) {
 			ArrayList<ReceiverDataPacket<IReceiverMsg>> list = new ArrayList<>();
 			list.add(host);
@@ -55,7 +54,7 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 		
 		Thread thread = new Thread(() -> {
 			try {
-				host.getSender().sendMessage(new ReceiverDataPacket<IReceiverMsg>(
+				host.getSender().sendMessage(new ReceiverDataPacket<ICommandRequestMsg>(
 						new CommandRequestMsg(host.getData().getID()), me));
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block

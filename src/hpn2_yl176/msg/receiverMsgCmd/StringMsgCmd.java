@@ -23,6 +23,10 @@ public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg> {
 	 * 
 	 */
 	private static final long serialVersionUID = 5121721703851699016L;
+	
+	/**
+	 * Ad
+	 */
 	private IMini2ViewAdptr adptr;
 
 	public StringMsgCmd(IMini2ViewAdptr adptr) {
