@@ -24,12 +24,14 @@ import common.receiver.messages.ICommandRequestMsg;
 import common.receiver.messages.IReceiverMsg;
 import common.receiver.messages.IStringMsg;
 import hpn2_yl176.main_mvc.model.ChatAppConfig;
+import hpn2_yl176.msg.receiverMsgCmd.CommandMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.CommandRequestMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.DefaultReceiverMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.HeartMessageCmd;
 import hpn2_yl176.msg.receiverMsgCmd.StringMsgCmd;
 import hpn2_yl176.msg.receiverMsgCmd.TabMsgCmd;
 import hpn2_yl176.msg.receiverMsgImpl.CommandMsg;
+import hpn2_yl176.msg.receiverMsgImpl.CommandRequestMsg;
 import hpn2_yl176.msg.receiverMsgImpl.HeartMessage;
 import hpn2_yl176.msg.receiverMsgImpl.StringMsg;
 import hpn2_yl176.msg.receiverMsgImpl.TabMsg;
@@ -197,9 +199,12 @@ public class MiniModel {
 
 	private void initVisitor() {
 		receiverVisitor.setCmd(DataPacketIDFactory.Singleton.makeID(IStringMsg.class), new StringMsgCmd(adptr));
-		receiverVisitor.setCmd(ICommandMsg.GetID(), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
+		receiverVisitor.setCmd(CommandRequestMsg.GetID(), new CommandRequestMsgCmd(adptr, receiverVisitor, cmd2ModelAdapter));
 		receiverVisitor.setCmd(HeartMessage.GetID(), new HeartMessageCmd(cmd2ModelAdapter));
 		receiverVisitor.setCmd(TabMsg.GetID(), new TabMsgCmd(cmd2ModelAdapter));
+		CommandMsgCmd cmd = new CommandMsgCmd(receiverVisitor, unexecutedMsgs);
+		cmd.setCmd2ModelAdpt(cmd2ModelAdapter);
+		receiverVisitor.setCmd(CommandMsg.GetID(), cmd);
 	}
 
 	public Set<INamedReceiver> getRoomRoster() {

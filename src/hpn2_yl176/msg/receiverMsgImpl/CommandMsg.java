@@ -8,6 +8,7 @@ import java.util.UUID;
 import common.adapter.ICmd2ModelAdapter;
 import common.receiver.AReceiverDataPacketAlgoCmd;
 import common.receiver.messages.ICommandMsg;
+import provided.datapacket.DataPacketIDFactory;
 import provided.datapacket.IDataPacketID;
 
 /**
@@ -42,6 +43,25 @@ public class CommandMsg implements ICommandMsg {
 	public IDataPacketID getCmdID() {
 		// TODO Auto-generated method stub
 		return this.cmdId;
+	}
+	
+	/**
+	 * Get the data packet ID associated with this class.
+	 * 
+	 * @return The data packet ID.
+	 */
+	public static IDataPacketID GetID() {
+		return DataPacketIDFactory.Singleton.makeID(CommandMsg.class);
+	}
+	
+	/**
+	 * Get the data packet ID associated with an instance of this class.
+	 * 
+	 * @return The data packet ID.
+	 */
+	@Override
+	public IDataPacketID getID() {
+		return CommandMsg.GetID();
 	}
 
 }
