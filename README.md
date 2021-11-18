@@ -23,6 +23,8 @@ Three UML diagram:
 2. chatRoom.umlcd: in the mini_mvc package, showing the chat room view and model
 3. main_mvc.umlcd: in the main_mvc package, showing the main mvc structure.
 
+The use case diagram can be found in src/use-case-diagram
+
 
 ## Application Notes:
 1. Send Heart will ask everybody to broadcast a string heart message
