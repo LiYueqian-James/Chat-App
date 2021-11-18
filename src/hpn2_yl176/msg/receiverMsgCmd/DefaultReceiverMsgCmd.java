@@ -27,8 +27,14 @@ public class DefaultReceiverMsgCmd extends AReceiverDataPacketAlgoCmd<IReceiverM
 	 */
 	private static final long serialVersionUID = -2325284822657390621L;
 
+	/**
+	 * not executed messages.
+	 */
 	private HashMap<IDataPacketID, ArrayList<ReceiverDataPacket<IReceiverMsg>>> unexecutedMsgs;
 	
+	/**
+	 * me in the chat room. 
+	 */
 	private INamedReceiver me;
 
 	/**

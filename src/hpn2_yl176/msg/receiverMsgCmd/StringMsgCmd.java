@@ -20,15 +20,19 @@ import provided.datapacket.IDataPacketID;
 public class StringMsgCmd extends AReceiverDataPacketAlgoCmd<IStringMsg> {
 
 	/**
-	 * 
+	 * serialization purpose.
 	 */
 	private static final long serialVersionUID = 5121721703851699016L;
 	
 	/**
-	 * Ad
+	 * Adapter.
 	 */
 	private IMini2ViewAdptr adptr;
 
+	/**
+	 * constructor
+	 * @param adptr the adapter
+	 */
 	public StringMsgCmd(IMini2ViewAdptr adptr) {
 		this.adptr = adptr;
 	}

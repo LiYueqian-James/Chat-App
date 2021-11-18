@@ -18,11 +18,17 @@ import provided.datapacket.IDataPacketID;
 public class TabMsgCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg>{
 	
 	/**
-	 * 
+	 * serialization
 	 */
 	private static final long serialVersionUID = -5834744522257653470L;
+	/**
+	 * adapter
+	 */
 	private transient ICmd2ModelAdapter cmd2ModelAdapter;
 	
+	/**
+	 * @param cmd2ModelAdapter the adapter.
+	 */
 	public TabMsgCmd(ICmd2ModelAdapter cmd2ModelAdapter) {
 		// TODO Auto-generated constructor stub
 		this.cmd2ModelAdapter = cmd2ModelAdapter;

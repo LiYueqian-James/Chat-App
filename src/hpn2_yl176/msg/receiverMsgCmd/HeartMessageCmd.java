@@ -26,7 +26,7 @@ public class HeartMessageCmd extends AReceiverDataPacketAlgoCmd<ICommandMsg> {
 	private transient ICmd2ModelAdapter cmd2ModelAdapter;
 
 	/**
-	 * 
+	 * constructor.
 	 */
 	public HeartMessageCmd(ICmd2ModelAdapter cmd2ModelAdapter) {
 		// TODO Auto-generated constructor stub

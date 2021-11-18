@@ -18,10 +18,16 @@ import provided.datapacket.IDataPacketID;
 public class CommandMsg implements ICommandMsg {
 
 	/**
-	 * 
+	 * serialization.
 	 */
 	private static final long serialVersionUID = -958601882847635293L;
+	/**
+	 * the cmd
+	 */
 	private AReceiverDataPacketAlgoCmd<?> cmd;
+	/**
+	 * the id
+	 */
 	private IDataPacketID cmdId;
 
 	/**

@@ -32,16 +32,14 @@ public class InviteMsgCmd extends AConnectorDataPacketAlgoCmd<IInviteMsg> {
 	 */
 	private static final long serialVersionUID = 3344719687626090467L;
 
-	/**
-	 * The manager of the pubsubsync system.
-	 */
-	private IPubSubSyncManager pubSubSyncManager;
+	
 
 	//	private INamedReceiver receiver;
 
+	/**
+	 * view adapter
+	 */
 	private IMainModel2ViewAdpt adapter;
-
-	private MainModel model;
 
 	/**
 	 * Constructor for the invite msg cmd.
